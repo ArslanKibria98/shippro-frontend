@@ -1,0 +1,59 @@
+
+import { createContext, useState, useEffect } from "react";
+import axios from "axios";
+
+const Adminauth = createContext();
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+
+    
+
+    // Load user from localStorage when app starts
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            setUser({ token });
+        }
+    }, []);
+
+    // Login function
+    const login = async (email, password) => {
+        try {
+            const res = await axios.post("http://localhost:5000/api/admin/login", { email, password });
+            const { token, userData } = res.data;
+            localStorage.setItem("token", token);
+            setUser({ token, ...userData });
+            console.log(userData)
+            return true; // Indicate successful login
+        } catch (err) {
+            console.error("Login failed:", err.response?.data || err.message);
+            return false; // Indicate failed login
+        }
+    };
+
+    // Signup function
+    const signup = async (name, email, password) => {
+        try {
+            await axios.post("http://localhost:5000/api/auth/signup", { name, email, password });
+            return true;
+        } catch (err) {
+            console.error("Signup failed", err.response.data);
+            return false;
+        }
+    };
+
+    // Logout function
+    const logout = () => {
+        localStorage.removeItem("token");
+        setUser(null);
+    };
+
+    return (
+        <Adminauth.Provider value={{ user, login, signup, logout }}>
+            {children}
+        </Adminauth.Provider>
+    );
+};
+
+export default Adminauth;
