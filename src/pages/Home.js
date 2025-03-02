@@ -22,7 +22,7 @@ const Home = () => {
             padding: '10px 20px',
             fontSize: '1em',
             color: '#fff',
-            backgroundColor: '#007BFF',
+            backgroundColor: 'var(--theme_color)',
             border: 'none',
             borderRadius: '5px',
             cursor: 'pointer',
@@ -36,7 +36,7 @@ const Home = () => {
         <div className='home_box_container'>
         <div className='container'>
         <navbar className="text-white">
-            <div className='logo navbar_logo'>Shipp Label Pro</div>
+            <div className='logo navbar_logo'>Ship Pro</div>
             <ul className='navbar-list'>
                 <li>Home</li>
                 <li>About Us</li>
@@ -47,8 +47,8 @@ const Home = () => {
         </navbar>
         
         <div className='main-box-content'>
-            <h1 className='text-white'>Welcome to Ship Label</h1>
-            <label className='text-white'>Pro</label>
+            <h1 className='text-white'>Welcome to Ship Pro</h1>
+            {/* <label className='text-white'>Pro</label> */}
             <button style={styles.button} onClick={() => navigate('/login')}>
                 Login
             </button>
