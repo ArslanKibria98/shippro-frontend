@@ -6,7 +6,7 @@ import html2pdf from "html2pdf.js";
 import shippoLogo from './one2.svg';
 import bwipjs from "bwip-js";
 
-const HandleLabel = ({ formData }) => {
+const HandleLabel = async ({ formData }) => {
   console.log(formData)
   const labelRef = useRef(null);
   const barcodeRef = useRef(null);
@@ -15,32 +15,56 @@ const HandleLabel = ({ formData }) => {
  var cleanTrackingNumber = formData.trackingNumber.replace(/\s+/g, ''); // This removes all spaces
 
  var formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
-  useEffect(() => {
-    if (formData.trackingNumber) {
-      JsBarcode(barcodeRef.current, cleanTrackingNumber, {
-        format: "CODE128",
-        lineColor: "black",
-        width: 1.75,
-        height: 80,
-        margin: 0, // Remove padding/margin around barcode
-        flat: true, // Ensures no extra white space around barcode
-        displayValue: false
-      });
-    //   fetch(`https://my.labelscheap.com/api/barcode.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=14784&tracking=${cleanTrackingNumber}&sf=3&ms=r&md=0.8`)
-    // .then(response => response.json())
-    // .then(data => {
-    //     if (data.barcode_url) {
-    //         console.log("Barcode URL:", data.barcode_url);
-    //         barcodeRef.current(data.barcode_url)
-    //     } else {
-    //         console.error("Error:", data.error);
-    //     }
-    // })
-    // .catch(error => console.error("Error:", error));
-    }
-  }, [formData.trackingNumber]);
+  // useEffect( async() => {
+  //   if (formData.trackingNumber) {
+  //     // JsBarcode(barcodeRef.current, cleanTrackingNumber, {
+  //     //   format: "CODE128",
+  //     //   lineColor: "black",
+  //     //   width: 1.75,
+  //     //   height: 80,
+  //     //   margin: 0, // Remove padding/margin around barcode
+  //     //   flat: true, // Ensures no extra white space around barcode
+  //     //   displayValue: false
+  //     // });
+  //     await fetch(`https://my.labelscheap.com/api/barcode.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=14784&tracking=${cleanTrackingNumber}&sf=3&ms=r&md=0.8`)
+  //   .then(response => response.json())
+  //   .then(data => {
+  //       if (data.barcode_url) {
+  //           console.log("Barcode URL:", data.barcode_url);
+  //           barcodeRef.current(data.barcode_url)
+  //       } else {
+  //           console.error("Error:", data.error);
+  //       }
+  //   })
+  //   .catch(error => console.error("Error:", error));
+  //   }
+  // }, [formData.trackingNumber]);
 
- 
+  useEffect(() => {
+    const fetchBarcode = async () => {
+      // setLoading(true); // Set loading to true
+      const cleanTrackingNumber = formData.trackingNumber.trim(); // Clean the tracking number
+
+      try {
+        const response = await fetch(
+          `https://my.labelscheap.com/api/barcode.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=14784&tracking=${cleanTrackingNumber}&sf=3&ms=r&md=0.8`
+        );
+
+        const data = await response.json(); // Parse the response as JSON
+
+        if (data.barcode_url) {
+          console.log("Barcode URL:", data.barcode_url);
+          barcodeRef.current.src = data.barcode_url; // Set the barcode URL as the image source
+        } else {
+          console.error("Error:", data.error);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } 
+    };
+
+    fetchBarcode(); // Call the fetch function
+  }, [formData.trackingNumber]);
 
   const generateBarcode = (canvasRef) => {
     if (formData.trackingNumber && canvasRef) {
@@ -161,8 +185,8 @@ USPS PRIORITY MAIL<sup>®</sup>
             </div></div></div>
         <div class="barcode">
             <div class="tracking_heading">USPS TRACKING # - EP</div>
-      <svg ref={barcodeRef}></svg>
-      <img src='https:\/\/my.labelscheap.com\/api\/g_barcode.php?f=png&s=ean-128&d=42014784%1D9200191742300244839837&sf=3&ms=r&md=0.8'></img>
+      {/* <svg ref={barcodeRef}></svg> */}
+      <img ref={barcodeRef} alt="Barcode" style={{ display: 'block', margin: '20px auto' }} />
             <div id="tracking-number">{formattedTracking}</div>
         </div>
 
