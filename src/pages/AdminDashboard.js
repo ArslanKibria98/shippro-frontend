@@ -53,7 +53,7 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleUpdateUser = async (userId, newStatus, newBalance, newIsDealer, newCarriers) => {
+    const handleUpdateUser = async (userId, newStatus, newBalance, newIsDealer, newCarriers, newRate) => {
         try {
             const originalUser = originalUsers.find((u) => u._id === userId);
 
@@ -97,6 +97,15 @@ const AdminDashboard = () => {
                 );
             }
 
+            // Update rate if changed
+            if (parseFloat(newRate) !== originalUser.rate) {
+                await axios.put(
+                    `${process.env.REACT_APP_API_URL}/api/admin/${userId}/rate`,
+                    { rate: parseFloat(newRate) },
+                    { headers: { Authorization: `Bearer ${user.token}` } }
+                );
+            }
+
             alert("User updated successfully!");
             fetchUsers(); // Refresh user list after update
         } catch (error) {
@@ -121,6 +130,7 @@ const AdminDashboard = () => {
                         <th>Status</th>
                         <th>Available Balance</th>
                         <th>Is Dealer</th>
+                        <th>Rate</th>
                         <th>Carriers (Enable/Disable)</th>
                         <th>Actions</th>
                     </tr>
@@ -178,6 +188,21 @@ const AdminDashboard = () => {
                                 </select>
                             </td>
                             <td>
+                                <input
+                                    type="number"
+                                    value={user.rate}
+                                    onChange={(e) =>
+                                        setUsers((prevUsers) =>
+                                            prevUsers.map((u) =>
+                                                u._id === user._id
+                                                    ? { ...u, rate: e.target.value }
+                                                    : u
+                                            )
+                                        )
+                                    }
+                                />
+                            </td>
+                            <td>
                                 {user.allowedCarriers.map((carrier, index) => (
                                     <div key={carrier.carrier}>
                                         <label>
@@ -212,7 +237,8 @@ const AdminDashboard = () => {
                                             user.status,
                                             user.availableBalance,
                                             user.isDealer,
-                                            user.allowedCarriers
+                                            user.allowedCarriers,
+                                            user.rate
                                         )
                                     }
                                 >
