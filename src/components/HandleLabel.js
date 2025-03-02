@@ -17,26 +17,26 @@ const HandleLabel = ({ formData }) => {
  var formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
   useEffect(() => {
     if (formData.trackingNumber) {
-      // JsBarcode(barcodeRef.current, cleanTrackingNumber, {
-      //   format: "CODE128",
-      //   lineColor: "black",
-      //   width: 1.75,
-      //   height: 80,
-      //   margin: 0, // Remove padding/margin around barcode
-      //   flat: true, // Ensures no extra white space around barcode
-      //   displayValue: false
-      // });
-      fetch(`https://my.labelscheap.com/api/barcode.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=14784&tracking=${cleanTrackingNumber}&sf=3&ms=r&md=0.8`)
-    .then(response => response.json())
-    .then(data => {
-        if (data.barcode_url) {
-            console.log("Barcode URL:", data.barcode_url);
-            barcodeRef.current(data.barcode_url)
-        } else {
-            console.error("Error:", data.error);
-        }
-    })
-    .catch(error => console.error("Error:", error));
+      JsBarcode(barcodeRef.current, cleanTrackingNumber, {
+        format: "CODE128",
+        lineColor: "black",
+        width: 1.75,
+        height: 80,
+        margin: 0, // Remove padding/margin around barcode
+        flat: true, // Ensures no extra white space around barcode
+        displayValue: false
+      });
+    //   fetch(`https://my.labelscheap.com/api/barcode.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=14784&tracking=${cleanTrackingNumber}&sf=3&ms=r&md=0.8`)
+    // .then(response => response.json())
+    // .then(data => {
+    //     if (data.barcode_url) {
+    //         console.log("Barcode URL:", data.barcode_url);
+    //         barcodeRef.current(data.barcode_url)
+    //     } else {
+    //         console.error("Error:", data.error);
+    //     }
+    // })
+    // .catch(error => console.error("Error:", error));
     }
   }, [formData.trackingNumber]);
 
@@ -162,7 +162,7 @@ USPS PRIORITY MAIL<sup>®</sup>
         <div class="barcode">
             <div class="tracking_heading">USPS TRACKING # - EP</div>
       <svg ref={barcodeRef}></svg>
-      <img src={barcodeRef}></img>
+      <img src='https:\/\/my.labelscheap.com\/api\/g_barcode.php?f=png&s=ean-128&d=42014784%1D9200191742300244839837&sf=3&ms=r&md=0.8'></img>
             <div id="tracking-number">{formattedTracking}</div>
         </div>
 
