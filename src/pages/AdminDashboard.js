@@ -2,30 +2,38 @@ import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import Adminauth from "../context/Adminauth";
 import UploadShipments from "../components/UploadShipments";
+import Signup from "../components/signup";
+import Loader from "../components/Loader";
 
 const AdminDashboard = () => {
-    const { user } = useContext(Adminauth); // Get admin token
+    const { user, loading: authLoading, logout } = useContext(Adminauth); // Get admin token and loading state
     const [users, setUsers] = useState([]);
     const [originalUsers, setOriginalUsers] = useState([]); // Store original data for comparison
+    const [loading, setLoading] = useState(false); // Loader state
 
     useEffect(() => {
-        fetchUsers();
-    }, []);
+        // Fetch users only if the admin is authenticated (user.token exists)
+        if (user?.token) {
+            fetchUsers();
+        }
+    }, [user]); // Re-run effect when `user` changes
 
     const fetchUsers = async () => {
+        setLoading(true);
+
         try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users`, {
-                headers: { Authorization: `Bearer ${user?.token}` },
+                headers: { Authorization: `Bearer ${user.token}` },
             });
 
             // Ensure each user has USPS, UPS, and FedEx in their allowedCarriers
             const updatedUsers = res.data.map((u) => ({
                 ...u,
                 allowedCarriers: [
-                    { carrier: "USPS", status: false, ...u.allowedCarriers.find(c => c.carrier === "USPS") },
-                    { carrier: "USPS(Pre Shipment)", status: false, ...u.allowedCarriers.find(c => c.carrier === "USPS(Pre Shipment)") },
-                    { carrier: "UPS", status: false, ...u.allowedCarriers.find(c => c.carrier === "UPS") },
-                    { carrier: "FedEx", status: false, ...u.allowedCarriers.find(c => c.carrier === "FedEx") },
+                    { carrier: "USPS", status: false, ...u.allowedCarriers.find((c) => c.carrier === "USPS") },
+                    { carrier: "USPS(Pre Shipment)", status: false, ...u.allowedCarriers.find((c) => c.carrier === "USPS(Pre Shipment)") },
+                    { carrier: "UPS", status: false, ...u.allowedCarriers.find((c) => c.carrier === "UPS") },
+                    { carrier: "FedEx", status: false, ...u.allowedCarriers.find((c) => c.carrier === "FedEx") },
                 ],
             }));
 
@@ -33,7 +41,15 @@ const AdminDashboard = () => {
             setOriginalUsers(updatedUsers);
         } catch (error) {
             console.error("Error fetching users:", error.response?.data || error.message);
-            alert("Failed to fetch users.");
+            if (error.response?.status === 401) {
+                // Unauthorized (token expired or invalid)
+                alert("Session expired. Please log in again.");
+                logout(); // Log the admin out
+            } else {
+                alert("Failed to fetch users.");
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -46,7 +62,7 @@ const AdminDashboard = () => {
                 await axios.put(
                     `${process.env.REACT_APP_API_URL}/api/admin/users/${userId}/status`,
                     { status: newStatus },
-                    { headers: { Authorization: `Bearer ${user?.token}` } }
+                    { headers: { Authorization: `Bearer ${user.token}` } }
                 );
             }
 
@@ -55,7 +71,7 @@ const AdminDashboard = () => {
                 await axios.put(
                     `${process.env.REACT_APP_API_URL}/api/admin/users/${userId}/balance`,
                     { availableBalance: parseFloat(newBalance) },
-                    { headers: { Authorization: `Bearer ${user?.token}` } }
+                    { headers: { Authorization: `Bearer ${user.token}` } }
                 );
             }
 
@@ -64,7 +80,7 @@ const AdminDashboard = () => {
                 await axios.put(
                     `${process.env.REACT_APP_API_URL}/api/admin/${userId}/is-dealer`,
                     { isDealer: newIsDealer },
-                    { headers: { Authorization: `Bearer ${user?.token}` } }
+                    { headers: { Authorization: `Bearer ${user.token}` } }
                 );
             }
 
@@ -77,7 +93,7 @@ const AdminDashboard = () => {
                 await axios.put(
                     `${process.env.REACT_APP_API_URL}/api/admin/${userId}/carriers`,
                     { allowedCarriers: newCarriers },
-                    { headers: { Authorization: `Bearer ${user?.token}` } }
+                    { headers: { Authorization: `Bearer ${user.token}` } }
                 );
             }
 
@@ -88,6 +104,11 @@ const AdminDashboard = () => {
             alert("Failed to update user.");
         }
     };
+
+    // Show loader if auth is still loading or users are being fetched
+    if (authLoading || loading) {
+        return <Loader />;
+    }
 
     return (
         <div>
@@ -203,6 +224,7 @@ const AdminDashboard = () => {
                 </tbody>
             </table>
             <UploadShipments />
+            <Signup onSignupSuccess={fetchUsers} />
         </div>
     );
 };

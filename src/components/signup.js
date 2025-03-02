@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
-const Signup = () => {
+const Signup = ({ onSignupSuccess }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -13,7 +13,9 @@ const Signup = () => {
         e.preventDefault();
         const success = await signup(name, email, password);
         if (success) {
-            navigate("/login");
+           alert('user Added Successfully')
+           if (onSignupSuccess) onSignupSuccess();
+
         }
     };
 

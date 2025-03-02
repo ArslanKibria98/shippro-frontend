@@ -58,11 +58,11 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
   <div  className="mt-6 border p-4 bg-gray-100">
   <div class="label-container" id="label" ref={ref}>
           <div class="header">
-              <div id="large-letter" class="large-letter">{formData.labelType === 'GROUND ADVANTAGE' ? 'G' : 'P'}
+              <div id="large-letter" class="large-letter">{formData.labelType == 'ground_advantage' ? 'G' : 'P'}
               </div>
               <div>
               <div class="label_reference">
-                <span id="label_reference_type">{formData.labelType === 'GROUND ADVANTAGE' ? 'USPS GROUND ADVANTAGE' : 'PRIORITY MAIL'} </span><br></br>
+                <span id="label_reference_type">{formData.labelType == 'ground_advantage' ? 'USPS GROUND ADVANTAGE' : 'PRIORITY MAIL'} </span><br></br>
                   U.S. POSTAGE PAID<br></br>
                   <span id="vendor_brand">{formData.vendor}</span><br></br>
                   e-Postage 
@@ -70,7 +70,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
               <span id="additional_info">{formData.vendor == 'Shippo' ? 'Cubic':''}</span>
           </div>
           </div>
-          <h3 class="label_type">{formData.labelType === 'GROUND ADVANTAGE' ? (
+          <h3 class="label_type">{formData.labelType == 'ground_advantage' ? (
     <>
       GROUND ADVANTAGE<sup>TM</sup>
     </>

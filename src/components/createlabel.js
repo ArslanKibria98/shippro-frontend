@@ -90,33 +90,35 @@ const CreateLabel = () => {
     
       try {
         const labelData = { ...formData, userId: loginUser.id };
+         // const pullTracking = fetch("https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&class=ground_advantage&count=5")
+        // .then(response => response.json())
+        // .then(data => console.log(data))
+        // .catch(error => console.error('Error:', error));
+        //   const pulledTrackingNumber = pullTracking;
+        //   console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
 
-        // const pullResponse = await fetch(`http://localhost:5000/api/admin/pull/shipts`, {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         Authorization: `Bearer ${user.token}`
-        //       },
-        //     body: JSON.stringify({
-        //       labelType: formData.labelType,
-        //       carrier: formData.carrier,
-        //     })
-        //   });
+        const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${user.token}`
+              },
+            body: JSON.stringify({
+              labelType: formData.labelType,
+              carrier: formData.carrier.toLowerCase(),
+            })
+          });
         
-        //   // Check if the pull call succeeded
-        //   if (!pullResponse.ok) {
-        //     const errText = await pullResponse.text();
-        //     throw new Error(`Pull shipment error: ${errText}`);
-        //   }
+          // Check if the pull call succeeded
+          if (!pullResponse.ok) {
+            const errText = await pullResponse.text();
+            alert(errText)
+            // throw new Error(`Pull shipment error: ${errText}`);
+          }
         
-        //   // Parse the shipment data
-        //   const shipmentResult = await pullResponse.json();
-        const pullTracking = fetch("https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&class=ground_advantage&count=5")
-        .then(response => response.json())
-        console.log(response.json)
-        .then(data => console.log('name cheap',data))
-        .catch(error => console.error('Error:', error));
-          const pulledTrackingNumber = pullTracking;
+          // Parse the shipment data
+          const shipmentResult = await pullResponse.json();
+          const pulledTrackingNumber = shipmentResult.shipment.tracking;
           console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
       
           // Update state with the pulled tracking number so it's available for preview/download
@@ -174,7 +176,7 @@ const CreateLabel = () => {
         }
       } catch (error) {
         console.error("Error generating label:", error);
-        alert("An error occurred while generating the label.");
+        // alert("An error occurred while generating the label.");
       }
     };
     const handleCarrierChange = (e) => {
@@ -258,8 +260,8 @@ const CreateLabel = () => {
                         <option value="" disabled>
                             --- Select Label Type ---
                         </option>
-                        <option value="GROUND ADVANTAGE">GROUND ADVANTAGE</option>
-                        <option value="USPS PRIORITY MAIL">PRIORITY MAIL</option>
+                        <option value="ground_advantage">GROUND ADVANTAGE</option>
+                        <option value="priority_mail">PRIORITY MAIL</option>
                     </select>
                     <h3 className="font-semibold">Sender Information</h3>
                     <input

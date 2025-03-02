@@ -2,6 +2,7 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import Loader from "./Loader";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -29,7 +30,9 @@ const Login = () => {
             env file:{process.env.REACT_APP_API_URL}
             <form onSubmit={handleLogin}>
                 <div>
+                    <Loader/>
                 <input
+
                     type="email"
                     placeholder="Email"
                     value={email}
