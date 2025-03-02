@@ -90,24 +90,24 @@ const CreateLabel = () => {
     
       try {
         const labelData = { ...formData, userId: loginUser.id };
-         // const pullTracking = fetch("https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&class=ground_advantage&count=5")
-        // .then(response => response.json())
-        // .then(data => console.log(data))
-        // .catch(error => console.error('Error:', error));
-        //   const pulledTrackingNumber = pullTracking;
-        //   console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+         const pullResponse = fetch("https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&class=ground_advantage&count=1")
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+          // const pulledTrackingNumber = pullTracking;
+          console.log("Retrieved shipment trackingNumber by name cheap:", pullResponse);
 
-        const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${user.token}`
-              },
-            body: JSON.stringify({
-              labelType: formData.labelType,
-              carrier: formData.carrier.toLowerCase(),
-            })
-          });
+        // const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: `Bearer ${user.token}`
+        //       },
+        //     body: JSON.stringify({
+        //       labelType: formData.labelType,
+        //       carrier: formData.carrier.toLowerCase(),
+        //     })
+        //   });
         
           // Check if the pull call succeeded
           if (!pullResponse.ok) {
