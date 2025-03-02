@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -32,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       }, []);
       const fetchUser = async (token) => {
         try {
-          const response = await fetch("https://ship-label.onrender.com/api/auth/user", {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/user`, {
             headers: {
               "Authorization": `Bearer ${token}`,
               "Content-Type": "application/json"
@@ -56,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     // Login function
     const login = async (email, password) => {
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { email, password });
             const { token, userData } = res.data;
             localStorage.setItem("token", token);
             setUser({ token, ...userData });
@@ -71,7 +72,7 @@ export const AuthProvider = ({ children }) => {
     // Signup function
     const signup = async (name, email, password) => {
         try {
-            await axios.post("http://localhost:5000/api/auth/signup", { name, email, password });
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/signup`, { name, email, password });
             return true;
         } catch (err) {
             console.error("Signup failed", err.response.data);

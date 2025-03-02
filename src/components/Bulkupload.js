@@ -62,7 +62,7 @@ const BulkUpload = () => {
         };
 
         try {
-          const response = await fetch(`https://ship-label.onrender.com/api/auth/bulk-generate-label/${user.id}`, {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/bulk-generate-label/${user.id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -102,7 +102,7 @@ const BulkUpload = () => {
       setGeneratedLabels(newLabels); // Update state with generated labels
       const bulkId = Date.now().toString();
 try {
-  const response = await fetch(`https://ship-label.onrender.com/api/auth/add-bulk-label-history/${user.id}`, {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/add-bulk-label-history/${user.id}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

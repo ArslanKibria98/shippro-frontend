@@ -26,6 +26,7 @@ const Login = () => {
 <div className="login_body">
     <div className="login_Container">
             <h2>User Login</h2>
+            env file:{process.env.REACT_APP_API_URL}
             <form onSubmit={handleLogin}>
                 <div>
                 <input

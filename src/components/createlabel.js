@@ -20,7 +20,7 @@ const CreateLabel = () => {
             try {
                 if (!user?.id) return; // Ensure user is loaded
 
-                const response = await fetch(`https://ship-label.onrender.com/api/auth/allowed-carriers/${user.id}`, {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/allowed-carriers/${user.id}`, {
                     headers: { "Authorization": `Bearer ${user.token}` }
                 });
 
@@ -74,29 +74,9 @@ const CreateLabel = () => {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-    useEffect(() => {
-        // Only call the API if carrier and labelType are filled out
-        if (formData.carrier && formData.labelType) {
-          const params = {
-            user_name: "sarim",
-            api_key: "4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca",
-            class: formData.labelType.toLowerCase(),
-            count: 1,
-          };
-    
-          axios
-            .get("https://my.labelscheap.com/api/generate_tracking.php", { params })
-            .then((response) => {
-              console.log("API response:", response.data);
-              // Assuming the response has a property 'trackingNumber'
-              const pulledTrackingNumber = response.data.trackingNumber;
-              setTrackingNumber(pulledTrackingNumber);
-              // Also update formData with the pulled tracking number
-              setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
-            })
-            .catch((error) => console.error("Error:", error));
-        }
-      }, [formData.carrier, formData.labelType]);
+
+
+   
     
     const handleGenerateLabel = async () => {
       console.log("Token being sent:", loginUser.token);
@@ -111,27 +91,32 @@ const CreateLabel = () => {
       try {
         const labelData = { ...formData, userId: loginUser.id };
 
-        const pullResponse = await fetch(`https://ship-label.onrender.com/api/admin/pull/shipts`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${user.token}`
-              },
-            body: JSON.stringify({
-              labelType: formData.labelType,
-              carrier: formData.carrier,
-            })
-          });
+        // const pullResponse = await fetch(`http://localhost:5000/api/admin/pull/shipts`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: `Bearer ${user.token}`
+        //       },
+        //     body: JSON.stringify({
+        //       labelType: formData.labelType,
+        //       carrier: formData.carrier,
+        //     })
+        //   });
         
-          // Check if the pull call succeeded
-          if (!pullResponse.ok) {
-            const errText = await pullResponse.text();
-            throw new Error(`Pull shipment error: ${errText}`);
-          }
+        //   // Check if the pull call succeeded
+        //   if (!pullResponse.ok) {
+        //     const errText = await pullResponse.text();
+        //     throw new Error(`Pull shipment error: ${errText}`);
+        //   }
         
-          // Parse the shipment data
-          const shipmentResult = await pullResponse.json();
-          const pulledTrackingNumber = shipmentResult.shipment.tracking;
+        //   // Parse the shipment data
+        //   const shipmentResult = await pullResponse.json();
+        const pullTracking = fetch("https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&class=ground_advantage&count=5")
+        .then(response => response.json())
+        console.log(response.json)
+        .then(data => console.log('name cheap',data))
+        .catch(error => console.error('Error:', error));
+          const pulledTrackingNumber = pullTracking;
           console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
       
           // Update state with the pulled tracking number so it's available for preview/download
@@ -141,7 +126,7 @@ const CreateLabel = () => {
         //   console.log("Retrieved shipment trackingNumber:", trackingNumber);
 
         // Call API to update both balance and labels in one request
-        const response = await fetch(`https://ship-label.onrender.com/api/auth/generate-label/${loginUser.id}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/generate-label/${loginUser.id}`, {
           method: "PUT",
           headers: {
               "Content-Type": "application/json",

@@ -31,7 +31,7 @@ const UploadShipments = () => {
           console.log("Parsed rows:", rows);
 
           // Send the rows to your backend
-          const response = await fetch("https://ship-label.onrender.com/api/admin/upload-shipments", {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/upload-shipments`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

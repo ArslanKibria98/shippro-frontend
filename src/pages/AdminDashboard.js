@@ -14,7 +14,7 @@ const AdminDashboard = () => {
 
     const fetchUsers = async () => {
         try {
-            const res = await axios.get("https://ship-label.onrender.com/api/admin/users", {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users`, {
                 headers: { Authorization: `Bearer ${user?.token}` },
             });
 
@@ -44,7 +44,7 @@ const AdminDashboard = () => {
             // Update status if changed
             if (newStatus !== originalUser.status) {
                 await axios.put(
-                    `http://localhost:5000/api/admin/users/${userId}/status`,
+                    `${process.env.REACT_APP_API_URL}/api/admin/users/${userId}/status`,
                     { status: newStatus },
                     { headers: { Authorization: `Bearer ${user?.token}` } }
                 );
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
             // Update balance if changed
             if (parseFloat(newBalance) !== originalUser.availableBalance) {
                 await axios.put(
-                    `http://localhost:5000/api/admin/users/${userId}/balance`,
+                    `${process.env.REACT_APP_API_URL}/api/admin/users/${userId}/balance`,
                     { availableBalance: parseFloat(newBalance) },
                     { headers: { Authorization: `Bearer ${user?.token}` } }
                 );
@@ -62,7 +62,7 @@ const AdminDashboard = () => {
             // Update isDealer status if changed
             if (newIsDealer !== originalUser.isDealer) {
                 await axios.put(
-                    `http://localhost:5000/api/admin/${userId}/is-dealer`,
+                    `${process.env.REACT_APP_API_URL}/api/admin/${userId}/is-dealer`,
                     { isDealer: newIsDealer },
                     { headers: { Authorization: `Bearer ${user?.token}` } }
                 );
@@ -75,7 +75,7 @@ const AdminDashboard = () => {
 
             if (changedCarriers.length > 0) {
                 await axios.put(
-                    `http://localhost:5000/api/admin/${userId}/carriers`,
+                    `${process.env.REACT_APP_API_URL}/api/admin/${userId}/carriers`,
                     { allowedCarriers: newCarriers },
                     { headers: { Authorization: `Bearer ${user?.token}` } }
                 );
