@@ -40,8 +40,8 @@ const HandleLabel = async ({ formData }) => {
   //   }
   // }, [formData.trackingNumber]);
 
-  useEffect(() => {
-    const fetchBarcode = async () => {
+  useEffect( async() => {
+    
       // setLoading(true); // Set loading to true
       const cleanTrackingNumber = formData.trackingNumber.trim(); // Clean the tracking number
 
@@ -61,9 +61,9 @@ const HandleLabel = async ({ formData }) => {
       } catch (error) {
         console.error("Error:", error);
       } 
-    };
+  
 
-    fetchBarcode(); // Call the fetch function
+    // fetchBarcode(); // Call the fetch function
   }, [formData.trackingNumber]);
 
   const generateBarcode = (canvasRef) => {
