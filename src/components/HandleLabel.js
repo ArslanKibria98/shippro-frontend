@@ -162,6 +162,7 @@ USPS PRIORITY MAIL<sup>®</sup>
         <div class="barcode">
             <div class="tracking_heading">USPS TRACKING # - EP</div>
       <svg ref={barcodeRef}></svg>
+      <img src={barcodeRef}></img>
             <div id="tracking-number">{formattedTracking}</div>
         </div>
 
