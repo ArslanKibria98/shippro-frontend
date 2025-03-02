@@ -115,9 +115,10 @@ const CreateLabel = () => {
           // }
         
           // Parse the shipment data
-          const shipmentResult = await apiResponse.json();
-          console.log('shipment Response',shipmentResult)
-          const pulledTrackingNumber = shipmentResult.tracking;
+          const data = await apiResponse.json();
+          // const shipmentResult = ;
+          // console.log('shipment Response',shipmentResult)
+          const pulledTrackingNumber = data.tracking_numbers[0];
           console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
       
           // Update state with the pulled tracking number so it's available for preview/download
