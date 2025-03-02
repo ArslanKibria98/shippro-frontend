@@ -90,13 +90,10 @@ const CreateLabel = () => {
     
       try {
         const labelData = { ...formData, userId: loginUser.id };
-        
-         const pullResponse = fetch("https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=rollo&class=ground_advantage&count=1")
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
+        const apiResponse = await fetch("https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=rollo&class=ground_advantage&count=1");
+        // const data = await apiResponse.json();
           // const pulledTrackingNumber = pullTracking;
-          console.log("Retrieved shipment trackingNumber by name cheap:", pullResponse);
+          // console.log("Retrieved shipment trackingNumber by name cheap:", pullResponse);
 
         // const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
         //     method: "POST",
@@ -111,14 +108,15 @@ const CreateLabel = () => {
         //   });
         
           // Check if the pull call succeeded
-          if (!pullResponse.ok) {
-            const errText = await pullResponse.text();
-            alert(errText)
-            // throw new Error(`Pull shipment error: ${errText}`);
-          }
+          // if (!pullResponse.ok) {
+          //   const errText = await pullResponse.text();
+          //   alert(errText)
+          //   // throw new Error(`Pull shipment error: ${errText}`);
+          // }
         
           // Parse the shipment data
-          const shipmentResult = await pullResponse.json();
+          const shipmentResult = await apiResponse.json();
+          console.log('shipment Response',shipmentResult)
           const pulledTrackingNumber = shipmentResult.tracking;
           console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
       
