@@ -14,20 +14,36 @@ const HandleLabel = ({ formData }) => {
   const formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
 
   // Barcode generation for CODE128
-  useEffect(() => {
-    if (formData.trackingNumber) {
-      JsBarcode(barcodeRef.current, cleanTrackingNumber, {
-        format: "CODE128",
-        lineColor: "black",
-        width: 1.93,
-        height: 80,
-        margin: 0,
-        displayValue: false,
-      });
-    }
-  }, [formData.trackingNumber]);
+  // useEffect(() => {
+  //   if (formData.trackingNumber) {
+  //     JsBarcode(barcodeRef.current, cleanTrackingNumber, {
+  //       format: "CODE128",
+  //       lineColor: "black",
+  //       width: 1.93,
+  //       height: 80,
+  //       margin: 0,
+  //       displayValue: false,
+  //     });
+  //   }
+  // }, [formData.trackingNumber]);
+
+  fetch(`https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=14784&tracking=${formData.trackingNumber}&sf=3&ms=r&md=0.8`)
+  .then(response => response.json())
+  .then(data => {
+      if (data.barcode_url) {
+          console.log("Barcode URL:", data.barcode_url);
+          barcodeRef.current = data.barcode_url;
+
+      } else {
+          console.error("Error:", data.error);
+      }
+  })
+  .catch(error => console.error("Error:", error));
 
   // Barcode generation for DataMatrix
+
+    
+
   const generateBarcode = (canvasRef) => {
     if (formData.trackingNumber && canvasRef) {
       try {

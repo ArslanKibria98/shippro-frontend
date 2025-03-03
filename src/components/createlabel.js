@@ -146,7 +146,10 @@ const CreateLabel = () => {
           // const pulledTrackingNumber = shipmentResult.shipment.tracking;
           setFormData(prev => ({ ...prev, trackingNumber: pulledTrackingNumber }));
       
-          console.log("Retrieved shipment trackingNumber:", trackingNumber);
+          console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+
+
+   
 
         // Call API to update both balance and labels in one request
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/generate-label/${loginUser.id}`, {
