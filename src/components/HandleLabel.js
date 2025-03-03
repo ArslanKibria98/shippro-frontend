@@ -9,10 +9,10 @@ const HandleLabel = ({ formData }) => {
   const barcodeRef = useRef(null);
   const sbarcode = useRef(null);
   const sbarcode1 = useRef(null);
+  var barcodeImg;
 
   const cleanTrackingNumber = formData.trackingNumber.replace(/\s+/g, '');
   const formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
-
   // Barcode generation for CODE128
   // useEffect(() => {
   //   if (formData.trackingNumber) {
@@ -30,15 +30,17 @@ const HandleLabel = ({ formData }) => {
 
   useEffect(() => {
   if (formData.trackingNumber) {
-  fetch(`https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=14784&tracking=${formData.trackingNumber}&sf=3&ms=r&md=0.8`)
+  fetch(`https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${formData.trackingNumber}&sf=3&ms=r&md=0.8`)
   .then(response => response.json())
   .then(data => {
           console.log("Barcode URL:", data);
-          barcodeRef.current = data.barcode_data_url;
+          barcodeImg = data.barcode_data_url;
   })
   .catch(error => console.error("Error:", error));
 }
 }, [formData.trackingNumber]);
+
+ 
 
   // Barcode generation for DataMatrix
 
@@ -134,7 +136,8 @@ const HandleLabel = ({ formData }) => {
             </div>
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # - EP</div>
-              <svg ref={barcodeRef}></svg>
+              {/* <svg ref={barcodeRef}></svg> */}
+               <img src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
             <div className="end_label_container">
@@ -184,7 +187,7 @@ const HandleLabel = ({ formData }) => {
                   <br />
                 </div>
                 <div className="parcel_info">
-                   Mailed From: 22305 <br />
+                   Mailed From: {formData.senderZip} <br />
                   WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
                 </div>
               </div>
@@ -193,7 +196,7 @@ const HandleLabel = ({ formData }) => {
               To:
                 <div>
                   {formData.recipientName}<br />
-                  {formData.recipientAddress}<br />
+                  {formData.recipientAddress} {formData.recipientAddress1}<br />
                   {formData.recipientCity}, {formData.recipientState}, {formData.recipientZip}<br />
                   <br />
                 </div>
@@ -201,7 +204,7 @@ const HandleLabel = ({ formData }) => {
             </div>
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # - EP</div>
-              <svg ref={barcodeRef}></svg>
+              <img src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
           </div>
@@ -262,7 +265,7 @@ const HandleLabel = ({ formData }) => {
             </div>
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # eVS</div>
-              <svg ref={barcodeRef}></svg>
+              <img src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
           </div>
@@ -316,7 +319,7 @@ const HandleLabel = ({ formData }) => {
             </div>
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # - EP</div>
-              <svg ref={barcodeRef}></svg>
+              <img src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
             <div className="end_label_container">

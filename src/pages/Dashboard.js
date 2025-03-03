@@ -31,14 +31,14 @@ const Dashboard = () => {
             <div style={{display:"flex", gap:'20px'}}>
             <div className="dash_box">
                <div className="dashbox_icon"> <FaDollarSign /></div>
-               <div className="dashbox_stat">{user.availableBalance}</div>
+               <div className="dashbox_stat">{Math.round(user.availableBalance * 10) / 10}</div>
 
                 <div  className="dashbox_heading" > 
                 Current Balance: </div>
             </div>
             <div className="dash_box" id="dash_box2">
             <div className="dashbox_icon"> <FaDollarSign /></div>
-            <div className="dashbox_stat"> {user.totalGeneratedLabels}</div>
+            <div className="dashbox_stat"> {Math.round(user.totalGeneratedLabels* 10) / 10}</div>
                 <div  className="dashbox_heading">Total Spent:</div>
                 </div>
             <div className="dash_box" >
