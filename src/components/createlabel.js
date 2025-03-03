@@ -101,44 +101,48 @@ const CreateLabel = () => {
     
       try {
         const labelData = { ...formData, userId: loginUser.id };
-        const apiResponse = await fetch("https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=rollo&class=ground_advantage&count=1");
-        const data = await apiResponse.json();
-        const pulledTrackingNumber = data.tracking_numbers[0];
-        console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+        // const apiResponse = await fetch(`https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${formData.vendor}&class=${formData.labelType}&count=1`);
+        // const data = await apiResponse.json();
+        // const pulledTrackingNumber = data.tracking_numbers[0];
+        // console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+
+
+
+
+        
         // ///locally call api for tracking get from sheet
         // const data = await apiResponse.json();
         //   const pulledTrackingNumber = pullTracking;
         //   console.log("Retrieved shipment trackingNumber by name cheap:", pullResponse);
 
-        // const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         Authorization: `Bearer ${user.token}`
-        //       },
-        //     body: JSON.stringify({
-        //       labelType: formData.labelType,
-        //       carrier: formData.carrier.toLowerCase(),
-        //     })
-        //   });
+        const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${user.token}`
+              },
+            body: JSON.stringify({
+              labelType: formData.labelType,
+              carrier: formData.carrier.toLowerCase(),
+            })
+          });
         
         //   // Check if the pull call succeeded
-        //   if (!pullResponse.ok) {
-        //     const errText = await pullResponse.text();
-        //     alert(errText)
-        //     // throw new Error(`Pull shipment error: ${errText}`);
-            
-        //   }
-        //   const shipmentResult = await pullResponse.json();
-        //   var pulledTrackingNumber;
-        //   if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
-        //      pulledTrackingNumber = shipmentResult.shipment.tracking;
-        //     setFormData(prev => ({ ...prev, trackingNumber: pulledTrackingNumber }));
-        //     setTrackingNumber(pulledTrackingNumber);
-        //   } else {
-        //     console.error('Invalid shipment data:', shipmentResult);
-        //     alert('Failed to retrieve tracking number.');
-        //   }
+          if (!pullResponse.ok) {
+            const errText = await pullResponse.text();
+            alert(errText)
+            throw new Error(`Pull shipment error: ${errText}`);
+          }
+          const shipmentResult = await pullResponse.json();
+          var pulledTrackingNumber;
+          if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
+             pulledTrackingNumber = shipmentResult.shipment.tracking;
+            setFormData(prev => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+            setTrackingNumber(pulledTrackingNumber);
+          } else {
+            console.error('Invalid shipment data:', shipmentResult);
+            alert('Failed to retrieve tracking number.');
+          }
           
       
           // Update state with the pulled tracking number so it's available for preview/download
