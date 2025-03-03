@@ -96,9 +96,10 @@ const CreateLabel = () => {
     
       try {
         const labelData = { ...formData, userId: loginUser.id };
-        console.log(formData.vendor)
+        const apiVendor = (formData.vendor).toLowerCase()
+        console.log(apiVendor);
         console.log(formData.labelType)
-        const apiResponse = await fetch(`https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${formData.vendor}&class=${formData.labelType}&count=1`);
+        const apiResponse = await fetch(`https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`);
         const data = await apiResponse.json();
         const pulledTrackingNumber = data.tracking_numbers[0];
         console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
