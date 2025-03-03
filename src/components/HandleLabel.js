@@ -27,9 +27,7 @@ const HandleLabel = ({ formData }) => {
   //   }
   // }, [formData.trackingNumber]);
 
-  fetch(`https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=14784&tracking=${formData.trackingNumber}&sf=3&ms=r&md=0.8`, {
-    mode: "no-cors", // Disable CORS
-  })
+  fetch(`https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=14784&tracking=${formData.trackingNumber}&sf=3&ms=r&md=0.8`)
   .then(response => response.json())
   .then(data => {
       if (data.barcode_url) {

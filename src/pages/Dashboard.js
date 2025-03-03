@@ -22,8 +22,7 @@ const Dashboard = () => {
     return (
         <>
                 <div><Dashboardhead /></div>
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAjQAAAB8AgMAAAADccK4AAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAwElEQVR4nO3OwQ2CQBAF0MFkE+Kdu6VQAgemIQvybEmW4ewSbcCT5E0I+Rn+si/CGHPumXLdY8ktMnPaKiy1yVyjrdPnncezxWgendxbHRynMqvWv7ZaZn2tWoxcnQq9EEvvt96Mcd3eNzlyv5GGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhobmrzTmrHN5fuPt+oqYHzFXHIv7T39+A+RZQVm1xhNNAAAAAElFTkSuQmCC" alt="base 64"></img>
-
+               
         <div className="container">
 
         <div className="dashboard_Sec">
