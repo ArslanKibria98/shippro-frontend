@@ -154,18 +154,35 @@ a{
 
 .dashboard_Sec{
     display: flex;
-    gap: 40px;
+    gap: 24px;
+    height: 100vh;
     margin-top: 50px;
 }
 .dashboard_left{
-    background-color: black;
-    padding: 5px;
+    height: 100%;
+    padding: 10px 0px;
 }
+.create_sec_heading{
+  background: black;
+    margin-bottom: 24px;
+    color: white;
+    padding: 10px 7px;
+    border-radius: 4px;
+}
+.form_heading{
+  font-size: 20px;
+    color: var(--theme_color);
+    padding: 10px;
+    padding-top: 0px;
+}
+/* .dashboard_right{
+    flex: 0 0 100%;
+} */
 /* HTML: <div class="loader"></div> */
 .loader {
   width: 50px;
   aspect-ratio: 1;
-  --_c:no-repeat radial-gradient(farthest-side,#25b09b 92%,#0000);
+  --_c:no-repeat radial-gradient(farthest-side,var(--theme_color) 92%,#0000);
   background: 
     var(--_c) top,
     var(--_c) left,
@@ -188,28 +205,159 @@ a{
     border-radius: 3px;
     display: block;
 }
+.dashbox_icon{
+  font-size: 18px;
+}
+.dashbox_heading{
+  font-size: 14px;
+}
+.dashbox_stat{
+  font-size: 22px;
+  font-weight: bold;
+}
 .dash_box{
     display: flex;
     flex-direction: column;
-    border: 1px solid gray;
+    gap: 6px;
     padding: 20px;
+     height: 130px;
+    flex: 0 0 31.5%;
+    background-color: var(--theme_color);
+    color: #fff!important;
     border-radius: 5px;
+}
+#dash_box2{
+  background-color: #000;
+}
+.historysec_heading{
+  color: #fff;
+    padding: 15px 10px;
+    margin-bottom: 24px;
+    background: #000;
+    border-radius: 6px;
+    font-size: 25px;
+}
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.download_button{
+  background: var(--theme_color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
+}
+.download_button:hover{
+  background-color: #000;
+}
+.styled-table th,
+.styled-table td {
+  width: 16.66%; /* 100% divided by 6 columns */
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #ddd; /* Add border to the bottom of each row */
+}
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+
+.page-item.active .page-link {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-button {
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  background-color: #f2f2f2;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.filter-button.active {
+  background-color:var(--theme_color);
+  color: white;
+  border-color: var(--theme_color);
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  background-color: #f2f2f2;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination-controls button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.styled-table th {
+  background-color: #000;
+    color: white;
+    padding: 10px; /* Optional: Add background color to header */
+}
+.dashboard_right{
+  width: 100%;
 }
 .dashboard_left ul li a{
     padding: 12px;
     color: #fff;
     /* background-color: rgb(98 97 97 / 44%); */
-    background: white;
+    /* background: white; */
     color: var(--theme_color);
     color: black;
     display: block;
     margin-bottom: 5px;
-    border-radius: 10px;
+    /* border-radius: 10px; */
     font-size: 14px;
+}
+
+.dashboard_left ul li a:hover,.dashboard_left ul li .active{
+  color: #f16821;
+  background-color: #ebebeb;
+}
+.dashboard_left ul li {
+  border-bottom: 1px solid;
 }
 
 .dashboard_left{
     border: 1px solid gray;
+    background-color: none!important;
     border-radius: 10px;
     flex: 0 0 25%;
 }
@@ -371,11 +519,262 @@ a{
       font-size: 12px;
       font-weight: 600;
   }
+
+
+  /* Dashboardhead.css */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo-container h4 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.user-icon-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.user-icon {
+  font-size: 32px;
+  color: #333;
+}
+
+.username {
+  margin-left: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -250px; /* Hide sidebar by default */
+  width: 250px;
+  height: 100vh;
+  background-color: #fff;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+}
+
+.sidebar.open {
+  right: 0; /* Show sidebar when open */
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-item:hover {
+  background-color: #f1f1f1;
+}
+
+.sidebar-icon {
+  font-size: 20px;
+  margin-right: 10px;
+  color: #333;
+}
+
+.sidebar-item span {
+  font-size: 16px;
+  color: #333;
+}/* Dashboardhead.css */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo-container h4 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.user-icon-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.user-icon {
+  font-size: 32px;
+  color: #333;
+}
+
+.username {
+  margin-left: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 100vh;
+  background-color: #fff;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%); /* Hide sidebar by default */
+  transition: transform 0.3s ease;
+  z-index: 1000; /* Ensure sidebar is above other content */
+}
+
+.sidebar.open {
+  transform: translateX(0); /* Show sidebar when open */
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-item:hover {
+  background-color: #f1f1f1;
+}
+
+.sidebar-icon {
+  font-size: 20px;
+  margin-right: 10px;
+  color: #333;
+}
+
+.sidebar-item span {
+  font-size: 16px;
+  color: #333;
+}
+
+/* Prevent horizontal scrollbar when sidebar is open */
+body.sidebar-open {
+  overflow-x: hidden;
+}
   /* .shippo-logo{
   width: 120px!important;
   display: none;
   } */
-  
+
+
+
+
+/* Container for the form */
+.form-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Each row in the form */
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Select elements */
+.form-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Input fields */
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Columns for sender and recipient information */
+.form-columns {
+  display: flex;
+  gap: 20px;
+}
+
+/* Each column */
+.form-column {
+  flex: 1;
+}
+
+/* Generate Label Button */
+.generate-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.generate-button:hover {
+  background-color: #0056b3;
+}
+.form-column select{
+    margin-left: 5px;
+}
+.evs_label .label_reference{
+  text-align: left;
+  font-weight: normal;
+  margin-top: 20px;
+  font-size: 11px;
+}
+.evs_label .header{
+  align-items: normal;
+}
+.evs_label .large-letter{
+  font-size: 105px;
+}
+.rollo_label{
+  border: 1.5px solid;
+  font-weight: bold;
+}
+.rollo_label .label_reference{
+  text-align: left;
+  font-weight: bold;
+}
+.rollo_label .end_label_container{
+  padding-top: 14px;
+}  
+.sidebar-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.close-icon {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.close-icon:hover {
+  color: #000;
+}
       </style>
     <title>React App</title>
   </head>

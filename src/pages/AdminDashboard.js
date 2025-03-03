@@ -67,10 +67,29 @@ const AdminDashboard = () => {
             }
 
             // Update balance if changed
-            if (parseFloat(newBalance) !== originalUser.availableBalance) {
+            if (parseFloat(newBalance) > originalUser.availableBalance) {
+                const updatedAvailableBalance = parseFloat(newBalance);
+                const updatedTotalDeposit = originalUser.totalDeposit + (updatedAvailableBalance - originalUser.availableBalance);
+
                 await axios.put(
                     `${process.env.REACT_APP_API_URL}/api/admin/users/${userId}/balance`,
-                    { availableBalance: parseFloat(newBalance) },
+                    { 
+                        availableBalance: updatedAvailableBalance,
+                        totalDeposit: updatedTotalDeposit
+                    },
+                    { headers: { Authorization: `Bearer ${user.token}` } }
+                );
+            }
+            if (parseFloat(newBalance) < originalUser.availableBalance) {
+                const updatedAvailableBalance = parseFloat(newBalance);
+                const updatedTotalDeposit = originalUser.totalDeposit - (originalUser.availableBalance - updatedAvailableBalance);
+
+                await axios.put(
+                    `${process.env.REACT_APP_API_URL}/api/admin/users/${userId}/balance`,
+                    { 
+                        availableBalance: updatedAvailableBalance,
+                        totalDeposit: updatedTotalDeposit
+                    },
                     { headers: { Authorization: `Bearer ${user.token}` } }
                 );
             }

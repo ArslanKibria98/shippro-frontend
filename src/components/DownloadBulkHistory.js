@@ -43,9 +43,9 @@ const DownloadBulkHistory = ({ labelDataList }) => {
 
   return (
     <div className="p-6 bg-white shadow-md rounded-lg mt-6">
-      <h2 className="text-lg font-semibold mb-4">Download Generated Labels</h2>
-      <button onClick={downloadZip} className="bg-green-500 text-white px-4 py-2 rounded">
-        Download All Labels as ZIP
+      {/* <h2 className="text-lg font-semibold mb-4">Download Generated Labels</h2> */}
+      <button  onClick={downloadZip} className="download_button">
+        Download 
       </button>
       {/* Render labels invisibly for PDF generation */}
       <div style={{ display: "none" }}>

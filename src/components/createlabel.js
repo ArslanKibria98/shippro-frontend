@@ -4,17 +4,25 @@ import axios from "axios";
 import HandleLabel from "./HandleLabel";
 import AuthContext from "../context/AuthContext";
 import Sidebar from "./Sidebar";
+import Dashboardhead from "./Dashboardhead";
 
 const CreateLabel = () => {
   // const { user, setUser } = useContext(AuthContext);
   const { user, updateUser } = useContext(AuthContext);
+  const usStates = [
+    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
+    "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
+    "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri",
+    "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina",
+    "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
+    "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
+  ];
   const loginUser = user;
-  console.log('the user data is ',user)
+  // console.log('the user data is ',user)
   const [trackingNumber, setTrackingNumber] = useState(null)
   const [allowedCarriers, setAllowedCarriers] = useState([]);
   const [availableVendors, setAvailableVendors] = useState([]);
-
-
+   const [vendorLabelType,setVendorLabelType] = useState([]);
     useEffect(() => {
         const fetchAllowedCarriers = async () => {
             try {
@@ -26,7 +34,6 @@ const CreateLabel = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log("Allowed Carriers:", data); // Debugging
                     setAllowedCarriers(data);
                 } else {
                     console.error("Error fetching allowed carriers");
@@ -57,11 +64,15 @@ const CreateLabel = () => {
         labelType: "",
         senderName: "",
         senderAddress: "",
+        senderAddress1: "",
         senderCity: "",
+        senderPh: "",
         senderState: "",
         senderZip: "",
         recipientName: "",
         recipientAddress: "",
+        recipientAddress1: "",
+        recipientPh: "",
         recipientCity: "",
         recipientState: "",
         recipientZip: "",
@@ -91,9 +102,13 @@ const CreateLabel = () => {
       try {
         const labelData = { ...formData, userId: loginUser.id };
         const apiResponse = await fetch("https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=rollo&class=ground_advantage&count=1");
+        const data = await apiResponse.json();
+        const pulledTrackingNumber = data.tracking_numbers[0];
+        console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+        // ///locally call api for tracking get from sheet
         // const data = await apiResponse.json();
-          // const pulledTrackingNumber = pullTracking;
-          // console.log("Retrieved shipment trackingNumber by name cheap:", pullResponse);
+        //   const pulledTrackingNumber = pullTracking;
+        //   console.log("Retrieved shipment trackingNumber by name cheap:", pullResponse);
 
         // const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
         //     method: "POST",
@@ -107,25 +122,31 @@ const CreateLabel = () => {
         //     })
         //   });
         
-          // Check if the pull call succeeded
-          // if (!pullResponse.ok) {
-          //   const errText = await pullResponse.text();
-          //   alert(errText)
-          //   // throw new Error(`Pull shipment error: ${errText}`);
-          // }
-        
-          // Parse the shipment data
-          const data = await apiResponse.json();
-          // const shipmentResult = ;
-          // console.log('shipment Response',shipmentResult)
-          const pulledTrackingNumber = data.tracking_numbers[0];
-          console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+        //   // Check if the pull call succeeded
+        //   if (!pullResponse.ok) {
+        //     const errText = await pullResponse.text();
+        //     alert(errText)
+        //     // throw new Error(`Pull shipment error: ${errText}`);
+            
+        //   }
+        //   const shipmentResult = await pullResponse.json();
+        //   var pulledTrackingNumber;
+        //   if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
+        //      pulledTrackingNumber = shipmentResult.shipment.tracking;
+        //     setFormData(prev => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+        //     setTrackingNumber(pulledTrackingNumber);
+        //   } else {
+        //     console.error('Invalid shipment data:', shipmentResult);
+        //     alert('Failed to retrieve tracking number.');
+        //   }
+          
       
           // Update state with the pulled tracking number so it's available for preview/download
-          setTrackingNumber(pulledTrackingNumber);
+          // setTrackingNumber(shipmentResult.shipment.tracking);
+          // const pulledTrackingNumber = shipmentResult.shipment.tracking;
           setFormData(prev => ({ ...prev, trackingNumber: pulledTrackingNumber }));
       
-        //   console.log("Retrieved shipment trackingNumber:", trackingNumber);
+          console.log("Retrieved shipment trackingNumber:", trackingNumber);
 
         // Call API to update both balance and labels in one request
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/generate-label/${loginUser.id}`, {
@@ -135,7 +156,7 @@ const CreateLabel = () => {
               "Authorization": `Bearer ${loginUser.token}`,  // Ensure 'Bearer' is included
           },
           body: JSON.stringify({
-            amount: -1,         // To deduct balance
+            amount: -(loginUser.rate),         // To deduct balance
             count: 1,           // To increment total label count
             carrier: formData?.carrier,
             trackingNumber: pulledTrackingNumber,
@@ -144,11 +165,15 @@ const CreateLabel = () => {
             weight: formData.weight,
             senderName: formData.senderName,
             senderAddress: formData.senderAddress,
+            senderAddress1: formData.senderAddress1,
+            senderPh: formData.senderPh,
             senderCity: formData.senderCity,
             senderState: formData.senderState,
             senderZip: formData.senderZip,
             recipientName: formData.recipientName,
             recipientAddress: formData.recipientAddress,
+            recipientAddress1: formData.recipientAddress1,
+            recipientPh: formData.recipientPh,
             recipientCity: formData.recipientCity,
             recipientState: formData.recipientState,
             recipientZip: formData.recipientZip,
@@ -183,13 +208,15 @@ const CreateLabel = () => {
       const selectedCarrier = e.target.value;
 
       // Default vendors for USPS
-      const uspsVendors = ["ATFM", "Shippo", "Rolo", "Easypost","Evs"];
+      const uspsVendors = ["ATFM", "Shippo", "Rollo","Evs","Easyship"];
       const upsVendors = ["UPS 2nd Day Air", "UPS 3 Day", "UPS Ground", "UPS Next Day"];
+     
+      
 
       // Find the selected carrier from allowedCarriers
       const carrierData = allowedCarriers.find(carrier => carrier.carrier === selectedCarrier);
-
-      // Set vendors based on selected carrier
+      
+      // Set vendors based on selected carrie
       if (selectedCarrier === "USPS") {
           setAvailableVendors(uspsVendors);
       } else if (selectedCarrier === "UPS") {
@@ -208,175 +235,302 @@ const CreateLabel = () => {
 
   // Handle Vendor Selection
   const handleVendorChange = (e) => {
+    const ATFMLabelTypes = ['ground_advantage','preship']
+    const ShippoLabelTypes = ['ground_advantage','priority_mail']
+    const EvsLabelTypes = ['ground_advantage','priority_mail']
+    const RolloLabelTypes = ['ground_advantage','priority_mail']
+
+    if(e.target.value == 'Shippo'){
+      setVendorLabelType(ShippoLabelTypes)
+    }
+    else if(e.target.value == 'ATFM'){
+      setVendorLabelType(ATFMLabelTypes)
+    }
+    else if(e.target.value == 'Evs'){
+      setVendorLabelType(EvsLabelTypes)
+    }
+    else if(e.target.value == 'Rollo'){
+      setVendorLabelType(RolloLabelTypes)
+    }
+    else{
+      setVendorLabelType('')
+    }
       setFormData(prev => ({
           ...prev,
           vendor: e.target.value
       }));
+    
   };
 
-    return ( 
-        <div className="container">
-        <div className="dashboard_Sec">
-        <div className="dashboard_left"><Sidebar/></div>
+  return (
+    <div>
+      {/* <Dashboardhead /> */}
+    <div className="container">
+  
+      <div className="dashboard_Sec">
+        <div className="dashboard_left">
+          <Sidebar />
+        </div>
         <div className="dashboard-right">
-            <h2 className="text-lg font-semibold mb-4">USPS Label Generator</h2>
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-
-                <select
-                        name="carrier"
-                        value={formData.carrier}
-                        onChange={handleCarrierChange}
-                        id="carrier_type_container"
-                    >
-                     <option value="" disabled>
-                        --- Select Carrier---
+          <h4 className="create_sec_heading" style={{marginBottom:'24px'}}>Generate Label</h4>
+          <div className="form-container">
+            {/* Carrier, Vendor, Label Type */}
+            <div className="form-row">
+              <select
+                name="carrier"
+                value={formData.carrier}
+                onChange={handleCarrierChange}
+                className="form-select"
+              >
+                <option value="" disabled>
+                  --- Select Carrier ---
+                </option>
+                {allowedCarriers.length > 0
+                  ? allowedCarriers.map((carrier, index) => (
+                      <option key={index} value={carrier.carrier}>
+                        {carrier.carrier}
                       </option>
-                        {allowedCarriers.length > 0 ? (
-                allowedCarriers.map((carrier, index) => (
-                    <option key={index} value={carrier.carrier}>{carrier.carrier}</option>
-                ))
-            ) : (
-                <option value="" disabled>No Allowed Carriers</option>
-            )}
-                    </select>
-                    <select name="vendor" value={formData.vendor} onChange={handleVendorChange} id="vendor_type_container">
-                <option value="" disabled>--- Select Vendor Type ---</option>
-                {availableVendors.length > 0 ? (
-                    availableVendors.map((vendor, index) => (
-                        <option key={index} value={vendor}>{vendor}</option>
                     ))
-                ) : (
-                    <option value="" disabled>No Vendors Available</option>
-                )}
-            </select>
-                    <h3>Label Type</h3>
-                    <select
-                        name="labelType"
-                        value={formData.labelType}
-                        onChange={handleChange}
-                        id="label_type_container"
-                    >
-                        <option value="" disabled>
-                            --- Select Label Type ---
-                        </option>
-                        <option value="ground_advantage">GROUND ADVANTAGE</option>
-                        <option value="priority_mail">PRIORITY MAIL</option>
-                    </select>
-                    <h3 className="font-semibold">Sender Information</h3>
-                    <input
-                        type="text"
-                        name="senderName"
-                        placeholder="Name"
-                        value={formData.senderName}
-                        onChange={handleChange}
-                        className="border p-2 w-full mb-2"
-                    />
-                    <input
-                        type="text"
-                        name="senderAddress"
-                        placeholder="Address"
-                        value={formData.senderAddress}
-                        onChange={handleChange}
-                        className="border p-2 w-full mb-2"
-                    />
-                    <input
-                        type="text"
-                        name="senderCity"
-                        placeholder="City"
-                        value={formData.senderCity}
-                        onChange={handleChange}
-                        className="border p-2 w-full mb-2"
-                    />
-                    <input
-                        type="text"
-                        name="senderState"
-                        placeholder="State"
-                        value={formData.senderState}
-                        onChange={handleChange}
-                        className="border p-2 w-full mb-2"
-                    />
-                    <input
-                        type="text"
-                        name="senderZip"
-                        placeholder="ZIP Code"
-                        value={formData.senderZip}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                    />
-                </div>
-                <div>
-                    <h3 className="font-semibold">Recipient Information</h3>
-                    <input
-                        type="text"
-                        name="recipientName"
-                        placeholder="Name"
-                        value={formData.recipientName}
-                        onChange={handleChange}
-                        className="border p-2 w-full mb-2"
-                    />
-                    <input
-                        type="text"
-                        name="recipientAddress"
-                        placeholder="Address"
-                        value={formData.recipientAddress}
-                        onChange={handleChange}
-                        className="border p-2 w-full mb-2"
-                    />
-                    <input
-                        type="text"
-                        name="recipientCity"
-                        placeholder="City"
-                        value={formData.recipientCity}
-                        onChange={handleChange}
-                        className="border p-2 w-full mb-2"
-                    />
-                    <input
-                        type="text"
-                        name="recipientState"
-                        placeholder="State"
-                        value={formData.recipientState}
-                        onChange={handleChange}
-                        className="border p-2 w-full mb-2"
-                    />
-                    <input
-                        type="text"
-                        name="recipientZip"
-                        placeholder="ZIP Code"
-                        value={formData.recipientZip}
-                        onChange={handleChange}
-                        className="border p-2 w-full"
-                    />
-                </div>
-                <input
-                    type="number"
-                    name="weight"
-                    placeholder="Weight"
-                    value={formData.weight}
-                    onChange={handleChange}
-                    className="border p-2 w-full"
-                />
-            </div>
-            {/* <input
-                type="text"
-                name="trackingNumber"
-                placeholder="Tracking Number"
-                value={formData.trackingNumber}
+                  : (
+                      <option value="" disabled>
+                        No Allowed Carriers
+                      </option>
+                    )}
+              </select>
+            
+            
+              <select
+                name="vendor"
+                value={formData.vendor}
+                onChange={handleVendorChange}
+                className="form-select"
+              >
+                <option value="" disabled>
+                  --- Select Vendor ---
+                </option>
+                {availableVendors.length > 0
+                  ? availableVendors.map((vendor, index) => (
+                      <option key={index} value={vendor}>
+                        {vendor}
+                      </option>
+                    ))
+                  : (
+                      <option value="" disabled>
+                        No Vendors Available
+                      </option>
+                    )}
+              </select>
+
+              <select
+                name="labelType"
+                value={formData.labelType}
                 onChange={handleChange}
-                className="border p-2 w-full mt-4"
-            /> */}
-            <button
-                onClick={handleGenerateLabel}
-                className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-            >
-                Generate Label
+                className="form-select"
+              >
+                <option value="" disabled>
+                  --- Select Shipping Service ---
+                </option>
+                {vendorLabelType.length > 0
+                  ? vendorLabelType.map((vendor, index) => (
+                      <option key={index} value={vendor}>
+                        {vendor}
+                      </option>
+                    ))
+                  : (
+                      <option value="" disabled>
+                        No Service Available
+                      </option>
+                    )}
+              </select>
+            </div>
+
+            {/* Weight, Height, Width, Length */}
+            <div className="form-row">
+              <input
+                type="number"
+                name="weight"
+                placeholder="Weight (lbs)"
+                value={formData.weight}
+                onChange={handleChange}
+                className="form-input"
+              />
+               <input
+                type="number"
+                name="length"
+                placeholder="Length (in)"
+                value={formData.length}
+                onChange={handleChange}
+                className="form-input"
+              />
+                 <input
+                type="number"
+                name="width"
+                placeholder="Width (in)"
+                value={formData.width}
+                onChange={handleChange}
+                className="form-input"
+              />
+              <input
+                type="number"
+                name="height"
+                placeholder="Height (in)"
+                value={formData.height}
+                onChange={handleChange}
+                className="form-input"
+              />
+           
+             
+            </div>
+
+            {/* Sender and Recipient Information */}
+            <div className="form-columns">
+              <div className="form-column">
+                <h3 className="form_heading">Sender Information</h3>
+                <input
+                  type="text"
+                  name="senderName"
+                  placeholder="Name"
+                  value={formData.senderName}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+                <input
+                  type="text"
+                  name="senderAddress"
+                  placeholder="Address"
+                  value={formData.senderAddress}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+                <input
+                  type="text"
+                  name="senderAddress1"
+                  placeholder="Address 1"
+                  value={formData.senderAddress1}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+                <input
+                  type="text"
+                  name="senderPh"
+                  placeholder="Phone no"
+                  value={formData.senderPh}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+                <input
+                  type="text"
+                  name="senderCity"
+                  placeholder="City"
+                  value={formData.senderCity}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+                 
+                <select
+                  name="senderState"
+                  value={formData.senderState}
+                  onChange={handleChange}
+                  className="form-select"
+                >
+                  <option value="" disabled>
+                    --- Select State ---
+                  </option>
+                  {usStates.map((state, index) => (
+                    <option key={index} value={state}>
+                      {state}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  name="senderZip"
+                  placeholder="ZIP Code"
+                  value={formData.senderZip}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+              </div>
+              <div className="form-column">
+                <h3 className="form_heading">Recipient Information</h3>
+                <input
+                  type="text"
+                  name="recipientName"
+                  placeholder="Name"
+                  value={formData.recipientName}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+                <input
+                  type="text"
+                  name="recipientAddress"
+                  placeholder="Address"
+                  value={formData.recipientAddress}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+                 <input
+                  type="text"
+                  name="recipientAddress1"
+                  placeholder="Address1"
+                  value={formData.recipientAddress1}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+                <input
+                  type="text"
+                  name="recipientPh"
+                  placeholder="Phone no"
+                  value={formData.recipientPh}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+                <input
+                  type="text"
+                  name="recipientCity"
+                  placeholder="City"
+                  value={formData.recipientCity}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+                <select
+                  name="recipientState"
+                  value={formData.recipientState}
+                  onChange={handleChange}
+                  className="form-select"
+                >
+                  <option value="" disabled>
+                    --- Select State ---
+                  </option>
+                  {usStates.map((state, index) => (
+                    <option key={index} value={state}>
+                      {state}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  name="recipientZip"
+                  placeholder="ZIP Code"
+                  value={formData.recipientZip}
+                  onChange={handleChange}
+                  className="form-input"
+                />
+              </div>
+            </div>
+
+            {/* Generate Label Button */}
+            <button onClick={handleGenerateLabel} className="generate-button">
+              Generate Label
             </button>
 
-            {showLabel && <HandleLabel formData={formData}/>}
+            {showLabel && <HandleLabel formData={formData} />}
+          </div>
         </div>
-        </div>
-        </div>
-    );
+      </div>
+    </div>
+    </div>
+  );
 };
 
 export default CreateLabel;

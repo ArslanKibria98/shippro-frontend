@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CreateLabel from "./components/createlabel";
 import BulkUpload from "./components/Bulkupload";
 import LabelsHistory from "./components/labelsHistory";
+import DisplayHistory from "./components/displayHistory";
 const PrivateRoute = ({ element }) => {
     const { user, loading } = useContext(AuthContext);
   
@@ -35,7 +36,7 @@ function App() {
                     <Route path="/create-label" element={<CreateLabel />} />
                     <Route path="/create/bulk" element={<BulkUpload />} />
                     <Route path="/admin/dashboard" element={<AdminDashboard/>} />
-                    <Route path="/download-history" element={<LabelsHistory/>} />
+                    <Route path="/download-history" element={<DisplayHistory/>} />
 
                     
                 </Routes>

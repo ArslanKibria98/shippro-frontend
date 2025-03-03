@@ -1,33 +1,58 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'; // Use NavLink instead of Link
 
 const Sidebar = () => {
   return (
     <aside className="bg-gray-800 text-white min-h-screen w-64 p-4">
-      {/* <div className="text-2xl font-bold mb-8">
-        Label Generator
-      </div> */}
       <nav>
         <ul>
           <li className="mb-4">
-            <Link to="/dashboard" className="block p-2 hover:bg-gray-700 rounded">
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                ` ${
+                  isActive ? 'active' : ''
+                }`
+              }
+            >
               Dashboard
-            </Link>
+            </NavLink>
           </li>
           <li className="mb-4">
-            <Link to="/create-label" className="block p-2 hover:bg-gray-700 rounded">
+            <NavLink
+              to="/create-label"
+              className={({ isActive }) =>
+                `${
+                  isActive ? 'active' : ''
+                }`
+              }
+            >
               Create Label
-            </Link>
+            </NavLink>
           </li>
           <li className="mb-4">
-            <Link to="/create/bulk" className="block p-2 hover:bg-gray-700 rounded">
+            <NavLink
+              to="/create/bulk"
+              className={({ isActive }) =>
+                `${
+                  isActive ? 'active' : ''
+                }`
+              }
+            >
               Create Bulk Label
-            </Link>
+            </NavLink>
           </li>
           <li className="mb-4">
-            <Link to="/download-history" className="block p-2 hover:bg-gray-700 rounded">
+            <NavLink
+              to="/download-history"
+              className={({ isActive }) =>
+                ` ${
+                  isActive ? 'active' : ''
+                }`
+              }
+            >
               Download History
-            </Link>
+            </NavLink>
           </li>
           {/* Add more links as needed */}
         </ul>

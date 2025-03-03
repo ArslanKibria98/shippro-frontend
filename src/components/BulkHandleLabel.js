@@ -36,7 +36,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
         try {
           bwipjs.toCanvas(canvasRef, {
             bcid: "datamatrix", // Generates a DataMatrix barcode
-            text: "42022124 " + cleanTrackingNumber, // Content
+            text: `420${formData.recipientZip} ` + cleanTrackingNumber, // Content
             scale: 4,  
             height: 5,  
             width: 5,
