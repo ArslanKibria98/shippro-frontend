@@ -204,7 +204,7 @@ const HandleLabel = ({ formData }) => {
             </div>
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # - EP</div>
-              <img src={barcodeImg}></img>
+              <img style={{width:'100%'}} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
           </div>
