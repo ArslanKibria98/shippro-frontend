@@ -5,7 +5,6 @@ import HandleLabel from "./HandleLabel";
 import AuthContext from "../context/AuthContext";
 import Sidebar from "./Sidebar";
 import Dashboardhead from "./Dashboardhead";
-
 const CreateLabel = () => {
   // const { user, setUser } = useContext(AuthContext);
   const { user, updateUser } = useContext(AuthContext);
@@ -84,15 +83,11 @@ const CreateLabel = () => {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-
-   
-    
+    };    
     const handleGenerateLabel = async () => {
       console.log("Token being sent:", loginUser.token);
 
-      if (loginUser.availableBalance <= 0) {
+      if (loginUser.availableBalance <= loginUser.rate) {
         alert("Insufficient balance to generate a label.");
         return;
       }
@@ -101,12 +96,15 @@ const CreateLabel = () => {
     
       try {
         const labelData = { ...formData, userId: loginUser.id };
-        const apiResponse = await fetch(`https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=atfm&class=preship&count=1`);
+        const apiResponse = await fetch(`https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${formData.vendor}&class=${formData.labelType}&count=1`);
         const data = await apiResponse.json();
         const pulledTrackingNumber = data.tracking_numbers[0];
         console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+
         setFormData(prev => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+      
         console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+
 
         
         // ///locally call api for tracking get from sheet
@@ -147,7 +145,7 @@ const CreateLabel = () => {
           // Update state with the pulled tracking number so it's available for preview/download
           // setTrackingNumber(shipmentResult.shipment.tracking);
           // const pulledTrackingNumber = shipmentResult.shipment.tracking;
-       
+          
 
 
    
@@ -212,7 +210,7 @@ const CreateLabel = () => {
       const selectedCarrier = e.target.value;
 
       // Default vendors for USPS
-      const uspsVendors = ["ATFM", "Shippo", "Rollo","Evs","Easyship"];
+      const uspsVendors = ["ATFM", "Shippo", "Rollo","Evs"];
       const upsVendors = ["UPS 2nd Day Air", "UPS 3 Day", "UPS Ground", "UPS Next Day"];
      
       
@@ -240,9 +238,9 @@ const CreateLabel = () => {
   // Handle Vendor Selection
   const handleVendorChange = (e) => {
     const ATFMLabelTypes = ['ground_advantage','preship']
-    const ShippoLabelTypes = ['ground_advantage','priority_mail']
-    const EvsLabelTypes = ['ground_advantage','priority_mail']
-    const RolloLabelTypes = ['ground_advantage','priority_mail']
+    const ShippoLabelTypes = ['ground_advantage','priority']
+    const EvsLabelTypes = ['ground_advantage','priority']
+    const RolloLabelTypes = ['ground_advantage','priority']
 
     if(e.target.value == 'Shippo'){
       setVendorLabelType(ShippoLabelTypes)

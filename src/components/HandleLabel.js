@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import JsBarcode from "jsbarcode";
 import html2pdf from "html2pdf.js";
 import bwipjs from "bwip-js";
@@ -9,10 +9,11 @@ const HandleLabel = ({ formData }) => {
   const barcodeRef = useRef(null);
   const sbarcode = useRef(null);
   const sbarcode1 = useRef(null);
-  var barcodeImg;
-
+  const [barcodeImg, setBarcodeImg] = useState(null); // Use state for barcode image URL
   const cleanTrackingNumber = formData.trackingNumber.replace(/\s+/g, '');
   const formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
+
+
   // Barcode generation for CODE128
   // useEffect(() => {
   //   if (formData.trackingNumber) {
@@ -34,13 +35,20 @@ const HandleLabel = ({ formData }) => {
   .then(response => response.json())
   .then(data => {
           console.log("Barcode URL:", data);
-          barcodeImg = data.barcode_data_url;
+          setBarcodeImg(data.barcode_data_url);
   })
   .catch(error => console.error("Error:", error));
+  // const textData =  {barcode_data_url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
+  //   success: true}
+
+  //   console.log(textData.barcode_data_url);
+  //   setBarcodeImg(textData.barcode_data_url);
 }
 }, [formData.trackingNumber]);
 
- 
+
+
+
 
   // Barcode generation for DataMatrix
 
@@ -115,8 +123,8 @@ const HandleLabel = ({ formData }) => {
               <div className="address_label_info">
                 <div className="to_address_info">
                   {formData.senderName}<br />
-                  {formData.senderAddress}<br />
-                  {formData.senderCity}, {formData.senderState}, {formData.senderZip}<br />
+                  {formData.senderAddress} {formData.senderAddress1}<br />
+                  {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
                   <br />
                 </div>
                 <div className="parcel_info">
@@ -128,8 +136,8 @@ const HandleLabel = ({ formData }) => {
                 <canvas ref={sbarcode} />
                 <div>
                   {formData.recipientName}<br />
-                  {formData.recipientAddress}<br />
-                  {formData.recipientCity}, {formData.recipientState}, {formData.recipientZip}<br />
+                  {formData.recipientAddress} {formData.recipientAddress1}<br />
+                  {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
                   <br />
                 </div>
               </div>
@@ -137,7 +145,7 @@ const HandleLabel = ({ formData }) => {
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # - EP</div>
               {/* <svg ref={barcodeRef}></svg> */}
-               <img src={barcodeImg}></img>
+              <img style={{width:'100%'}} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
             <div className="end_label_container">
@@ -182,8 +190,8 @@ const HandleLabel = ({ formData }) => {
               <div className="address_label_info">
                 <div className="to_address_info">
                   {formData.senderName}<br />
-                  {formData.senderAddress}<br />
-                  {formData.senderCity}, {formData.senderState}, {formData.senderZip}<br />
+                  {formData.senderAddress} {formData.senderAddress1}<br />
+                  {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
                   <br />
                 </div>
                 <div className="parcel_info">
@@ -197,7 +205,7 @@ const HandleLabel = ({ formData }) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity}, {formData.recipientState}, {formData.recipientZip}<br />
+                  {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
                   <br />
                 </div>
               </div>
@@ -242,13 +250,13 @@ const HandleLabel = ({ formData }) => {
               <div className="address_label_info">
                 <div className="to_address_info">
                   {formData.senderName}<br />
-                  {formData.senderAddress}<br />
-                  {formData.senderCity}, {formData.senderState}, {formData.senderZip}<br />
+                  {formData.senderAddress} {formData.senderAddress1}<br />
+                  {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
                   <br />
                 </div>
                 <div className="parcel_info">
                   <div style={{textAlign:'center'}}>{new Date().toLocaleDateString('en-US')}</div>
-                   Mailed From: 22305 <br />
+                   Mailed From: {formData.senderZip} <br />
                   WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'} 0 ozs
                 </div>
               </div>
@@ -257,15 +265,15 @@ const HandleLabel = ({ formData }) => {
               
                 <div>
                   {formData.recipientName}<br />
-                  {formData.recipientAddress}<br />
-                  {formData.recipientCity}, {formData.recipientState}, {formData.recipientZip}<br />
+                  {formData.recipientAddress} {formData.recipientAddress1}<br />
+                  {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
                   <br />
                 </div>
               </div>
             </div>
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # eVS</div>
-              <img src={barcodeImg}></img>
+              <img style={{width:'100%'}} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
           </div>
@@ -297,8 +305,8 @@ const HandleLabel = ({ formData }) => {
               <div className="address_label_info">
                 <div className="to_address_info">
                   {formData.senderName}<br />
-                  {formData.senderAddress}<br />
-                  {formData.senderCity}, {formData.senderState}, {formData.senderZip}<br />
+                  {formData.senderAddress} {formData.senderAddress1}<br />
+                  {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
                   <br />
                 </div>
                 <div className="parcel_info">
@@ -311,7 +319,7 @@ const HandleLabel = ({ formData }) => {
                 <canvas ref={sbarcode} />
                 <div>
                   {formData.recipientName}<br />
-                  {formData.recipientAddress}<br />
+                  {formData.recipientAddress} {formData.recipientAddress1}<br />
                   {formData.recipientCity}, {formData.recipientState}, {formData.recipientZip}<br />
                   <br />
                 </div>
@@ -319,7 +327,7 @@ const HandleLabel = ({ formData }) => {
             </div>
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # - EP</div>
-              <img src={barcodeImg}></img>
+              <img style={{width:'100%'}} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
             <div className="end_label_container">
