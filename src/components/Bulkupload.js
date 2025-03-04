@@ -4,7 +4,7 @@ import AuthContext from "../context/AuthContext";
 import BulkDownloadLabels from "./BulkDownloadLabels"; // Import new component
 import Sidebar from "./Sidebar";
 import Dashboardhead from "./Dashboardhead";
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_API;
 const apiKey = process.env.REACT_APP_API_KEY;
 const userName = process.env.REACT_APP_USER_NAME;
 const BulkUpload = () => {

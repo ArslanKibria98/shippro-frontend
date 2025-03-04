@@ -42,7 +42,6 @@ const Home = () => {
                 <li>About Us</li>
                 <li>Contact Us</li>
                 <li>Recharge</li>
-                <li><button>Login</button></li>
             </ul>
         </navbar>
         
@@ -60,15 +59,10 @@ const Home = () => {
             <div className='about_left'>
             <h2  style={{marginBottom:"20px"}} class="text-primary">About Us</h2>
 
-          <p style={{marginBottom:"20px"}}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis deleniti reprehenderit animi est eaque corporis! Nisi, asperiores nam amet doloribus, soluta ut reiciendis. Consequatur modi rem, vero eos ipsam voluptas.</p>
-          <p style={{marginBottom:"20px"}}>
-           Error minus sint nobis dolor laborum architecto, quaerat. Voluptatum porro expedita labore esse velit veniam laborum quo obcaecati similique iusto delectus quasi!</p>
+          <p style={{marginBottom:"24px"}}>At Shippro, we specialize in empowering businesses to streamline their e-commerce operations and achieve seamless growth. As a trusted partner in the logistics and supply chain industry, we provide end-to-end solutions tailored to meet the unique needs of online sellers.</p>
+          <p style={{marginBottom:"24px"}}>
+          Our expertise spans Amazon FBA (Fulfillment by Amazon), FBM (Fulfillment by Merchant), and comprehensive warehouse services, ensuring your products are stored, managed, and delivered with precision and efficiency. Whether you're scaling your Amazon business or optimizing your inventory management, Shippro is committed to delivering reliable, cost-effective, and scalable solutions that drive success. Let us handle the complexities of logistics, so you can focus on what you do best—growing your business</p>
 
-           <ul>
-           <li style={{marginBottom:"10px"}}>Error minus sint nobis dolor</li>
-           <li style={{marginBottom:"10px"}}>Error minus sint nobis dolor</li>
-           <li style={{marginBottom:"10px"}}>Error minus sint nobis dolor</li>
-           </ul>
            </div>
            <div className='about_right'><img src='https://preview.colorlib.com/theme/logis/images/img_3.jpg.webp'></img></div>
         </div>
@@ -76,19 +70,19 @@ const Home = () => {
 
         <div className='work_style_container sec-distance' style={{padding:'60px 0px'}}>
             <div className='container'>
-                <h2 style={{textAlign:'center'}}>How It Work</h2>
+                <h2 className='heading_main' style={{textAlign:'center'}}>How It Work</h2>
                 <div class="row work_style_head" style={{position:"relative"}}>
           <div class="col-md-6 col-lg-4 mb-5 mb-lg-0 aos-init aos-animate" data-aos="fade" data-aos-delay="100">
             <div class="how-it-work-item">
               <span class="number">1</span>
               <div class="how-it-work-body">
-                <h2>Make An Order</h2>
-                <p class="mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt praesentium dicta consectetur fuga neque fugit a at. Cum quod vero assumenda iusto.</p>
-                <ul class="ul-check list-unstyled success">
+                <h2>Create Label</h2>
+                <p class="mb-5">You have the option to create shipping labels easily either by filling out a form or by uploading a CSV file.</p>
+                {/* <ul class="ul-check list-unstyled success">
                   <li class="text-white">Error minus sint nobis dolor</li>
                   <li class="text-white">Voluptatum porro expedita labore esse</li>
                   <li class="text-white">Voluptas unde sit pariatur earum</li>
-                </ul>
+                </ul> */}
               </div>
             </div>
           </div>
@@ -97,13 +91,9 @@ const Home = () => {
             <div class="how-it-work-item">
               <span class="number">2</span>
               <div class="how-it-work-body">
-                <h2>Make A Payment</h2>
-                <p class="mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt praesentium dicta consectetur fuga neque fugit a at. Cum quod vero assumenda iusto.</p>
-                <ul class="ul-check list-unstyled success">
-                  <li class="text-white">Error minus sint nobis dolor</li>
-                  <li class="text-white">Voluptatum porro expedita labore esse</li>
-                  <li class="text-white">Voluptas unde sit pariatur earum</li>
-                </ul>
+                <h2>Download Shipping Label</h2>
+                <p class="mb-5">Subsequently, you can acquire the shipping label directly from your dashboard by clicking on download link..</p>
+                
               </div>
             </div>
           </div>
@@ -112,13 +102,9 @@ const Home = () => {
             <div class="how-it-work-item">
               <span class="number">3</span>
               <div class="how-it-work-body">
-                <h2>Track Your Order</h2>
-                <p class="mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt praesentium dicta consectetur fuga neque fugit a at. Cum quod vero assumenda iusto.</p>
-                <ul class="ul-check list-unstyled success">
-                  <li class="text-white">Error minus sint nobis dolor</li>
-                  <li class="text-white">Voluptatum porro expedita labore esse</li>
-                  <li class="text-white">Voluptas unde sit pariatur earum</li>
-                </ul>
+                <h2>Ready to Ship</h2>
+                <p class="mb-5">Affix the label onto your parcel/Package so it can be shipped using specific courier service..</p>
+               
               </div>
             </div>
           </div>
