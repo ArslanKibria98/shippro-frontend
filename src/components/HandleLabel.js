@@ -31,18 +31,20 @@ const HandleLabel = ({ formData }) => {
 
   useEffect(() => {
   if (formData.trackingNumber) {
-  fetch(`https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${formData.trackingNumber}&sf=3&ms=r&md=0.8`)
-  .then(response => response.json())
-  .then(data => {
-          console.log("Barcode URL:", data);
-          setBarcodeImg(data.barcode_data_url);
-  })
-  .catch(error => console.error("Error:", error));
-  // const textData =  {barcode_data_url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
-  //   success: true}
+  // fetch(`https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${formData.trackingNumber}&sf=3&ms=r&md=0.8`)
+  // .then(response => response.json())
+  // .then(data => {
+  //         console.log("Barcode URL:", data);
+  //         setBarcodeImg(data.barcode_data_url);
+  // })
+  // .catch(error => console.error("Error:", error));
 
-  //   console.log(textData.barcode_data_url);
-  //   setBarcodeImg(textData.barcode_data_url);
+  
+  const textData =  {barcode_data_url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
+    success: true}
+
+    console.log(textData.barcode_data_url);
+    setBarcodeImg(textData.barcode_data_url);
 }
 }, [formData.trackingNumber]);
 
@@ -93,7 +95,8 @@ const HandleLabel = ({ formData }) => {
   const renderVendorLabel = () => {
     switch (formData.vendor) {
       case 'Shippo':
-        return (
+        return (<div style={{display:'none'}}>
+
           <div className="label-container" id="label" ref={labelRef}>
             <div className="header">
               <div id="large-letter" className="large-letter">
@@ -143,7 +146,7 @@ const HandleLabel = ({ formData }) => {
               </div>
             </div>
             <div className="barcode">
-              <div className="tracking_heading">USPS TRACKING # - EP</div>
+              <div className="tracking_heading">USPS TRACKING # EP</div>
               {/* <svg ref={barcodeRef}></svg> */}
               <img style={{width:'100%'}} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
@@ -157,10 +160,11 @@ const HandleLabel = ({ formData }) => {
               <canvas ref={sbarcode1} />
             </div>
           </div>
+          </div>
         );
 
       case 'ATFM':
-        return (
+        return (<div style={{display:'none'}}>
           <div className="label-container" id="label" ref={labelRef}>
              <div className="header">
               <div id="large-letter" className="large-letter">
@@ -211,15 +215,16 @@ const HandleLabel = ({ formData }) => {
               </div>
             </div>
             <div className="barcode">
-              <div className="tracking_heading">USPS TRACKING # - EP</div>
+              <div className="tracking_heading">USPS TRACKING # EP</div>
               <img style={{width:'100%'}} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
           </div>
+          </div>
         );
 
       case 'Evs':
-        return (
+        return (<div style={{display:'none'}}>
           <div className="label-container evs_label" id="label" ref={labelRef} >
             <div className="header">
               <div id="large-letter" className="large-letter">
@@ -277,28 +282,29 @@ const HandleLabel = ({ formData }) => {
               <div id="tracking-number">{formattedTracking}</div>
             </div>
           </div>
+          </div>
         );
         case 'Rollo':
-        return (
+        return (<div style={{display:'none'}}>
           <div className="label-container rollo_label" id="label" ref={labelRef}>
             <div className="header">
               <div id="large-letter" className="large-letter">
-                {formData.labelType === 'ground_advantage' ? 'P' : 'P'}
+                {formData.labelType === 'ground_advantage' ? 'G' : 'P'}
               </div>
               <div>
                 <div style={{textAlign:'left'}} className="label_reference" >
                   U.S. POSTAGE PAID<br />
                   <span id="vendor_brand">{formData.vendor}</span><br />
-                  e-Postage
+                  ePostage
                 </div>
                 <span id="additional_info">{formData.vendor === 'Shippo' ? 'Cubic' : ''}</span>
               </div>
             </div>
             <h3 className="label_type">
               {formData.labelType === 'ground_advantage' ? (
-                <>GROUND MAIL</>
+                <>GROUND ADVANTAGE</>
               ) : (
-                <>GROUND MAIL</>
+                <>PRIORITY MAIL</>
               )}
             </h3>
             <div className="info" id="labelInfo">
@@ -326,7 +332,7 @@ const HandleLabel = ({ formData }) => {
               </div>
             </div>
             <div className="barcode">
-              <div className="tracking_heading">USPS TRACKING # - EP</div>
+              <div className="tracking_heading">USPS TRACKING # EP</div>
               <img style={{width:'100%'}} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
@@ -336,6 +342,7 @@ const HandleLabel = ({ formData }) => {
               </div>
               <canvas ref={sbarcode1} />
             </div>
+          </div>
           </div>
         );
 
