@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }) => {
                 // Token is invalid or expired
                 logout();
                 alert("Your session has expired. Please log in again.");
+            window.location.href = "/login";
             }
         } finally {
             setLoading(false);

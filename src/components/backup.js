@@ -114,155 +114,169 @@ const CreateLabel = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
-  const handleGenerateLabel = async () => {
-    if (loginUser.availableBalance <= loginUser.rate) {
-      alert("Insufficient balance to generate a label.");
-      return;
-    }
   
-    setShowLabel(false); // Reset the label state before generation
-    try {
-      const isValid = validateForm();
-      if (isValid) {
-        // const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     Authorization: `Bearer ${user.token}`,
-        //   },
-        //   body: JSON.stringify({
-        //     labelType: formData.labelType,
-        //     carrier: formData.carrier.toLowerCase(),
-        //   }),
-        // });
-  
-        // if (!pullResponse.ok) {
-        //   const errText = await pullResponse.text();
-        //   alert(errText);
-        //   throw new Error(`Pull shipment error: ${errText}`);
-        // }
-  
-        // const shipmentResult = await pullResponse.json();
-        // let pulledTrackingNumber;
-        // if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
-        //   pulledTrackingNumber = shipmentResult.shipment.tracking;
-        //   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
-        //   setTrackingNumber(pulledTrackingNumber);
-        // } else {
-        //   console.error("Invalid shipment data:", shipmentResult);
-        //   alert("Failed to retrieve tracking number.");
-        // }
+    const handleGenerateLabel = async () => {
+      // console.log("Token being sent:", loginUser.token);
 
-
-const apiVendor = formData.vendor.toLowerCase();
-console.log("API Vendor:", apiVendor);
-console.log("Label Type:", formData.labelType);
-let pulledTrackingNumber;
-try {
-  // Fetch tracking number from the API
-  const apiResponse = await fetch(
-    `https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`
-  );
-
-  if (!apiResponse.ok) {
-    throw new Error(`Failed to fetch tracking number: ${apiResponse.statusText}`);
-  }
-
-  const data = await apiResponse.json();
-  pulledTrackingNumber = data.tracking_numbers[0];
-  console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
-
-  // Update formData with the new tracking number
-  setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
-
-  // Fetch barcode based on the new tracking number
-  const barcodeResponse = await fetch(
-    `https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${pulledTrackingNumber}&sf=3&ms=r&md=0.8`
-  );
-
-  if (!barcodeResponse.ok) {
-    throw new Error(`Failed to fetch barcode: ${barcodeResponse.statusText}`);
-  }
-
-  const barcodeData = await barcodeResponse.json();
-  console.log("Barcode URL:", barcodeData);
-  setBarcodeImg(barcodeData.barcode_data_url);
-} catch (error) {
-  console.error("Error:", error);
-  // Handle the error (e.g., show a message to the user)
-}
-  
-        // Fetch the barcode image
-        // const textData = {
-        //   barcode_data_url:
-        //     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
-        //   success: true,
-        // };
-  
-        // setBarcodeImg(textData.barcode_data_url);
-
-
-        // Use a callback to ensure the state is updated
-        setTimeout(() => {
-          const generateLabel = async () => {
-
-            try {
-              const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/generate-label/${loginUser.id}`, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${loginUser.token}`,
-                },
-                body: JSON.stringify({
-                  amount: -(loginUser.rate),
-                  count: 1,
-                  carrier: formData?.carrier,
-                  trackingNumber: pulledTrackingNumber,
-                  labelType: formData.labelType,
-                  vendor: formData.vendor,
-                  weight: formData.weight,
-                  senderName: formData.senderName,
-                  senderAddress: formData.senderAddress,
-                  senderAddress1: formData.senderAddress1,
-                  senderPh: formData.senderPh,
-                  senderCity: formData.senderCity,
-                  senderState: formData.senderState,
-                  senderZip: formData.senderZip,
-                  recipientName: formData.recipientName,
-                  recipientAddress: formData.recipientAddress,
-                  recipientAddress1: formData.recipientAddress1,
-                  recipientPh: formData.recipientPh,
-                  recipientCity: formData.recipientCity,
-                  recipientState: formData.recipientState,
-                  barcodeImg: barcodeImg,
-                  recipientZip: formData.recipientZip,
-                }),
-              });
-  
-              const result = await response.json();
-              console.log(result);
-  
-              if (response.ok) {
-                updateUser({
-                  availableBalance: result.availableBalance,
-                  totalGeneratedLabels: result.totalGeneratedLabels,
-                });
-                setShowLabel(true); // Show the generated label
-              } else {
-                alert(result.msg || "Failed to generate label. Please try again.");
-              }
-            } catch (error) {
-              console.error("Error generating label:", error);
-            }
-          };
-  
-          generateLabel();
-        }, 10); // Wait for the next event loop tick
+      if (loginUser.availableBalance <= loginUser.rate) {
+        alert("Insufficient balance to generate a label.");
+        return;
       }
-    } catch (error) {
-      console.error("Error generating label:", error);
-    }
-  };
+    
+      setShowLabel(false); // Reset the label state before generation
+      try {
+        const isValid = validateForm();
+        if (isValid) {
+        const labelData = { ...formData, userId: loginUser.id };
+        // const apiVendor = (formData.vendor).toLowerCase()
+        // console.log(apiVendor);
+        // console.log(formData.labelType)
+        // const apiResponse = await fetch(`https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`);
+        // const data = await apiResponse.json();
+        // const pulledTrackingNumber = data.tracking_numbers[0];
+        // console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+
+        // setFormData(prev => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+      
+        // console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+
+
+        
+        // ///locally call api for tracking get from sheet
+        // const data = await apiResponse.json();
+        //   const pulledTrackingNumber = pullTracking;
+        //   console.log("Retrieved shipment trackingNumber by name cheap:", pullResponse);
+
+         
+      
+
+
+
+
+
+        const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${user.token}`
+              },
+            body: JSON.stringify({
+              labelType: formData.labelType,
+              carrier: formData.carrier.toLowerCase(),
+            })
+          });
+        
+        //   // Check if the pull call succeeded
+          if (!pullResponse.ok) {
+            const errText = await pullResponse.text();
+            alert(errText)
+            throw new Error(`Pull shipment error: ${errText}`);
+          }
+          const shipmentResult = await pullResponse.json();
+          var pulledTrackingNumber;
+          if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
+             pulledTrackingNumber = shipmentResult.shipment.tracking;
+            setFormData(prev => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+            setTrackingNumber(pulledTrackingNumber);
+          } else {
+            console.error('Invalid shipment data:', shipmentResult);
+            alert('Failed to retrieve tracking number.');
+          }
+          
+
+
+
+
+          // get the barcode img
+
+        
+           // fetch(`https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${formData.trackingNumber}&sf=3&ms=r&md=0.8`)
+           // .then(response => response.json())
+           // .then(data => {
+           //         console.log("Barcode URL:", data);
+           //         setBarcodeImg(data.barcode_data_url);
+           // })
+           // .catch(error => console.error("Error:", error));
+         
+           
+           const textData =  {barcode_data_url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
+             success: true}
+         
+             console.log(textData.barcode_data_url);
+            await setBarcodeImg(textData.barcode_data_url);
+         
+             await new Promise((resolve) => setTimeout(resolve, 0));
+
+
+
+
+      
+          // Update state with the pulled tracking number so it's available for preview/download
+          // setTrackingNumber(shipmentResult.shipment.tracking);
+          // const pulledTrackingNumber = shipmentResult.shipment.tracking;
+          
+        // Call API to update both balance and labels in one request
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/generate-label/${loginUser.id}`, {
+          method: "PUT",
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${loginUser.token}`,  // Ensure 'Bearer' is included
+          },
+          body: JSON.stringify({
+            amount: -(loginUser.rate),         // To deduct balance
+            count: 1,           // To increment total label count
+            carrier: formData?.carrier,
+            trackingNumber: pulledTrackingNumber,
+            labelType: formData.labelType,
+            vendor: formData.vendor,
+            weight: formData.weight,
+            senderName: formData.senderName,
+            senderAddress: formData.senderAddress,
+            senderAddress1: formData.senderAddress1,
+            senderPh: formData.senderPh,
+            senderCity: formData.senderCity,
+            senderState: formData.senderState,
+            senderZip: formData.senderZip,
+            recipientName: formData.recipientName,
+            recipientAddress: formData.recipientAddress,
+            recipientAddress1: formData.recipientAddress1,
+            recipientPh: formData.recipientPh,
+            recipientCity: formData.recipientCity,
+            recipientState: formData.recipientState,
+            barcodeImg:barcodeImg,
+            recipientZip: formData.recipientZip,
+          })
+          
+        });
+    
+        const result = await response.json();
+        console.log(result)
+    
+        if (response.ok) {
+          // Update the local state if the API call is successful
+          // setLoginUser(result.user);
+
+          updateUser({
+            availableBalance: result.availableBalance,
+            totalGeneratedLabels: result.totalGeneratedLabels,
+        });
+    
+          setShowLabel(true); // Show the generated label
+          // console.log("Label generated successfully!", formData);
+
+        } else {
+          alert(result.msg || "Failed to generate label. Please try again.");
+        }
+      }
+      else {
+        setShowLabel(false); 
+      }
+  
+      } catch (error) {
+        console.error("Error generating label:", error);
+        // alert("An error occurred while generating the label.");
+      }
+    };
     const handleCarrierChange = (e) => {
       const selectedCarrier = e.target.value;
 
@@ -296,7 +310,7 @@ try {
 
   // Handle Vendor Selection
   const handleVendorChange = (e) => {
-    const ATFMLabelTypes = ['preship']
+    const ATFMLabelTypes = ['priority']
     const ShippoLabelTypes = ['ground_advantage','priority']
     const EvsLabelTypes = ['ground_advantage','priority']
     const RolloLabelTypes = ['ground_advantage','priority']
@@ -374,7 +388,7 @@ try {
                 {availableVendors.length > 0
                   ? availableVendors.map((vendor, index) => (
                       <option key={index} value={vendor}>
-                        {vendor == 'preship' ?'priority' :vendor}
+                        {vendor}
                       </option>
                     ))
                   : (

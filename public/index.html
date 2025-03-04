@@ -10,6 +10,10 @@
       content="Web site created using create-react-app"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -68,6 +72,34 @@ font-family: "Montserrat", sans-serif;
         margin:auto;
         
     }
+    .loader2 {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    position: relative;
+    border-width: 3px 2px 3px 2px;
+    border-style: solid dotted solid dotted;
+    border-color: #fff rgba(255, 255, 255,0.3) #fff rgba(151, 107, 93, 0.3);
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: 1s rotate linear infinite;
+ }
+ .loader2:before , .loader2:after{
+    /* content: ''; */
+    top: 0;
+    left: 0;
+    position: absolute;
+    border: 10px solid transparent;
+    border-bottom-color:#fff;
+    transform: translate(-10px, 19px) rotate(-35deg);
+  }
+ .loader2:after {
+    border-color: #de3500 #0000 #0000 #0000 ;
+    transform: translate(32px, 3px) rotate(-35deg);
+  }
+   @keyframes rotate {
+    100%{    transform: rotate(360deg)}
+  }
         .home_box_container{
             background: url('https://preview.colorlib.com/theme/logis/images/hero_bg_2.jpg.webp');
             background-position: 50% -25px;
@@ -155,11 +187,11 @@ a{
 .dashboard_Sec{
     display: flex;
     gap: 24px;
-    height: 100vh;
+    min-height: 100vh;
     margin-top: 50px;
 }
 .dashboard_left{
-    height: 100%;
+    height: auto;
     padding: 10px 0px;
 }
 .create_sec_heading{
@@ -696,13 +728,24 @@ body.sidebar-open {
 
 /* Select elements */
 .form-select {
+  width: 100%; 
+ 
+}
+
+.form-select select , .bulk_form_select{
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
 }
-
+.form-select_state{
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
 /* Input fields */
 .form-input {
   width: 100%;

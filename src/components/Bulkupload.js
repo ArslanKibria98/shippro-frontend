@@ -10,11 +10,17 @@ const BulkUpload = () => {
   const [file, setFile] = useState(null);
   const [labelsGenerated, setLabelsGenerated] = useState(0);
   const [totalRows, setTotalRows] = useState(0);
+    const [trackingNumber, setTrackingNumber] = useState(null)
+  
   const [generatedLabels, setGeneratedLabels] = useState([]); // Store processed label data
   const [allowedCarriers, setAllowedCarriers] = useState([]);
   const [availableVendors, setAvailableVendors] = useState([]);
   const [availableLabels, setAvailableLabels] = useState([]);
    const [vendorLabelType,setVendorLabelType] = useState([]);
+      const [barcodeImg, setBarcodeImg] = useState(null);
+      let  [missRow,setmissrows] = useState([]);
+      
+  let errors =[];
 
   const [formData, setFormData] = useState({
     carrier: "",
@@ -44,7 +50,7 @@ const BulkUpload = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("Allowed Carriers:", data); // Debugging
+          // console.log("Allowed Carriers:", data); // Debugging
           setAllowedCarriers(data);
         } else {
           console.error("Error fetching allowed carriers");
@@ -62,8 +68,12 @@ const BulkUpload = () => {
       alert("Please upload an Excel file.");
       return;
     }
+    if (!formData.carrier || !formData.vendor || !formData.labelType) {
+      alert("Please select Carrier, Vendor, and Label Type before processing.");
+      return;
+    }
 
-    if (user.availableBalance <= 0) {
+    if (user.availableBalance <= user.rate) {
       alert("Insufficient balance to generate labels.");
       return;
     }
@@ -81,8 +91,115 @@ const BulkUpload = () => {
       const labelHistory = [];
       const newLabels = [];
 
-      for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
+
+for (let i = 0; i < rows.length; i++) {
+  const row = rows[i];
+
+  if (
+    !row.senderName || !row.senderAddress || !row.senderCity || 
+    !row.senderState || !row.senderZip || 
+    !row.recipientName || !row.recipientAddress || !row.recipientCity || 
+    !row.recipientState || !row.recipientZip
+  ) {
+    errors.push(`Row ${i + 2}: Missing required fields.`);
+    setmissrows(errors)
+    continue; // Skip this row
+  }
+  // if (errors.length > 0) {
+  //   alert("Some rows were skipped due to missing data:\n" + errors.join("\n"));
+  // }
+  if (user.availableBalance <= user.rate) {
+    alert("Insufficient balance to generate labels.");
+    return;
+  }
+
+
+  // const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${user.token}`,
+  //   },
+  //   body: JSON.stringify({
+  //     labelType: formData.labelType,
+  //     carrier: formData.carrier.toLowerCase(),
+  //   }),
+  // });
+
+  // if (!pullResponse.ok) {
+  //   const errText = await pullResponse.text();
+  //   alert(errText);
+  //   throw new Error(`Pull shipment error: ${errText}`);
+  // }
+
+  // const shipmentResult = await pullResponse.json();
+  // let pulledTrackingNumber;
+  // if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
+  //   pulledTrackingNumber = shipmentResult.shipment.tracking;
+  //   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+  //   setTrackingNumber(pulledTrackingNumber);
+  // } else {
+  //   console.error("Invalid shipment data:", shipmentResult);
+  //   alert("Failed to retrieve tracking number.");
+  // }
+
+  // const textData = {
+  //   barcode_data_url:
+  //     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
+  //   success: true,
+  // };
+
+  //     let newBarcodeImg = textData.barcode_data_url;
+
+
+
+
+  const apiVendor = formData.vendor.toLowerCase();
+  console.log("API Vendor:", apiVendor);
+  console.log("Label Type:", formData.labelType);
+  let pulledTrackingNumber;
+  let newBarcodeImg;
+  try {
+    // Fetch tracking number from the API
+    const apiResponse = await fetch(
+      `https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`
+    );
+  
+    if (!apiResponse.ok) {
+      throw new Error(`Failed to fetch tracking number: ${apiResponse.statusText}`);
+    }
+  
+    const data = await apiResponse.json();
+    pulledTrackingNumber = data.tracking_numbers[0];
+    console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+  
+    // Update formData with the new tracking number
+    setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+  
+    // Fetch barcode based on the new tracking number
+    const barcodeResponse = await fetch(
+      `https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${pulledTrackingNumber}&sf=3&ms=r&md=0.8`
+    );
+  
+    if (!barcodeResponse.ok) {
+      throw new Error(`Failed to fetch barcode: ${barcodeResponse.statusText}`);
+    }
+  
+    const barcodeData = await barcodeResponse.json();
+    console.log("Barcode URL:", barcodeData);
+    setBarcodeImg(barcodeData.barcode_data_url);
+    newBarcodeImg = barcodeData.barcode_data_url
+  } catch (error) {
+    console.error("Error:", error);
+    // Handle the error (e.g., show a message to the user)
+  }
+
+
+
+
+
+
+
         const labelData = {
           userId: user.id,
           carrier: formData.carrier, // Use selected carrier from form
@@ -99,7 +216,8 @@ const BulkUpload = () => {
           recipientState: row.recipientState,
           recipientZip: row.recipientZip,
           weight: row.weight,
-          trackingNumber: row.trackingNumber || "",
+          barcodeImg : newBarcodeImg,
+          trackingNumber: pulledTrackingNumber,
         };
 
         try {
@@ -113,7 +231,7 @@ const BulkUpload = () => {
               },
               body: JSON.stringify({
                 ...labelData,
-                amount: -1, // Deduct balance
+                amount: -(user.rate), // Deduct balance
                 count: 1, // Increment label count
               }),
             }
@@ -132,7 +250,7 @@ const BulkUpload = () => {
             newLabels.push(labelData); // Store label data for PDF generation
             labelHistory.push(labelData);
 
-            console.log(`Label ${i + 1} generated successfully`);
+            // console.log(`Label ${i + 1} generated successfully`);
           } else {
             console.error(`Error generating label for row ${i + 1}: ${result.msg}`);
           }
@@ -141,7 +259,7 @@ const BulkUpload = () => {
         }
       }
 
-      console.log(labelHistory);
+      // console.log(labelHistory);
 
       setGeneratedLabels(newLabels); // Update state with generated labels
       const bulkId = Date.now().toString();
@@ -161,7 +279,7 @@ const BulkUpload = () => {
 
         const result = await response.json();
         if (response.ok) {
-          console.log("Bulk label history updated successfully", result);
+          // console.log("Bulk label history updated successfully", result);
         } else {
           console.error("Error updating bulk label history:", result.msg);
         }
@@ -185,7 +303,7 @@ const BulkUpload = () => {
 
     // Set vendors based on selected carrier
     if (selectedCarrier === "USPS") {
-      setAvailableVendors(uspsVendors);
+      setAvailableVendors(uspsVendors)
       setAvailableLabels(uspsLabelType)
     } else if (selectedCarrier === "UPS") {
       setAvailableVendors("");
@@ -212,9 +330,9 @@ const BulkUpload = () => {
   // Handle Vendor Selection
   const handleVendorChange = (e) => {
     const ATFMLabelTypes = ['ground_advantage','preship']
-    const ShippoLabelTypes = ['ground_advantage','priority_mail']
-    const EvsLabelTypes = ['ground_advantage','priority_mail']
-    const RolloLabelTypes = ['ground_advantage','priority_mail']
+    const ShippoLabelTypes = ['ground_advantage','priority']
+    const EvsLabelTypes = ['ground_advantage','priority']
+    const RolloLabelTypes = ['ground_advantage','priority']
 
     if(e.target.value == 'Shippo'){
       setVendorLabelType(ShippoLabelTypes)
@@ -260,7 +378,7 @@ const BulkUpload = () => {
                 name="carrier"
                 value={formData.carrier}
                 onChange={handleCarrierChange}
-                className="form-select"
+                className="form-select bulk_form_select"
               >
                 <option value="" disabled>
                   --- Select Carrier ---
@@ -282,7 +400,7 @@ const BulkUpload = () => {
                 name="vendor"
                 value={formData.vendor}
                 onChange={handleVendorChange}
-                className="form-select"
+                className="form-select bulk_form_select"
               >
                 <option value="" disabled>
                   --- Select Vendor ---
@@ -303,7 +421,7 @@ const BulkUpload = () => {
                 name="labelType"
                 value={formData.labelType}
                 onChange={handleChange}
-                className="form-select"
+                className="form-select bulk_form_select"
               >
                 <option value="" disabled>
                   --- Select Shipping Service ---
@@ -322,7 +440,9 @@ const BulkUpload = () => {
               </select>
 
             </div>
-            <h4>Upload CSV File</h4>
+        <h4>Upload CSV</h4>
+        
+
 
             <input type="file" accept="" onChange={handleFileUpload} />
             <button
@@ -335,7 +455,20 @@ const BulkUpload = () => {
               Progress: {labelsGenerated} / {totalRows} labels generated
             </p>
 
+          
             {generatedLabels.length > 0 && <BulkDownloadLabels labelDataList={generatedLabels} />}
+
+
+            {missRow.length > 0 && (
+        <div style={{marginTop:'24px'}}>
+          Label not Generated for :
+          <ol>
+          {missRow.map((error, idx) => (
+            <li key={idx} style={{ color: 'red' }}>{error}</li>
+          ))}
+          </ol>
+        </div>
+      )}
           </div>
         </div>
       </div>

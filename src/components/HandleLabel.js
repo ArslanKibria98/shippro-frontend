@@ -4,12 +4,12 @@ import html2pdf from "html2pdf.js";
 import bwipjs from "bwip-js";
 import shippoLogo from './one2.svg';
 
-const HandleLabel = ({ formData }) => {
+const HandleLabel = ({ formData, barcodeImg }) => {
   const labelRef = useRef(null);
   const barcodeRef = useRef(null);
   const sbarcode = useRef(null);
   const sbarcode1 = useRef(null);
-  const [barcodeImg, setBarcodeImg] = useState(null); // Use state for barcode image URL
+  // const [barcodeImg, setBarcodeImg] = useState(null); // Use state for barcode image URL
   const cleanTrackingNumber = formData.trackingNumber.replace(/\s+/g, '');
   const formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
 
@@ -29,24 +29,24 @@ const HandleLabel = ({ formData }) => {
   // }, [formData.trackingNumber]);
 
 
-  useEffect(() => {
-  if (formData.trackingNumber) {
-  // fetch(`https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${formData.trackingNumber}&sf=3&ms=r&md=0.8`)
-  // .then(response => response.json())
-  // .then(data => {
-  //         console.log("Barcode URL:", data);
-  //         setBarcodeImg(data.barcode_data_url);
-  // })
-  // .catch(error => console.error("Error:", error));
+//   useEffect(() => {
+//   if (formData.trackingNumber) {
+//   // fetch(`https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${formData.trackingNumber}&sf=3&ms=r&md=0.8`)
+//   // .then(response => response.json())
+//   // .then(data => {
+//   //         console.log("Barcode URL:", data);
+//   //         setBarcodeImg(data.barcode_data_url);
+//   // })
+//   // .catch(error => console.error("Error:", error));
 
   
-  const textData =  {barcode_data_url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
-    success: true}
+//   const textData =  {barcode_data_url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
+//     success: true}
 
-    console.log(textData.barcode_data_url);
-    setBarcodeImg(textData.barcode_data_url);
-}
-}, [formData.trackingNumber]);
+//     console.log(textData.barcode_data_url);
+//     setBarcodeImg(textData.barcode_data_url);
+// }
+// }, [formData.trackingNumber]);
 
 
 

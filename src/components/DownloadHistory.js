@@ -11,21 +11,19 @@ const DownloadHistory = ({ formData }) => {
    const sbarcode1 = useRef(null);
    var cleanTrackingNumber = formData.trackingNumber.replace(/\s+/g, ''); // This removes all spaces
    var formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
-    useEffect(() => {
-      if (formData.trackingNumber) {
-        JsBarcode(barcodeRef.current, cleanTrackingNumber, {
-          format: "CODE128",
-          lineColor: "black",
-          width: 1.75,
-          height: 80,
-          margin: 0, // Remove padding/margin around barcode
-          flat: true, // Ensures no extra white space around barcode
-          displayValue: false
-        });
-      }
-    }, [formData.trackingNumber]);
-  
-   
+    // useEffect(() => {
+    //   if (formData.trackingNumber) {
+    //     JsBarcode(barcodeRef.current, cleanTrackingNumber, {
+    //       format: "CODE128",
+    //       lineColor: "black",
+    //       width: 1.75,
+    //       height: 80,
+    //       margin: 0, // Remove padding/margin around barcode
+    //       flat: true, // Ensures no extra white space around barcode
+    //       displayValue: false
+    //     });
+    //   }
+    // }, [formData.trackingNumber]);
   
     const generateBarcode = (canvasRef) => {
       if (formData.trackingNumber && canvasRef) {
@@ -73,103 +71,271 @@ const DownloadHistory = ({ formData }) => {
         }
   };
 
+    const renderVendorLabel = () => {
+      switch (formData.vendor) {
+        case 'Shippo':
+          return (<div style={{display:'none'}}>
+  
+            <div className="label-container" id="label" ref={labelRef}>
+              <div className="header">
+                <div id="large-letter" className="large-letter">
+                  {formData.labelType === 'ground_advantage' ? 'G' : 'P'}
+                </div>
+                <div>
+                  <div className="label_reference">
+                    <span id="label_reference_type">
+                      {formData.labelType === 'ground_advantage' ? 'USPS GROUND ADVANTAGE' : 'PRIORITY MAIL'}
+                    </span>
+                    <br />
+                    U.S. POSTAGE PAID<br />
+                    <span id="vendor_brand">{formData.vendor}</span><br />
+                    e-Postage
+                  </div>
+                  <span id="additional_info">{formData.vendor === 'Shippo' ? 'Cubic' : ''}</span>
+                </div>
+              </div>
+              <h3 className="label_type">
+                {formData.labelType === 'ground_advantage' ? (
+                  <>GROUND ADVANTAGE<sup>TM</sup></>
+                ) : (
+                  <>USPS PRIORITY MAIL<sup>®</sup></>
+                )}
+              </h3>
+              <div className="info" id="labelInfo">
+                <div className="address_label_info">
+                  <div className="to_address_info">
+                    {formData.senderName}<br />
+                    {formData.senderAddress} {formData.senderAddress1}<br />
+                    {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
+                    <br />
+                  </div>
+                  <div className="parcel_info">
+                    Ship Date: {new Date().toLocaleDateString('en-US')}<br />
+                    WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
+                  </div>
+                </div>
+                <div className="from_address_info">
+                  <canvas ref={sbarcode} />
+                  <div>
+                    {formData.recipientName}<br />
+                    {formData.recipientAddress} {formData.recipientAddress1}<br />
+                    {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
+                    <br />
+                  </div>
+                </div>
+              </div>
+              <div className="barcode">
+                <div className="tracking_heading">USPS TRACKING # EP</div>
+                {/* <svg ref={barcodeRef}></svg> */}
+                <img style={{width:'100%'}} src={formData.barcodeImg}></img>
+                <div id="tracking-number">{formattedTracking}</div>
+              </div>
+              <div className="end_label_container">
+                <div id="end_label">
+                  <div className="shippo-logo" id="shippo-logo">
+                    <img width="120px" src={shippoLogo} alt="Shippo Logo" />
+                  </div>
+                </div>
+                <canvas ref={sbarcode1} />
+              </div>
+            </div>
+            </div>
+          );
+  
+        case 'ATFM':
+          return (<div style={{display:'none'}}>
+            <div className="label-container" id="label" ref={labelRef}>
+               <div className="header">
+                <div id="large-letter" className="large-letter">
+                  {formData.labelType === 'ground_advantage' ? 'G' : 'P'}
+                </div>
+                <div>
+                  <div className="label_reference">
+                    <span id="label_reference_type">
+                      {formData.labelType === 'ground_advantage' ? 'USPS GROUND ADVANTAGE' : 'PRIORITY MAIL'}
+                    </span>
+                    <br />
+                    U.S. POSTAGE PAID<br />
+                    <span id="vendor_brand">{formData.vendor}</span><br />
+                    e-Postage
+                  </div>
+                  <span id="additional_info">{formData.vendor === 'Shippo' ? 'Cubic' : ''}</span>
+                </div>
+              </div>
+              <h3 className="label_type">
+                {formData.labelType === 'ground_advantage' ? (
+                  <>GROUND ADVANTAGE<sup>TM</sup></>
+                ) : (
+                  <>USPS PRIORITY MAIL<sup>®</sup></>
+                )}
+              </h3>
+              <div className="info" id="labelInfo">
+                <div className="address_label_info">
+                  <div className="to_address_info">
+                    {formData.senderName}<br />
+                    {formData.senderAddress} {formData.senderAddress1}<br />
+                    {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
+                    <br />
+                  </div>
+                  <div className="parcel_info">
+                     Mailed From: {formData.senderZip} <br />
+                    WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
+                  </div>
+                </div>
+                <div className="from_address_info">
+                Ship <br></br>
+                To:
+                  <div>
+                    {formData.recipientName}<br />
+                    {formData.recipientAddress} {formData.recipientAddress1}<br />
+                    {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
+                    <br />
+                  </div>
+                </div>
+              </div>
+              <div className="barcode">
+                <div className="tracking_heading">USPS TRACKING # EP</div>
+                <img style={{width:'100%'}} src={formData.barcodeImg}></img>
+                <div id="tracking-number">{formattedTracking}</div>
+              </div>
+            </div>
+            </div>
+          );
+  
+        case 'Evs':
+          return (<div style={{display:'none'}}>
+            <div className="label-container evs_label" id="label" ref={labelRef} >
+              <div className="header">
+                <div id="large-letter" className="large-letter">
+                  {formData.labelType === 'ground_advantage' ? 'G' : 'P'}
+                </div>
+                <div>
+                  <div className="label_reference">
+                    {/* <span id="label_reference_type">
+                      {formData.labelType === 'ground_advantage' ? 'USPS GROUND ADVANTAGE' : 'PRIORITY MAIL'}
+                    </span> */}
+                    {/* <br /> */}
+                    U.S. POSTAGE PAID<br />
+                    PERMIT NO. 49493<br />
+                    <span id="vendor_brand" style={{textAlign:'left'}}>{formData.vendor == 'Evs' ? 'eVS':''}</span><br />
+  
+                    </div>
+                  <span id="additional_info">{formData.vendor === 'Shippo' ? 'Cubic' : ''}</span>
+                </div>
+              </div>
+              <h3 className="label_type">
+                {formData.labelType === 'ground_advantage' ? (
+                  <>GROUND ADVANTAGE<sup>TM</sup></>
+                ) : (
+                  <>USPS PRIORITY MAIL<sup>®</sup></>
+                )}
+              </h3>
+              <div className="info" id="labelInfo">
+                <div className="address_label_info">
+                  <div className="to_address_info">
+                    {formData.senderName}<br />
+                    {formData.senderAddress} {formData.senderAddress1}<br />
+                    {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
+                    <br />
+                  </div>
+                  <div className="parcel_info">
+                    <div style={{textAlign:'center'}}>{new Date().toLocaleDateString('en-US')}</div>
+                     Mailed From: {formData.senderZip} <br />
+                    WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'} 0 ozs
+                  </div>
+                </div>
+                <div className="from_address_info">
+                <br></br>
+                
+                  <div>
+                    {formData.recipientName}<br />
+                    {formData.recipientAddress} {formData.recipientAddress1}<br />
+                    {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
+                    <br />
+                  </div>
+                </div>
+              </div>
+              <div className="barcode">
+                <div className="tracking_heading">USPS TRACKING # eVS</div>
+                <img style={{width:'100%'}} src={formData.barcodeImg}></img>
+                <div id="tracking-number">{formattedTracking}</div>
+              </div>
+            </div>
+            </div>
+          );
+          case 'Rollo':
+          return (<div style={{display:'none'}}>
+            <div className="label-container rollo_label" id="label" ref={labelRef}>
+              <div className="header">
+                <div id="large-letter" className="large-letter">
+                  {formData.labelType === 'ground_advantage' ? 'G' : 'P'}
+                </div>
+                <div>
+                  <div style={{textAlign:'left'}} className="label_reference" >
+                    U.S. POSTAGE PAID<br />
+                    <span id="vendor_brand">{formData.vendor}</span><br />
+                    ePostage
+                  </div>
+                  <span id="additional_info">{formData.vendor === 'Shippo' ? 'Cubic' : ''}</span>
+                </div>
+              </div>
+              <h3 className="label_type">
+                {formData.labelType === 'ground_advantage' ? (
+                  <>GROUND ADVANTAGE</>
+                ) : (
+                  <>PRIORITY MAIL</>
+                )}
+              </h3>
+              <div className="info" id="labelInfo">
+                <div className="address_label_info">
+                  <div className="to_address_info">
+                    {formData.senderName}<br />
+                    {formData.senderAddress} {formData.senderAddress1}<br />
+                    {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
+                    <br />
+                  </div>
+                  <div className="parcel_info">
+                    Ship Date: {new Date().toLocaleDateString('en-US')}<br />
+                    Weight: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'} 0 oz <br />
+                    <p className="parcel_no">0004</p>
+                  </div>
+                </div>
+                <div className="from_address_info">
+                  <canvas ref={sbarcode} />
+                  <div>
+                    {formData.recipientName}<br />
+                    {formData.recipientAddress} {formData.recipientAddress1}<br />
+                    {formData.recipientCity}, {formData.recipientState}, {formData.recipientZip}<br />
+                    <br />
+                  </div>
+                </div>
+              </div>
+              <div className="barcode">
+                <div className="tracking_heading">USPS TRACKING # EP</div>
+                <img style={{width:'100%'}} src={formData.barcodeImg}></img>
+                <div id="tracking-number">{formattedTracking}</div>
+              </div>
+              <div className="end_label_container">
+                <div id="end_label">
+                 
+                </div>
+                <canvas ref={sbarcode1} />
+              </div>
+            </div>
+            </div>
+          );
+  
+  
+        default:
+          return <div>Unsupported Vendor</div>;
+      }
+    };
+
   return (
     <div >
-      {/* Hidden container renders the label design */}
-   <div style={{display:'none'}}>
-        <div class="label-container" id="label" ref={labelRef}>
-                <div class="header">
-                    <div id="large-letter" class="large-letter">{formData.labelType === 'GROUND ADVANTAGE' ? 'G' : 'P'}
-                    </div>
-                    <div>
-                    <div class="label_reference">
-                      <span id="label_reference_type">{formData.labelType === 'GROUND ADVANTAGE' ? 'USPS GROUND ADVANTAGE' : 'PRIORITY MAIL'} </span><br></br>
-                        U.S. POSTAGE PAID<br></br>
-                        <span id="vendor_brand">{formData.vendor}</span><br></br>
-                        e-Postage 
-                    </div>
-                    <span id="additional_info">{formData.vendor == 'Shippo' ? 'Cubic':''}</span>
-                </div>
-                </div>
-                <h3 class="label_type">{formData.labelType === 'GROUND ADVANTAGE' ? (
-          <>
-            GROUND ADVANTAGE<sup>TM</sup>
-          </>
-        ) :  <>
-        USPS PRIORITY MAIL<sup>®</sup>
-        </>}</h3>
-        <div class="info" id="labelInfo">
-                    <div class="address_label_info">
-                        <div class="to_address_info">
-                        {formData.senderName}<br></br>
-                        {formData.senderAddress}<br></br>
-                        {formData.senderCity}, {formData.senderState}, {formData.senderZip}<br></br>
-                        <br></br>
-                        </div>
-                        <div class="parcel_info">
-                          {formData.vendor == 'ATFM' ? (<>
-                           Mailed From: 22305 <br></br>
-                           WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
-                           </>
-                          ):<></>
-                          }
-                           {formData.vendor == 'Shippo' ? (<>
-                           Ship Date: {new Date().toLocaleDateString('en-US')} <br></br>
-                           WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
-                           </>
-                          ):<></>
-                          }
-                        </div>
-                        </div>
-                        <div class="from_address_info">
-                        {formData.vendor == 'ATFM' ? (<>
-                           Ship <br></br>
-                           To:
-                           </>
-                          ):<></>
-                          }
-                             {formData.vendor == 'Shippo' ? (<>
-                              <canvas ref={sbarcode}/>
-                           </>
-                          ):<></>
-                          }
-              <div>
-                        {formData.recipientName}<br></br>
-                        {formData.recipientAddress}<br></br>
-                        {formData.recipientCity}, {formData.recipientState}, {formData.recipientZip}<br></br>
-                        <div>
-                        <br></br>
-                        </div>
-                    </div></div></div>
-                <div class="barcode">
-                    <div class="tracking_heading">USPS TRACKING # - EP</div>
-              <svg ref={barcodeRef}></svg>
-                    <div id="tracking-number">{formattedTracking}</div>
-                </div>
-        
-        
-                {formData.vendor == 'Shippo' ? (<>
-                <div class="end_label_container">
-                <div id="end_label">
-                    <div class="shippo-logo" id="shippo-logo">
-                        <img width="120px" src={shippoLogo} alt="Shippo Logo"/>
-                      </div>
-                </div>
-                <canvas ref={sbarcode1}/>
-         
-             </div>
-             </>
-              ):<></>
-            }
-                {/* <!-- <button onclick="">Download PDF</button> --> */}
-          
-      </div>
-      </div>
-      <button 
-        onClick={downloadLabel} 
-        className="download_button"
-      >
-        Download
+   {renderVendorLabel()}
+      <button onClick={downloadLabel} className="bg-green-500 text-white px-4 py-2 rounded mt-4">
+        Download Label
       </button>
     </div>
   );

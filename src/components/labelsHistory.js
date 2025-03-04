@@ -210,10 +210,10 @@ const LabelsHistory = () => {
 
                       return (
                         <tr key={event._id || bulkIndex}>
-                          <td></td>
+                          <td>{event.labels[0].carrier}_Labels.zip</td>
                           <td>{event.labels.length}</td>
                           <td>Ready to Download</td>
-                          <td>{event?.vendor}</td>
+                          <td>{event.labels[0].vendor}</td>
                           <td>{new Date(event.generatedAt).toLocaleString()}</td>
                           <td>
                             {/* Render buttons for each group of tracking numbers */}
