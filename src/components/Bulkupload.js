@@ -177,8 +177,9 @@ for (let i = 0; i < rows.length; i++) {
     setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
   
     // Fetch barcode based on the new tracking number
+    console.log(row.recipientZip);
     const barcodeResponse = await fetch(
-      `https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${pulledTrackingNumber}&sf=3&ms=r&md=0.8`
+      `https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${row.recipientZip}&tracking=${pulledTrackingNumber}&sf=3&ms=r&md=0.8`
     );
   
     if (!barcodeResponse.ok) {
