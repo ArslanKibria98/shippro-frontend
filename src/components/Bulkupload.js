@@ -4,9 +4,7 @@ import AuthContext from "../context/AuthContext";
 import BulkDownloadLabels from "./BulkDownloadLabels"; // Import new component
 import Sidebar from "./Sidebar";
 import Dashboardhead from "./Dashboardhead";
-const apiUrl = process.env.REACT_APP_API;
-const apiKey = process.env.REACT_APP_API_KEY;
-const userName = process.env.REACT_APP_USER_NAME;
+
 const BulkUpload = () => {
   const { user, updateUser } = useContext(AuthContext);
   const [file, setFile] = useState(null);
@@ -160,14 +158,14 @@ for (let i = 0; i < rows.length; i++) {
 
 
   const apiVendor = formData.vendor.toLowerCase();
-  // console.log("API Vendor:", apiVendor);
-  // console.log("Label Type:", formData.labelType);
+  console.log("API Vendor:", apiVendor);
+  console.log("Label Type:", formData.labelType);
   let pulledTrackingNumber;
   let newBarcodeImg;
   try {
     // Fetch tracking number from the API
     const apiResponse = await fetch(
-      `${apiUrl}?user_name=${userName}&api_key=${apiKey}&vendor=${apiVendor}&class=${formData.labelType}&count=1`
+      `https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`
     );
   
     if (!apiResponse.ok) {

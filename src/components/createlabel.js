@@ -5,9 +5,6 @@ import HandleLabel from "./HandleLabel";
 import AuthContext from "../context/AuthContext";
 import Sidebar from "./Sidebar";
 import Dashboardhead from "./Dashboardhead";
-const apiUrl = process.env.REACT_APP_API;
-const apiKey = process.env.REACT_APP_API_KEY;
-const userName = process.env.REACT_APP_USER_NAME;
 const CreateLabel = () => {
   
   // const { user, setUser } = useContext(AuthContext);
@@ -210,7 +207,7 @@ let newBarcodeImg;
 try {
   // Fetch tracking number from the API
   const apiResponse = await fetch(
-    `${apiUrl}?user_name=${userName}&api_key=${apiKey}&vendor=${apiVendor}&class=${formData.labelType}&count=1`
+    `https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`
   );
 
   if (!apiResponse.ok) {
