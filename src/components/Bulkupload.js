@@ -4,7 +4,9 @@ import AuthContext from "../context/AuthContext";
 import BulkDownloadLabels from "./BulkDownloadLabels"; // Import new component
 import Sidebar from "./Sidebar";
 import Dashboardhead from "./Dashboardhead";
-
+const apiUrl = process.env.REACT_APP_API_URL;
+const apiKey = process.env.REACT_APP_API_KEY;
+const userName = process.env.REACT_APP_USER_NAME;
 const BulkUpload = () => {
   const { user, updateUser } = useContext(AuthContext);
   const [file, setFile] = useState(null);
@@ -84,7 +86,10 @@ const BulkUpload = () => {
       const workbook = XLSX.read(data, { type: "array" });
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(worksheet);
-
+      if (rows.length > 40) {
+        alert("Only 40 labels can be created at a time.");
+        return; // Stop further execution
+      }
       setTotalRows(rows.length);
       setLabelsGenerated(0);
 
@@ -155,14 +160,14 @@ for (let i = 0; i < rows.length; i++) {
 
 
   const apiVendor = formData.vendor.toLowerCase();
-  console.log("API Vendor:", apiVendor);
-  console.log("Label Type:", formData.labelType);
+  // console.log("API Vendor:", apiVendor);
+  // console.log("Label Type:", formData.labelType);
   let pulledTrackingNumber;
   let newBarcodeImg;
   try {
     // Fetch tracking number from the API
     const apiResponse = await fetch(
-      `https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`
+      `${apiUrl}?user_name=${userName}&api_key=${apiKey}&vendor=${apiVendor}&class=${formData.labelType}&count=1`
     );
   
     if (!apiResponse.ok) {
@@ -171,13 +176,13 @@ for (let i = 0; i < rows.length; i++) {
   
     const data = await apiResponse.json();
     pulledTrackingNumber = data.tracking_numbers[0];
-    console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+    // console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
   
     // Update formData with the new tracking number
     setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
   
     // Fetch barcode based on the new tracking number
-    console.log(row.recipientZip);
+    // console.log(row.recipientZip);
     const barcodeResponse = await fetch(
       `https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${row.recipientZip}&tracking=${pulledTrackingNumber}&sf=3&ms=r&md=0.8`
     );
@@ -187,7 +192,7 @@ for (let i = 0; i < rows.length; i++) {
     }
   
     const barcodeData = await barcodeResponse.json();
-    console.log("Barcode URL:", barcodeData);
+    // console.log("Barcode URL:", barcodeData);
     setBarcodeImg(barcodeData.barcode_data_url);
     newBarcodeImg = barcodeData.barcode_data_url
   } catch (error) {
@@ -296,41 +301,36 @@ for (let i = 0; i < rows.length; i++) {
     const selectedCarrier = e.target.value;
 
     // Default vendors for USPS
-    const uspsVendors = ["ATFM", "Shippo", "Rollo","Evs"];
-    const upsLableType = ["UPS 2nd Day Air", "UPS 3 Day", "UPS Ground", "UPS Next Day"];
-    const uspsLabelType = ["priority","ground_advantage"];
+    const uspsVendors = ["Shippo", "Rollo","Evs"];
+    const upsVendors = ["UPS 2nd Day Air", "UPS 3 Day", "UPS Ground", "UPS Next Day"];
+     const uspsPreVendors = ['ATFM']
+    
+
     // Find the selected carrier from allowedCarriers
-    const carrierData = allowedCarriers.find((carrier) => carrier.carrier === selectedCarrier);
-
-    // Set vendors based on selected carrier
+    const carrierData = allowedCarriers.find(carrier => carrier.carrier === selectedCarrier);
+    
+    // Set vendors based on selected carrie
     if (selectedCarrier === "USPS") {
-      setAvailableVendors(uspsVendors)
-      setAvailableLabels(uspsLabelType)
+        setAvailableVendors(uspsVendors);
     } else if (selectedCarrier === "UPS") {
-      setAvailableVendors("");
-      setAvailableLabels(upsLableType)
-
-    }else if (selectedCarrier === "USPS(Pre Shipment)") {
-      setAvailableVendors(["Piority"]);
-      setAvailableLabels(['ATFM'])
-
-    } 
-     else {
-      setAvailableVendors([]);
-      setAvailableLabels([]);
+      setAvailableVendors(upsVendors);
+    } else if (selectedCarrier === "USPS(Pre Shipment)") {
+      setAvailableVendors(uspsPreVendors);
+    } else {
+        setAvailableVendors([]);
     }
 
     // Update form data
-    setFormData((prev) => ({
-      ...prev,
-      carrier: selectedCarrier,
-      vendor: "", // Reset vendor when carrier changes
+    setFormData(prev => ({
+        ...prev,
+        carrier: selectedCarrier,
+        vendor: "" // Reset vendor when carrier changes
     }));
-  };
+};
 
   // Handle Vendor Selection
   const handleVendorChange = (e) => {
-    const ATFMLabelTypes = ['ground_advantage','preship']
+    const ATFMLabelTypes = ['preship']
     const ShippoLabelTypes = ['ground_advantage','priority']
     const EvsLabelTypes = ['ground_advantage','priority']
     const RolloLabelTypes = ['ground_advantage','priority']
@@ -353,8 +353,7 @@ for (let i = 0; i < rows.length; i++) {
       setFormData(prev => ({
           ...prev,
           vendor: e.target.value,
-          labelType: "", // Reset vendor when carrier changes
-
+          labelType: "",
       }));
     
   };
@@ -409,8 +408,8 @@ for (let i = 0; i < rows.length; i++) {
                 {availableVendors.length > 0
                   ? availableVendors.map((vendor, index) => (
                       <option key={index} value={vendor}>
-                        {vendor}
-                      </option>
+                 {vendor}
+        </option>
                     ))
                   : (
                       <option value="" disabled>
@@ -428,9 +427,9 @@ for (let i = 0; i < rows.length; i++) {
                   --- Select Shipping Service ---
                 </option>
                 {vendorLabelType.length > 0
-                  ? vendorLabelType.map((vendor, index) => (
-                      <option key={index} value={vendor}>
-                        {vendor}
+                  ? vendorLabelType.map((labelType, index) => (
+                      <option key={index} value={labelType}>
+                        {labelType == 'preship' ? 'priority' : labelType}
                       </option>
                     ))
                   : (

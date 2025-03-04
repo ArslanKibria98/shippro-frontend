@@ -5,17 +5,65 @@ import HandleLabel from "./HandleLabel";
 import AuthContext from "../context/AuthContext";
 import Sidebar from "./Sidebar";
 import Dashboardhead from "./Dashboardhead";
+const apiUrl = process.env.REACT_APP_API_URL;
+const apiKey = process.env.REACT_APP_API_KEY;
+const userName = process.env.REACT_APP_USER_NAME;
 const CreateLabel = () => {
+  
   // const { user, setUser } = useContext(AuthContext);
   const { user, updateUser } = useContext(AuthContext);
-  const usStates = [
-    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
-    "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
-    "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri",
-    "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina",
-    "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
-    "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
-  ];
+ const usStates = [
+    { name: "Alabama", abbreviation: "AL" },
+    { name: "Alaska", abbreviation: "AK" },
+    { name: "Arizona", abbreviation: "AZ" },
+    { name: "Arkansas", abbreviation: "AR" },
+    { name: "California", abbreviation: "CA" },
+    { name: "Colorado", abbreviation: "CO" },
+    { name: "Connecticut", abbreviation: "CT" },
+    { name: "Delaware", abbreviation: "DE" },
+    { name: "Florida", abbreviation: "FL" },
+    { name: "Georgia", abbreviation: "GA" },
+    { name: "Hawaii", abbreviation: "HI" },
+    { name: "Idaho", abbreviation: "ID" },
+    { name: "Illinois", abbreviation: "IL" },
+    { name: "Indiana", abbreviation: "IN" },
+    { name: "Iowa", abbreviation: "IA" },
+    { name: "Kansas", abbreviation: "KS" },
+    { name: "Kentucky", abbreviation: "KY" },
+    { name: "Louisiana", abbreviation: "LA" },
+    { name: "Maine", abbreviation: "ME" },
+    { name: "Maryland", abbreviation: "MD" },
+    { name: "Massachusetts", abbreviation: "MA" },
+    { name: "Michigan", abbreviation: "MI" },
+    { name: "Minnesota", abbreviation: "MN" },
+    { name: "Mississippi", abbreviation: "MS" },
+    { name: "Missouri", abbreviation: "MO" },
+    { name: "Montana", abbreviation: "MT" },
+    { name: "Nebraska", abbreviation: "NE" },
+    { name: "Nevada", abbreviation: "NV" },
+    { name: "New Hampshire", abbreviation: "NH" },
+    { name: "New Jersey", abbreviation: "NJ" },
+    { name: "New Mexico", abbreviation: "NM" },
+    { name: "New York", abbreviation: "NY" },
+    { name: "North Carolina", abbreviation: "NC" },
+    { name: "North Dakota", abbreviation: "ND" },
+    { name: "Ohio", abbreviation: "OH" },
+    { name: "Oklahoma", abbreviation: "OK" },
+    { name: "Oregon", abbreviation: "OR" },
+    { name: "Pennsylvania", abbreviation: "PA" },
+    { name: "Rhode Island", abbreviation: "RI" },
+    { name: "South Carolina", abbreviation: "SC" },
+    { name: "South Dakota", abbreviation: "SD" },
+    { name: "Tennessee", abbreviation: "TN" },
+    { name: "Texas", abbreviation: "TX" },
+    { name: "Utah", abbreviation: "UT" },
+    { name: "Vermont", abbreviation: "VT" },
+    { name: "Virginia", abbreviation: "VA" },
+    { name: "Washington", abbreviation: "WA" },
+    { name: "West Virginia", abbreviation: "WV" },
+    { name: "Wisconsin", abbreviation: "WI" },
+    { name: "Wyoming", abbreviation: "WY" }
+];
   const loginUser = user;
   // console.log('the user data is ',user)
   const [trackingNumber, setTrackingNumber] = useState(null)
@@ -155,13 +203,14 @@ const CreateLabel = () => {
 
 
 const apiVendor = formData.vendor.toLowerCase();
-console.log("API Vendor:", apiVendor);
-console.log("Label Type:", formData.labelType);
+// console.log("API Vendor:", apiVendor);
+// console.log("Label Type:", formData.labelType);
 let pulledTrackingNumber;
+let newBarcodeImg;
 try {
   // Fetch tracking number from the API
   const apiResponse = await fetch(
-    `https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`
+    `${apiUrl}?user_name=${userName}&api_key=${apiKey}&vendor=${apiVendor}&class=${formData.labelType}&count=1`
   );
 
   if (!apiResponse.ok) {
@@ -170,7 +219,7 @@ try {
 
   const data = await apiResponse.json();
   pulledTrackingNumber = data.tracking_numbers[0];
-  console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+  // console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
 
   // Update formData with the new tracking number
   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
@@ -185,8 +234,10 @@ try {
   }
 
   const barcodeData = await barcodeResponse.json();
-  console.log("Barcode URL:", barcodeData);
+  // console.log("Barcode URL:", barcodeData);
   setBarcodeImg(barcodeData.barcode_data_url);
+  newBarcodeImg = barcodeData.barcode_data_url
+
 } catch (error) {
   console.error("Error:", error);
   // Handle the error (e.g., show a message to the user)
@@ -203,8 +254,7 @@ try {
 
 
         // Use a callback to ensure the state is updated
-        setTimeout(() => {
-          const generateLabel = async () => {
+      
 
             try {
               const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/generate-label/${loginUser.id}`, {
@@ -234,13 +284,13 @@ try {
                   recipientPh: formData.recipientPh,
                   recipientCity: formData.recipientCity,
                   recipientState: formData.recipientState,
-                  barcodeImg: barcodeImg,
+                  barcodeImg: newBarcodeImg,
                   recipientZip: formData.recipientZip,
                 }),
               });
   
               const result = await response.json();
-              console.log(result);
+              // console.log(result);
   
               if (response.ok) {
                 updateUser({
@@ -256,9 +306,6 @@ try {
             }
           };
   
-          generateLabel();
-        }, 10); // Wait for the next event loop tick
-      }
     } catch (error) {
       console.error("Error generating label:", error);
     }
@@ -318,7 +365,8 @@ try {
     }
       setFormData(prev => ({
           ...prev,
-          vendor: e.target.value
+          vendor: e.target.value,
+          labelType: "",
       }));
     
   };
@@ -374,7 +422,7 @@ try {
                 {availableVendors.length > 0
                   ? availableVendors.map((vendor, index) => (
                       <option key={index} value={vendor}>
-                        {vendor == 'preship' ?'priority' :vendor}
+                        {vendor}
                       </option>
                     ))
                   : (
@@ -395,9 +443,9 @@ try {
                   --- Select Shipping Service ---
                 </option>
                 {vendorLabelType.length > 0
-                  ? vendorLabelType.map((vendor, index) => (
-                      <option key={index} value={vendor}>
-                        {vendor}
+                  ? vendorLabelType.map((labelType, index) => (
+                      <option key={index} value={labelType}>
+                        {labelType == 'preship' ? 'priority' : labelType}
                       </option>
                     ))
                   : (
@@ -508,8 +556,8 @@ try {
                     --- Select State ---
                   </option>
                   {usStates.map((state, index) => (
-                    <option key={index} value={state}>
-                      {state}
+                    <option key={index} value={state.name}>
+                      {state.name} ({state.abbreviation})
                     </option>
                   ))}
                 </select>
@@ -586,8 +634,8 @@ try {
                     --- Select State ---
                   </option>
                   {usStates.map((state, index) => (
-                    <option key={index} value={state}>
-                      {state}
+                    <option key={index} value={state.name}>
+                     {state.name} ({state.abbreviation})
                     </option>
                   ))}
                 </select>
