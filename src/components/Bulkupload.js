@@ -309,21 +309,21 @@ for (let i = 0; i < rows.length; i++) {
     
     // Set vendors based on selected carrie
     if (selectedCarrier === "USPS") {
-        setAvailableVendors(uspsVendors);
-    } else if (selectedCarrier === "UPS") {
-      setAvailableVendors(upsVendors);
-    } else if (selectedCarrier === "USPS(Pre Shipment)") {
-      setAvailableVendors(uspsPreVendors);
-    } else {
-        setAvailableVendors([]);
-    }
+      setAvailableVendors(uspsVendors);
+  } else if (selectedCarrier === "UPS") {
+    setAvailableVendors(upsVendors);
+  } else if (selectedCarrier === "USPS(Pre Shipment)") {
+    setAvailableVendors(uspsPreVendors);
+  } else {
+      setAvailableVendors([]);
+  }
 
-    // Update form data
-    setFormData(prev => ({
-        ...prev,
-        carrier: selectedCarrier,
-        vendor: "" // Reset vendor when carrier changes
-    }));
+  // Update form data
+  setFormData(prev => ({
+      ...prev,
+      carrier: selectedCarrier,
+      vendor: "" // Reset vendor when carrier changes
+  }));
 };
 
   // Handle Vendor Selection
