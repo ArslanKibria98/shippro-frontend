@@ -22,13 +22,9 @@ const Dashboard = () => {
 
     return (
         <>
-                <div><Dashboardhead /></div>
-               
+         <div><Dashboardhead /></div>       
         <div className="container">
-
         <div className="dashboard_Sec">
-    
-
         <div className="dashboard_left sidebar_main"><Sidebar/></div>
         <div className="dashboard_right">
             <div style={{display:"flex", gap:'20px'}}>

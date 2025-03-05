@@ -12,22 +12,44 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
   // const [barcodeImg, setBarcodeImg] = useState(null); // Use state for barcode image URL
   const cleanTrackingNumber = formData.trackingNumber.replace(/\s+/g, '');
   const formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
+   
+
+
   const formatZipCode = (zip) => {
-    if (!zip) return ''; // Handle empty or undefined values
+    // Convert input to string if it's not already a string
+    const zipString = String(zip || '');
   
-    // Split the ZIP code into parts based on the dash
-    const [zipPart1, zipPart2] = zip.split('-');
+    // Split into parts based on the dash and take only the part before the dash
+    const [zipPart1] = zipString.split('-');
   
-    // Ensure the first part is 5 digits long by adding leading zeros
-    const formattedZipPart1 = zipPart1.padStart(5, '0');
+    // Remove non-numeric characters and ensure the first part is at least 5 digits long
+    const formattedZip = zipPart1.replace(/\D/g, '').padStart(5, '0');
   
-    // If there's a second part (after the dash), combine it with the formatted first part
-    if (zipPart2) {
-      return `${formattedZipPart1}-${zipPart2}`;
+    // Return the formatted ZIP code
+    return formattedZip;
+  };
+  
+
+  const formatZipCodeBeforeDash = (zip) => {
+    // Convert input to string if it's not already a string
+    const zipString = String(zip || '');
+  
+    // Check if the ZIP code contains a dash
+    const hasDash = zipString.includes('-');
+  
+    // Split into parts only if it has a dash
+    let zipPart1 = zipString;
+    let zipPart2 = '';
+  
+    if (hasDash) {
+      [zipPart1, zipPart2] = zipString.split('-');
     }
   
-    // If no dash, return the formatted first part
-    return formattedZipPart1;
+    // Remove non-numeric characters and ensure the first part is at least 5 digits long
+    zipPart1 = zipPart1.replace(/\D/g, '').padStart(5, '0');
+  
+    // Return formatted ZIP code with or without the second part
+    return zipPart2 ? `${zipPart1}-${zipPart2}` : zipPart1;
   };
 
   // Barcode generation for CODE128
@@ -148,7 +170,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formatZipCode(formData.recipientZip)}<br />
+                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -217,7 +239,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formatZipCode(formData.recipientZip)}<br />
+                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -279,7 +301,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formatZipCode(formData.recipientZip)}<br />
+                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -334,7 +356,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity}, {formData.recipientState}, {formatZipCode(formData.recipientZip)}<br />
+                  {formData.recipientCity}, {formData.recipientState}, {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>

@@ -209,10 +209,17 @@ const CreateLabel = () => {
 
         // for online get tracking start here 
         const formatZipCode = (zip) => {
-          if (!zip) return ""; // Handle empty input
-          let trimmedZip = zip.split("-")[0]; // Get digits before '-'
-          return trimmedZip.padStart(5, "0"); // Ensure 5-digit format
-
+          // Convert input to string if it's not already a string
+          const zipString = String(zip || '');
+        
+          // Split into parts based on the dash and take only the part before the dash
+          const [zipPart1] = zipString.split('-');
+        
+          // Remove non-numeric characters and ensure the first part is at least 5 digits long
+          const formattedZip = zipPart1.replace(/\D/g, '').padStart(5, '0');
+        
+          // Return the formatted ZIP code
+          return formattedZip;
         };
 
 

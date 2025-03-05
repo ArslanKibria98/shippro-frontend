@@ -29,47 +29,45 @@ const HandleLabel = ({ formData, barcodeImg }) => {
   // }, [formData.trackingNumber]);
 
 
-//   useEffect(() => {
-//   if (formData.trackingNumber) {
-//   // fetch(`https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${formData.trackingNumber}&sf=3&ms=r&md=0.8`)
-//   // .then(response => response.json())
-//   // .then(data => {
-//   //         console.log("Barcode URL:", data);
-//   //         setBarcodeImg(data.barcode_data_url);
-//   // })
-//   // .catch(error => console.error("Error:", error));
-
-  
-//   const textData =  {barcode_data_url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
-//     success: true}
-
-//     console.log(textData.barcode_data_url);
-//     setBarcodeImg(textData.barcode_data_url);
-// }
-// }, [formData.trackingNumber]);
-
-
-
 
 
   // Barcode generation for DataMatrix
 
   const formatZipCode = (zip) => {
-    if (!zip) return ''; // Handle empty or undefined values
+    // Convert input to string if it's not already a string
+    const zipString = String(zip || '');
   
-    // Split the ZIP code into parts based on the dash
-    const [zipPart1, zipPart2] = zip.split('-');
+    // Split into parts based on the dash and take only the part before the dash
+    const [zipPart1] = zipString.split('-');
   
-    // Ensure the first part is 5 digits long by adding leading zeros
-    const formattedZipPart1 = zipPart1.padStart(5, '0');
+    // Remove non-numeric characters and ensure the first part is at least 5 digits long
+    const formattedZip = zipPart1.replace(/\D/g, '').padStart(5, '0');
   
-    // If there's a second part (after the dash), combine it with the formatted first part
-    if (zipPart2) {
-      return `${formattedZipPart1}-${zipPart2}`;
+    // Return the formatted ZIP code
+    return formattedZip;
+  };
+
+
+  const formatZipCodeBeforeDash = (zip) => {
+    // Convert input to string if it's not already a string
+    const zipString = String(zip || '');
+  
+    // Check if the ZIP code contains a dash
+    const hasDash = zipString.includes('-');
+  
+    // Split into parts only if it has a dash
+    let zipPart1 = zipString;
+    let zipPart2 = '';
+  
+    if (hasDash) {
+      [zipPart1, zipPart2] = zipString.split('-');
     }
   
-    // If no dash, return the formatted first part
-    return formattedZipPart1;
+    // Remove non-numeric characters and ensure the first part is at least 5 digits long
+    zipPart1 = zipPart1.replace(/\D/g, '').padStart(5, '0');
+  
+    // Return formatted ZIP code with or without the second part
+    return zipPart2 ? `${zipPart1}-${zipPart2}` : zipPart1;
   };
 
   const generateBarcode = (canvasRef) => {
@@ -156,7 +154,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formatZipCode(formData.recipientZip)}<br />
+                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -225,7 +223,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formatZipCode(formData.recipientZip)}<br />
+                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -287,7 +285,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formatZipCode(formData.recipientZip)}<br />
+                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -342,7 +340,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity}, {formData.recipientState}, {formatZipCode(formData.recipientZip)}<br />
+                  {formData.recipientCity}, {formData.recipientState}, {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>

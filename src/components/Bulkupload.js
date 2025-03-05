@@ -125,6 +125,20 @@ const BulkUpload = () => {
     fetchAllowedCarriers();
   }, [user]);
 
+  const formatZipCode = (zip) => {
+    // Convert input to string if it's not already a string
+    const zipString = String(zip || '');
+  
+    // Split into parts based on the dash and take only the part before the dash
+    const [zipPart1] = zipString.split('-');
+  
+    // Remove non-numeric characters and ensure the first part is at least 5 digits long
+    const formattedZip = zipPart1.replace(/\D/g, '').padStart(5, '0');
+  
+    // Return the formatted ZIP code
+    return formattedZip;
+  };
+
   const handleProcessFile = async () => {
     if (!file) {
       alert("Please upload an Excel file.");
@@ -152,7 +166,6 @@ const BulkUpload = () => {
       }
       setTotalRows(rows.length);
       setLabelsGenerated(0);
-
       const labelHistory = [];
       const newLabels = [];
 
@@ -179,42 +192,7 @@ for (let i = 0; i < rows.length; i++) {
   }
 
 
-  // const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Authorization: `Bearer ${user.token}`,
-  //   },
-  //   body: JSON.stringify({
-  //     labelType: formData.labelType,
-  //     carrier: formData.carrier.toLowerCase(),
-  //   }),
-  // });
-
-  // if (!pullResponse.ok) {
-  //   const errText = await pullResponse.text();
-  //   alert(errText);
-  //   throw new Error(`Pull shipment error: ${errText}`);
-  // }
-
-  // const shipmentResult = await pullResponse.json();
-  // let pulledTrackingNumber;
-  // if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
-  //   pulledTrackingNumber = shipmentResult.shipment.tracking;
-  //   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
-  //   setTrackingNumber(pulledTrackingNumber);
-  // } else {
-  //   console.error("Invalid shipment data:", shipmentResult);
-  //   alert("Failed to retrieve tracking number.");
-  // }
-
-  // const textData = {
-  //   barcode_data_url:
-  //     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
-  //   success: true,
-  // };
-
-  //     let newBarcodeImg = textData.barcode_data_url;
+ 
 
 
 
@@ -222,16 +200,14 @@ for (let i = 0; i < rows.length; i++) {
 
   ///// one start here 
 
-
+  let pulledTrackingNumber;
   const apiVendor = formData.vendor.toLowerCase();
   // console.log("API Vendor:", apiVendor);
   // console.log("Label Type:", formData.labelType);
-  let pulledTrackingNumber;
   let newBarcodeImg;
   try {
     // Fetch tracking number from the API
-    
-
+  
     const backendResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/get/vtno`, {
       method: 'POST',
       headers: {
@@ -254,12 +230,7 @@ for (let i = 0; i < rows.length; i++) {
     setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
   
    
-    const formatZipCode = (zip) => {
-      if (!zip) return ""; // Handle empty input
-      let trimmedZip = zip.split("-")[0]; // Get digits before '-'
-      return trimmedZip.padStart(5, "0"); // Ensure 5-digit format
-
-    };
+    
 
     const formattedZip = formatZipCode(row.recipientZip)
 
@@ -277,6 +248,53 @@ for (let i = 0; i < rows.length; i++) {
     const barcodeData = await barcodeResponse.json();
     setBarcodeImg(barcodeData.barcode_data_url);
     newBarcodeImg = barcodeData.barcode_data_url;
+
+
+    // for local testing data
+
+      //  for local 
+  //   const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${user.token}`,
+  //   },
+  //   body: JSON.stringify({
+  //     labelType: formData.labelType,
+  //     carrier: formData.carrier.toLowerCase(),
+  //   }),
+  // });
+
+  // if (!pullResponse.ok) {
+  //   const errText = await pullResponse.text();
+  //   alert(errText);
+  //   throw new Error(`Pull shipment error: ${errText}`);
+  // }
+
+  // const shipmentResult = await pullResponse.json();
+  // // alert(shipmentResult.shipment.tracking)
+
+  // if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
+  //   pulledTrackingNumber = shipmentResult.shipment.tracking;
+  //   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+  //   setTrackingNumber(pulledTrackingNumber);
+  // } else {
+  //   console.error("Invalid shipment data:", shipmentResult);
+  //   alert("Failed to retrieve tracking number.");
+  // }
+
+  // const textData = {
+  //   barcode_data_url:
+  //     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
+  //   success: true,
+  // };
+
+  //      setBarcodeImg(textData.barcode_data_url);
+  //       newBarcodeImg = textData.barcode_data_url;
+
+
+
+    
   } catch (error) {
     console.error('Error:', error);
     // Handle the error (e.g., show a message to the user)
@@ -446,18 +464,20 @@ for (let i = 0; i < rows.length; i++) {
           </div>
           <div className="dashboard_right">
           <h4 className="create_sec_heading" style={{marginBottom:'24px'}}>Generate Bulk Labels</h4>
-
-          <h4>Download Sample Sheets</h4>
+          <h4 style={{marginBottom:'20px'}}>Download Sample Sheets</h4>
        <button
           onClick={downloadSampleSheet}
           className="download_button"
+          style={{marginBottom:'5px'}}
         >
           Download Sample Sheet
         </button>
-            <p className="text-warning" style={{color:'red', marginBottom:'10px'}}>
-              *Follow below sample to generate labels, format except this sample will not be accepted
+            <p className="text-warning" style={{color:'red', marginBottom:'20px', fontSize:'14px'}}>
+              Note: *Follow below sample to generate labels, format except this sample will not be accepted
             </p>
             {/* <h2 className="text-lg font-semibold mb-4">Bulk Label Upload</h2> */}
+            <h4 style={{marginBottom:'10px'}}>Create Labels</h4>
+
             <div className="form-row">
               <select
                 name="carrier"
