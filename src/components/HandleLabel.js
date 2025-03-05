@@ -54,14 +54,30 @@ const HandleLabel = ({ formData, barcodeImg }) => {
 
   // Barcode generation for DataMatrix
 
-    
+  const formatZipCode = (zip) => {
+    if (!zip) return ''; // Handle empty or undefined values
+  
+    // Split the ZIP code into parts based on the dash
+    const [zipPart1, zipPart2] = zip.split('-');
+  
+    // Ensure the first part is 5 digits long by adding leading zeros
+    const formattedZipPart1 = zipPart1.padStart(5, '0');
+  
+    // If there's a second part (after the dash), combine it with the formatted first part
+    if (zipPart2) {
+      return `${formattedZipPart1}-${zipPart2}`;
+    }
+  
+    // If no dash, return the formatted first part
+    return formattedZipPart1;
+  };
 
   const generateBarcode = (canvasRef) => {
     if (formData.trackingNumber && canvasRef) {
       try {
         bwipjs.toCanvas(canvasRef, {
           bcid: "datamatrix",
-          text: "420" + formData.recipientZip + cleanTrackingNumber,
+          text: "420" + formatZipCode(formData.recipientZip) + cleanTrackingNumber,
           scale: 4,
           height: 5,
           width: 5,
@@ -140,7 +156,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
+                  {formData.recipientCity} {formData.recipientState} {formatZipCode(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -209,7 +225,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
+                  {formData.recipientCity} {formData.recipientState} {formatZipCode(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -271,7 +287,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
+                  {formData.recipientCity} {formData.recipientState} {formatZipCode(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -326,7 +342,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity}, {formData.recipientState}, {formData.recipientZip}<br />
+                  {formData.recipientCity}, {formData.recipientState}, {formatZipCode(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>

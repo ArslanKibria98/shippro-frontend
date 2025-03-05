@@ -8,6 +8,7 @@ import Sidebar from "../components/Sidebar";
 import Dashboardhead from "../components/Dashboardhead";
 import DownloadHistory from "../components/DownloadHistory";
 import LabelsHistory from "../components/labelsHistory";
+import ZipCodeFormatter from "../components/Zipformater";
 
 const Dashboard = () => {
     const { user, logout } = useContext(AuthContext);
@@ -26,6 +27,8 @@ const Dashboard = () => {
         <div className="container">
 
         <div className="dashboard_Sec">
+    
+
         <div className="dashboard_left sidebar_main"><Sidebar/></div>
         <div className="dashboard_right">
             <div style={{display:"flex", gap:'20px'}}>

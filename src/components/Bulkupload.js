@@ -230,25 +230,44 @@ for (let i = 0; i < rows.length; i++) {
   let newBarcodeImg;
   try {
     // Fetch tracking number from the API
-    const apiResponse = await fetch(
-      `https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`
-    );
+    
+
+    const backendResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/get/vtno`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        vendor: apiVendor,
+        labelType: formData.labelType,
+      }),
+    });
   
-    if (!apiResponse.ok) {
-      throw new Error(`Failed to fetch tracking number: ${apiResponse.statusText}`);
+    if (!backendResponse.ok) {
+      throw new Error(`Failed to fetch tracking number: ${backendResponse.statusText}`);
     }
   
-    const data = await apiResponse.json();
-    pulledTrackingNumber = data.tracking_numbers[0];
-    // console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+    const data = await backendResponse.json();
+    pulledTrackingNumber = data.trackingNumber;
   
     // Update formData with the new tracking number
     setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
   
-    // Fetch barcode based on the new tracking number
-    // console.log(row.recipientZip);
+   
+    const formatZipCode = (zip) => {
+      if (!zip) return ""; // Handle empty input
+      let trimmedZip = zip.split("-")[0]; // Get digits before '-'
+      return trimmedZip.padStart(5, "0"); // Ensure 5-digit format
+
+    };
+
+    const formattedZip = formatZipCode(row.recipientZip)
+
     const barcodeResponse = await fetch(
-      `https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${row.recipientZip}&tracking=${pulledTrackingNumber}&sf=3&ms=r&md=0.8`
+      `${process.env.REACT_APP_API_URL}/api/admin/set/barcode?zip=${formattedZip}&tracking=${pulledTrackingNumber}`,
+      {
+        method: 'GET', // Explicitly specify GET
+      }
     );
   
     if (!barcodeResponse.ok) {
@@ -256,18 +275,12 @@ for (let i = 0; i < rows.length; i++) {
     }
   
     const barcodeData = await barcodeResponse.json();
-    // console.log("Barcode URL:", barcodeData);
     setBarcodeImg(barcodeData.barcode_data_url);
-    newBarcodeImg = barcodeData.barcode_data_url
+    newBarcodeImg = barcodeData.barcode_data_url;
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
     // Handle the error (e.g., show a message to the user)
   }
-
-
-
-
-
 
 
         const labelData = {
@@ -544,6 +557,7 @@ for (let i = 0; i < rows.length; i++) {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };

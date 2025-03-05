@@ -69,6 +69,8 @@ const CreateLabel = () => {
    const [vendorLabelType,setVendorLabelType] = useState([]);
    const [barcodeImg, setBarcodeImg] = useState(null);
 
+
+   
     useEffect(() => {
         const fetchAllowedCarriers = async () => {
             try {
@@ -91,19 +93,7 @@ const CreateLabel = () => {
 
         fetchAllowedCarriers();
     }, [user]);
-  // try{
-  //   const params = {
-  //       user_name: 'johndoe',
-  //       api_key: 'abc123',
-  //       class: 'ground_advantage',
-  //       count: 5
-  //   };
-  //   axios.get('https://my.labelscheap.com/api/generate_tracking.php', { params })
-  //       .then(response => console.log(response.data))
-  //       .catch(error => console.error('Error:', error));
-  // }
-  // catch{};
-  // const { user } = useContext(AuthContext); // Get admin token
+  
     const [formData, setFormData] = useState({
         carrier: "",
         vendor: "",
@@ -169,6 +159,8 @@ const CreateLabel = () => {
     try {
       const isValid = validateForm();
       if (isValid) {
+
+        
         // const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
         //   method: "POST",
         //   headers: {
@@ -200,30 +192,39 @@ const CreateLabel = () => {
 
 
 
+
+        // for online get tracking url end here 
+
+// Fetch the barcode image
+// let newBarcodeImg;
+//         const textData = {
+//           barcode_data_url:
+//             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
+//           success: true,
+//         };
+  
+//         setBarcodeImg(textData.barcode_data_url);
+//         newBarcodeImg = textData.barcode_data_url
+
+
         // for online get tracking start here 
+        const formatZipCode = (zip) => {
+          if (!zip) return ""; // Handle empty input
+          let trimmedZip = zip.split("-")[0]; // Get digits before '-'
+          return trimmedZip.padStart(5, "0"); // Ensure 5-digit format
+
+        };
+
 
 
 const apiVendor = formData.vendor.toLowerCase();
+let formattedZip
 // console.log("API Vendor:", apiVendor);
 // console.log("Label Type:", formData.labelType);
 let pulledTrackingNumber;
 let newBarcodeImg;
 try {
-  // Fetch tracking number from the API
-  // const apiResponse = await fetch(
-  //   `https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`
-  // );
-
-  // if (!apiResponse.ok) {
-  //   throw new Error(`Failed to fetch tracking number: ${apiResponse.statusText}`);
-  // }
-
-  // const data = await apiResponse.json();
-  // pulledTrackingNumber = data.tracking_numbers[0];
-  // // console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
-
-  // // Update formData with the new tracking number
-  // setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+  
 
   const backendResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/get/vtno`, {
     method: 'POST',
@@ -247,11 +248,10 @@ try {
   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
 
 
-  
-
+  formattedZip = formatZipCode(formData.recipientZip)
 
   const barcodeResponse = await fetch(
-    `${process.env.REACT_APP_API_URL}/api/admin/set/barcode?zip=${formData.recipientZip}&tracking=${pulledTrackingNumber}`,
+    `${process.env.REACT_APP_API_URL}/api/admin/set/barcode?zip=${formattedZip}&tracking=${pulledTrackingNumber}`,
     {
       method: 'GET', // Explicitly specify GET
     }
@@ -275,37 +275,9 @@ try {
 
 
   // Fetch barcode based on the new tracking number
-//   const barcodeResponse = await fetch(
-//     `https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${pulledTrackingNumber}&sf=3&ms=r&md=0.8`
-//   );
 
-//   if (!barcodeResponse.ok) {
-//     throw new Error(`Failed to fetch barcode: ${barcodeResponse.statusText}`);
-//   }
 
-//   const barcodeData = await barcodeResponse.json();
-//   // console.log("Barcode URL:", barcodeData);
-//   setBarcodeImg(barcodeData.barcode_data_url);
-//   newBarcodeImg = barcodeData.barcode_data_url
 
-// } catch (error) {
-//   console.error("Error:", error);
-//   // Handle the error (e.g., show a message to the user)
-// }
-  
-
-// for online get tracking url end here 
-
-// Fetch the barcode image
-// let newBarcodeImg;
-//         const textData = {
-//           barcode_data_url:
-//             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
-//           success: true,
-//         };
-  
-//         setBarcodeImg(textData.barcode_data_url);
-//         newBarcodeImg = textData.barcode_data_url
 
         // Use a callback to ensure the state is updated
       
