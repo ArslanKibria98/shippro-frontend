@@ -1,5 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import * as XLSX from "xlsx";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 import AuthContext from "../context/AuthContext";
 import BulkDownloadLabels from "./BulkDownloadLabels"; // Import new component
 import Sidebar from "./Sidebar";
@@ -27,6 +29,66 @@ const BulkUpload = () => {
     vendor: "",
     labelType: "",
   });
+
+  const downloadSampleSheet = () => {
+    // Sample data for the Excel sheet
+    const sampleData = [
+      {
+        "vendor": "ATFM",
+        "labelType": "ground_priority",
+        "senderName": "VA Warehouse",
+        "senderAddress": "108 Page Street",
+        "senderAddress1": "10001",
+        "senderPh": "1234",
+        "senderCompany": "",
+        "senderCity": "Berryville",
+        "senderState": "VA",
+        "senderZip": "22611",
+        "recipientName": "Jasmine Diaz",
+        "recipientAddress": "1226 THREE FORKS DR",
+        "recipientAddress1": "22611",
+        "recipientPh": "1234",
+        "recipientCompany": "",
+        "recipientCity": "22611",
+        "recipientState": "22611",
+        "recipientZip": "22611",
+        "length":"",
+        "width":"",
+        "height":"",
+        "weight": "6"
+      },
+    
+    ];
+
+    // Create a new workbook and worksheet
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(sampleData);
+
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sample Sheet");
+
+    // Generate the Excel file as a binary string
+    const excelBinaryString = XLSX.write(workbook, {
+      type: "binary",
+      bookType: "xlsx",
+    });
+
+    // Convert binary string to a Blob
+    const excelBlob = new Blob([s2ab(excelBinaryString)], {
+      type: "application/octet-stream",
+    });
+
+    // Trigger the download
+    saveAs(excelBlob, "Sample_Sheet.xlsx");
+  };
+
+  // Utility function to convert string to ArrayBuffer
+  const s2ab = (s) => {
+    const buf = new ArrayBuffer(s.length);
+    const view = new Uint8Array(buf);
+    for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff;
+    return buf;
+  };
 
   const handleFileUpload = (event) => {
     setFile(event.target.files[0]);
@@ -157,9 +219,13 @@ for (let i = 0; i < rows.length; i++) {
 
 
 
+
+  ///// one start here 
+
+
   const apiVendor = formData.vendor.toLowerCase();
-  console.log("API Vendor:", apiVendor);
-  console.log("Label Type:", formData.labelType);
+  // console.log("API Vendor:", apiVendor);
+  // console.log("Label Type:", formData.labelType);
   let pulledTrackingNumber;
   let newBarcodeImg;
   try {
@@ -367,6 +433,14 @@ for (let i = 0; i < rows.length; i++) {
           </div>
           <div className="dashboard_right">
           <h4 className="create_sec_heading" style={{marginBottom:'24px'}}>Generate Bulk Labels</h4>
+
+          <h4>Download Sample Sheets</h4>
+       <button
+          onClick={downloadSampleSheet}
+          className="download_button"
+        >
+          Download Sample Sheet
+        </button>
             <p className="text-warning" style={{color:'red', marginBottom:'10px'}}>
               *Follow below sample to generate labels, format except this sample will not be accepted
             </p>
@@ -440,8 +514,7 @@ for (let i = 0; i < rows.length; i++) {
             </div>
         <h4>Upload CSV</h4>
         
-
-
+      
             <input type="file" accept="" onChange={handleFileUpload} />
             <button
               onClick={handleProcessFile}
@@ -454,7 +527,7 @@ for (let i = 0; i < rows.length; i++) {
             </p>
 
           
-            {generatedLabels.length > 0 && <BulkDownloadLabels labelDataList={generatedLabels} />}
+            {generatedLabels.length > 0 && <BulkDownloadLabels labelDataList={generatedLabels} uploadedExcelFile={file} />}
 
 
             {missRow.length > 0 && (
