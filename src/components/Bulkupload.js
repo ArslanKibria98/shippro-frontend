@@ -518,7 +518,8 @@ for (let i = 0; i < rows.length; i++) {
             <input type="file" accept="" onChange={handleFileUpload} />
             <button
               onClick={handleProcessFile}
-              className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+              className="download_button"
+              style={{backgroundColor:'black'}}
             >
               Process File
             </button>
