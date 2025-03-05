@@ -6,7 +6,7 @@ import html2pdf from "html2pdf.js";
 import BulkHandleLabel from "./BulkHandleLabel"; // Import the component above
 
 const DownloadBulkHistory = ({ labelDataList }) => {
-    console.log(labelDataList)
+    // console.log(labelDataList)
   const labelRefs = useRef([]);
   const generatePDF = async (refElement, index) => {
     const options = {

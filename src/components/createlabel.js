@@ -210,24 +210,51 @@ let pulledTrackingNumber;
 let newBarcodeImg;
 try {
   // Fetch tracking number from the API
-  const apiResponse = await fetch(
-    `https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`
-  );
+  // const apiResponse = await fetch(
+  //   `https://my.labelscheap.com/api/generate_tracking.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&vendor=${apiVendor}&class=${formData.labelType}&count=1`
+  // );
 
-  if (!apiResponse.ok) {
-    throw new Error(`Failed to fetch tracking number: ${apiResponse.statusText}`);
+  // if (!apiResponse.ok) {
+  //   throw new Error(`Failed to fetch tracking number: ${apiResponse.statusText}`);
+  // }
+
+  // const data = await apiResponse.json();
+  // pulledTrackingNumber = data.tracking_numbers[0];
+  // // console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+
+  // // Update formData with the new tracking number
+  // setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+
+  const backendResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/get/vtno`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      vendor: apiVendor,
+      labelType: formData.labelType,
+    }),
+  });
+
+  if (!backendResponse.ok) {
+    throw new Error(`Failed to fetch tracking number: ${backendResponse.statusText}`);
   }
 
-  const data = await apiResponse.json();
-  pulledTrackingNumber = data.tracking_numbers[0];
-  // console.log("Retrieved shipment trackingNumber:", pulledTrackingNumber);
+  const data = await backendResponse.json();
+  pulledTrackingNumber = data.trackingNumber;
 
   // Update formData with the new tracking number
   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
 
-  // Fetch barcode based on the new tracking number
+
+  
+
+
   const barcodeResponse = await fetch(
-    `https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${pulledTrackingNumber}&sf=3&ms=r&md=0.8`
+    `${process.env.REACT_APP_API_URL}/api/admin/set/barcode?zip=${formData.recipientZip}&tracking=${pulledTrackingNumber}`,
+    {
+      method: 'GET', // Explicitly specify GET
+    }
   );
 
   if (!barcodeResponse.ok) {
@@ -235,14 +262,36 @@ try {
   }
 
   const barcodeData = await barcodeResponse.json();
-  // console.log("Barcode URL:", barcodeData);
   setBarcodeImg(barcodeData.barcode_data_url);
-  newBarcodeImg = barcodeData.barcode_data_url
-
+  newBarcodeImg = barcodeData.barcode_data_url;
 } catch (error) {
-  console.error("Error:", error);
+  console.error('Error:', error);
   // Handle the error (e.g., show a message to the user)
 }
+
+
+
+
+
+
+  // Fetch barcode based on the new tracking number
+//   const barcodeResponse = await fetch(
+//     `https://my.labelscheap.com/api/barcodev2.php?user_name=sarim&api_key=4ec5cdddf39363d957608a7927b6dc28be4211c9f5cc3e836cb12abb61054aca&f=png&s=ean-128&zip=${formData.recipientZip}&tracking=${pulledTrackingNumber}&sf=3&ms=r&md=0.8`
+//   );
+
+//   if (!barcodeResponse.ok) {
+//     throw new Error(`Failed to fetch barcode: ${barcodeResponse.statusText}`);
+//   }
+
+//   const barcodeData = await barcodeResponse.json();
+//   // console.log("Barcode URL:", barcodeData);
+//   setBarcodeImg(barcodeData.barcode_data_url);
+//   newBarcodeImg = barcodeData.barcode_data_url
+
+// } catch (error) {
+//   console.error("Error:", error);
+//   // Handle the error (e.g., show a message to the user)
+// }
   
 
 // for online get tracking url end here 
