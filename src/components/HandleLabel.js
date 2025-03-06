@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import JsBarcode from "jsbarcode";
+// import { render } from 'pdf417';
 import html2pdf from "html2pdf.js";
 import bwipjs from "bwip-js";
 import shippoLogo from './one2.svg';
+import generateBarcode from "pdf417";
 
+import easyLogo from './easypost-logo.svg';
 const HandleLabel = ({ formData, barcodeImg }) => {
   const labelRef = useRef(null);
   const barcodeRef = useRef(null);
@@ -12,21 +14,26 @@ const HandleLabel = ({ formData, barcodeImg }) => {
   // const [barcodeImg, setBarcodeImg] = useState(null); // Use state for barcode image URL
   const cleanTrackingNumber = formData.trackingNumber.replace(/\s+/g, '');
   const formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
+  const canvasRef = useRef(null);
 
 
   // Barcode generation for CODE128
-  // useEffect(() => {
-  //   if (formData.trackingNumber) {
-  //     JsBarcode(barcodeRef.current, cleanTrackingNumber, {
-  //       format: "CODE128",
-  //       lineColor: "black",
-  //       width: 1.93,
-  //       height: 80,
-  //       margin: 0,
-  //       displayValue: false,
-  //     });
-  //   }
-  // }, [formData.trackingNumber]);
+  useEffect(() => {
+    if (canvasRef.current) {
+      const canvas = canvasRef.current;
+      // Generate the PDF417 barcode
+      bwipjs.toCanvas(canvas, {
+        bcid: 'pdf417', // Barcode type (PDF417)
+        text: '8997793739744739', // Data to encode
+        scale: .5, // Scaling factor
+        height: 17, // Barcode height
+        width: 75, // Barcode width
+        includetext: true, // Show the encoded text below the barcode
+        textxalign: 'center', // Center the text
+      });
+    }
+  }, [formData.trackingNumber]);
+ 
 
 
 
@@ -202,6 +209,66 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 <>GROUND ADVANTAGE<sup>TM</sup></>
               ) : (
                 <>USPS PRIORITY MAIL<sup>®</sup></>
+              )}
+            </h3>
+            <div className="info" id="labelInfo">
+              <div className="address_label_info">
+                <div className="to_address_info">
+                  {formData.senderName}<br />
+                  {formData.senderAddress} {formData.senderAddress1}<br />
+                  {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
+                  <br />
+                </div>
+                <div className="parcel_info">
+                   Mailed From: {formData.senderZip} <br />
+                  WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
+                </div>
+              </div>
+              <div className="from_address_info">
+              Ship <br></br>
+              To:
+                <div>
+                  {formData.recipientName}<br />
+                  {formData.recipientAddress} {formData.recipientAddress1}<br />
+                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
+                  <br />
+                </div>
+              </div>
+            </div>
+            <div className="barcode">
+              <div className="tracking_heading">USPS TRACKING # EP</div>
+              <img style={{width:'100%'}} src={barcodeImg}></img>
+              <div id="tracking-number">{formattedTracking}</div>
+            </div>
+          </div>
+          </div>
+        );
+        case 'Easypost':
+        return (<div >
+          <div className="label-container easypost_label"  style={{border:'1px solid'}} id="label easypost_label" ref={labelRef}>
+             <div className="header">
+              <div id="large-letter" className="large-letter">
+                {formData.labelType === 'preship' ? 'P' : 'P'}
+              </div>
+              <div>
+                <div className="header_right">
+                  <div className="headerR-top">
+                    <span className="paid_text">US POSTAGE AND FEES PAID</span>
+                    <img src={easyLogo}></img>
+                  </div>
+                  <div>            <canvas ref={canvasRef}></canvas>
+                  
+                  </div>
+                  
+                  
+                </div>
+              </div>
+            </div>
+            <h3 className="label_type">
+              {formData.labelType === 'ground_advantage' ? (
+                <>GROUND ADVANTAGE<sup>TM</sup></>
+              ) : (
+                <>USPS PRIORITY MAIL</>
               )}
             </h3>
             <div className="info" id="labelInfo">

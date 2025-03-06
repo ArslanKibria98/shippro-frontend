@@ -5,8 +5,10 @@ import HandleLabel from "./HandleLabel";
 import AuthContext from "../context/AuthContext";
 import Sidebar from "./Sidebar";
 import Dashboardhead from "./Dashboardhead";
+
 const CreateLabel = () => {
-  
+  const [loading, setLoading] = useState(false); // New state for loading
+
   // const { user, setUser } = useContext(AuthContext);
   const { user, updateUser } = useContext(AuthContext);
  const usStates = [
@@ -156,55 +158,13 @@ const CreateLabel = () => {
     }
   
     setShowLabel(false); // Reset the label state before generation
+    setLoading(true); // Disable button and show loader
+
     try {
       const isValid = validateForm();
       if (isValid) {
 
         
-        // const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     Authorization: `Bearer ${user.token}`,
-        //   },
-        //   body: JSON.stringify({
-        //     labelType: formData.labelType,
-        //     carrier: formData.carrier.toLowerCase(),
-        //   }),
-        // });
-  
-        // if (!pullResponse.ok) {
-        //   const errText = await pullResponse.text();
-        //   alert(errText);
-        //   throw new Error(`Pull shipment error: ${errText}`);
-        // }
-  
-        // const shipmentResult = await pullResponse.json();
-        // let pulledTrackingNumber;
-        // if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
-        //   pulledTrackingNumber = shipmentResult.shipment.tracking;
-        //   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
-        //   setTrackingNumber(pulledTrackingNumber);
-        // } else {
-        //   console.error("Invalid shipment data:", shipmentResult);
-        //   alert("Failed to retrieve tracking number.");
-        // }
-
-
-
-
-        // for online get tracking url end here 
-
-// Fetch the barcode image
-// let newBarcodeImg;
-//         const textData = {
-//           barcode_data_url:
-//             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
-//           success: true,
-//         };
-  
-//         setBarcodeImg(textData.barcode_data_url);
-//         newBarcodeImg = textData.barcode_data_url
 
 
         // for online get tracking start here 
@@ -232,7 +192,6 @@ let pulledTrackingNumber;
 let newBarcodeImg;
 try {
   
-
   const backendResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/get/vtno`, {
     method: 'POST',
     headers: {
@@ -287,6 +246,60 @@ try {
 
 
         // Use a callback to ensure the state is updated
+
+
+
+//  for local production
+
+        // const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //     Authorization: `Bearer ${user.token}`,
+        //   },
+        //   body: JSON.stringify({
+        //     labelType: formData.labelType,
+        //     carrier: formData.carrier.toLowerCase(),
+        //   }),
+        // });
+  
+        // if (!pullResponse.ok) {
+        //   const errText = await pullResponse.text();
+        //   alert(errText);
+        //   throw new Error(`Pull shipment error: ${errText}`);
+        // }
+  
+        // const shipmentResult = await pullResponse.json();
+        // // let pulledTrackingNumber;
+        // if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
+        //   pulledTrackingNumber = shipmentResult.shipment.tracking;
+        //   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+        //   setTrackingNumber(pulledTrackingNumber);
+        // } else {
+        //   console.error("Invalid shipment data:", shipmentResult);
+        //   alert("Failed to retrieve tracking number.");
+        // }
+
+
+
+
+        // for online get tracking url end here 
+
+// Fetch the barcode image
+// let newBarcodeImg;
+        // const textData = {
+        //   barcode_data_url:
+        //     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
+        //   success: true,
+        // };
+  
+        // setBarcodeImg(textData.barcode_data_url);
+        // newBarcodeImg = textData.barcode_data_url
+
+
+
+
+
       
 // get barcode from api
             try {
@@ -342,6 +355,9 @@ try {
     } catch (error) {
       console.error("Error generating label:", error);
     }
+    finally {
+      setLoading(false); // Re-enable button after processing
+    }
   };
     const handleCarrierChange = (e) => {
       const selectedCarrier = e.target.value;
@@ -377,6 +393,7 @@ try {
   // Handle Vendor Selection
   const handleVendorChange = (e) => {
     const ATFMLabelTypes = ['preship']
+    const EasypostLabelTypes = ['preship']
     const ShippoLabelTypes = ['ground_advantage','priority']
     const EvsLabelTypes = ['ground_advantage','priority']
     const RolloLabelTypes = ['ground_advantage','priority']
@@ -392,6 +409,9 @@ try {
     }
     else if(e.target.value == 'Rollo'){
       setVendorLabelType(RolloLabelTypes)
+    }
+    else if(e.target.value == 'Easypost'){
+      setVendorLabelType(EasypostLabelTypes)
     }
     else{
       setVendorLabelType('')
@@ -688,10 +708,17 @@ try {
             </div>
 
             {/* Generate Label Button */}
+            {loading ? (<button
+        
+        className="generate-button"
+     
+      >
+        <span class="loader2"></span>
+         </button>):(
             <button onClick={handleGenerateLabel} className="generate-button">
               Generate Label
             </button>
-
+            )}
             {showLabel && <HandleLabel formData={formData} barcodeImg={barcodeImg} />}
           </div>
         </div>

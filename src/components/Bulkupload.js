@@ -21,6 +21,8 @@ const BulkUpload = () => {
    const [vendorLabelType,setVendorLabelType] = useState([]);
       const [barcodeImg, setBarcodeImg] = useState(null);
       let  [missRow,setmissrows] = useState([]);
+        const [loading, setLoading] = useState(false); // New state for loading
+      
       
   let errors =[];
 
@@ -153,6 +155,7 @@ const BulkUpload = () => {
       alert("Insufficient balance to generate labels.");
       return;
     }
+    setLoading(true); // Disable button and show loader
 
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -387,6 +390,9 @@ for (let i = 0; i < rows.length; i++) {
       } catch (error) {
         console.error("Error sending bulk label history request:", error);
       }
+      finally {
+        setLoading(false); // Re-enable button after processing
+      }
     };
 
     reader.readAsArrayBuffer(file);
@@ -549,13 +555,22 @@ for (let i = 0; i < rows.length; i++) {
         
       
             <input type="file" accept="" onChange={handleFileUpload} />
+            {loading ? (<button
+        
+              className="download_button"
+              style={{backgroundColor:'black'}}
+            >
+              <span class="loader2"></span>
+            </button>) : (
+
             <button
               onClick={handleProcessFile}
               className="download_button"
               style={{backgroundColor:'black'}}
             >
-              Process File
+             Process File
             </button>
+          )}
             <p>
               Progress: {labelsGenerated} / {totalRows} labels generated
             </p>
