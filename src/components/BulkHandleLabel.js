@@ -157,7 +157,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div className="to_address_info">
                   {formData.senderName}<br />
                   {formData.senderAddress} {formData.senderAddress1}<br />
-                  {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
+                  {formData.senderCity} {(formData.senderState).toUpperCase()} {formData.senderZip}<br />
                   <br />
                 </div>
                 <div className="parcel_info">
@@ -170,7 +170,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
+                  {formData.recipientCity} {(formData.recipientState).toUpperCase()} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -225,7 +225,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div className="to_address_info">
                   {formData.senderName}<br />
                   {formData.senderAddress} {formData.senderAddress1}<br />
-                  {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
+                  {formData.senderCity} {(formData.senderState).toUpperCase()} {formData.senderZip}<br />
                   <br />
                 </div>
                 <div className="parcel_info">
@@ -239,7 +239,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
+                  {formData.recipientCity} {(formData.recipientState).toUpperCase()} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -286,7 +286,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div className="to_address_info">
                   {formData.senderName}<br />
                   {formData.senderAddress} {formData.senderAddress1}<br />
-                  {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
+                  {formData.senderCity} {(formData.senderState).toUpperCase()} {formData.senderZip}<br />
                   <br />
                 </div>
                 <div className="parcel_info">
@@ -301,7 +301,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
+                  {formData.recipientCity} {(formData.recipientState).toUpperCase()} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>
@@ -342,7 +342,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div className="to_address_info">
                   {formData.senderName}<br />
                   {formData.senderAddress} {formData.senderAddress1}<br />
-                  {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
+                  {formData.senderCity} {(formData.senderState).toUpperCase()} {formData.senderZip}<br />
                   <br />
                 </div>
                 <div className="parcel_info">
@@ -356,7 +356,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity}, {formData.recipientState}, {formatZipCodeBeforeDash(formData.recipientZip)}<br />
+                  {formData.recipientCity}, {(formData.recipientState).toUpperCase()}, {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                   <br />
                 </div>
               </div>

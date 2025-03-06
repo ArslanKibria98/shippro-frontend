@@ -4,13 +4,15 @@ import axios from "axios";
 import HandleLabel from "./HandleLabel";
 import AuthContext from "../context/AuthContext";
 import Sidebar from "./Sidebar";
+import ReactModal from 'react-modal';
 import Dashboardhead from "./Dashboardhead";
-
 const CreateLabel = () => {
   const [loading, setLoading] = useState(false); // New state for loading
-
+  const [successMessage, setSuccessMessage] = useState(false);
   // const { user, setUser } = useContext(AuthContext);
   const { user, updateUser } = useContext(AuthContext);
+  const [labelData, setLabelData] = useState(null); // New state for label data
+
  const usStates = [
     { name: "Alabama", abbreviation: "AL" },
     { name: "Alaska", abbreviation: "AK" },
@@ -116,7 +118,10 @@ const CreateLabel = () => {
         recipientZip: "",
         trackingNumber: "",
         barcodeImg:'',
-        weight: ""
+        weight: "",
+        height:"",
+        length:"",
+        width:""
     });
 
     const [showLabel, setShowLabel] = useState(false);
@@ -147,6 +152,10 @@ const CreateLabel = () => {
     if (!formData.recipientCity) newErrors.recipientCity = "Recipient City is required";
     if (!formData.recipientState) newErrors.recipientState = "Recipient State is required";
     if (!formData.recipientZip) newErrors.recipientZip = "Recipient ZIP Code is required";
+    if (!formData.weight) newErrors.weight = "weight is required";
+    if (!formData.length) newErrors.length = "length is required";
+    if (!formData.width) newErrors.width = "width is required";
+    if (!formData.height) newErrors.height = "height is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Return true if no errors
@@ -251,50 +260,49 @@ try {
 
 //  for local production
 
-        // const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     Authorization: `Bearer ${user.token}`,
-        //   },
-        //   body: JSON.stringify({
-        //     labelType: formData.labelType,
-        //     carrier: formData.carrier.toLowerCase(),
-        //   }),
-        // });
+//         const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${user.token}`,
+//           },
+//           body: JSON.stringify({
+//             labelType: formData.labelType,
+//             carrier: formData.carrier.toLowerCase(),
+//           }),
+//         });
   
-        // if (!pullResponse.ok) {
-        //   const errText = await pullResponse.text();
-        //   alert(errText);
-        //   throw new Error(`Pull shipment error: ${errText}`);
-        // }
+//         if (!pullResponse.ok) {
+//           const errText = await pullResponse.text();
+//           alert(errText);
+//           throw new Error(`Pull shipment error: ${errText}`);
+//         }
   
-        // const shipmentResult = await pullResponse.json();
-        // // let pulledTrackingNumber;
-        // if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
-        //   pulledTrackingNumber = shipmentResult.shipment.tracking;
-        //   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
-        //   setTrackingNumber(pulledTrackingNumber);
-        // } else {
-        //   console.error("Invalid shipment data:", shipmentResult);
-        //   alert("Failed to retrieve tracking number.");
-        // }
+//         const shipmentResult = await pullResponse.json();
+//         // let pulledTrackingNumber;
+//         if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
+//           pulledTrackingNumber = shipmentResult.shipment.tracking;
+//           setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+//           setTrackingNumber(pulledTrackingNumber);
+//         } else {
+//           console.error("Invalid shipment data:", shipmentResult);
+//           alert("Failed to retrieve tracking number.");
+//         }
 
 
 
 
-        // for online get tracking url end here 
+//         // for online get tracking url end here 
 
-// Fetch the barcode image
-// let newBarcodeImg;
-        // const textData = {
-        //   barcode_data_url:
-        //     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
-        //   success: true,
-        // };
+// // Fetch the barcode image
+//         const textData = {
+//           barcode_data_url:
+//             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
+//           success: true,
+//         };
   
-        // setBarcodeImg(textData.barcode_data_url);
-        // newBarcodeImg = textData.barcode_data_url
+//         setBarcodeImg(textData.barcode_data_url);
+//         newBarcodeImg = textData.barcode_data_url
 
 
 
@@ -317,6 +325,9 @@ try {
                   labelType: formData.labelType,
                   vendor: formData.vendor,
                   weight: formData.weight,
+                  height:formData.height,
+                  width:formData.width,
+                  length:formData.length,
                   senderName: formData.senderName,
                   senderAddress: formData.senderAddress,
                   senderAddress1: formData.senderAddress1,
@@ -343,7 +354,42 @@ try {
                   availableBalance: result.availableBalance,
                   totalGeneratedLabels: result.totalGeneratedLabels,
                 });
+                setLabelData({
+                  ...formData,
+                  trackingNumber: pulledTrackingNumber,
+                  barcodeImg: newBarcodeImg,
+                });
                 setShowLabel(true); // Show the generated label
+
+                // Show success message
+                setSuccessMessage(true);
+
+                setFormData({
+                  carrier: "",
+                  vendor: "",
+                  labelType: "",
+                  senderName: "",
+                  senderAddress: "",
+                  senderAddress1: "",
+                  senderCity: "",
+                  senderPh: "",
+                  senderState: "",
+                  senderZip: "",
+                  recipientName: "",
+                  recipientAddress: "",
+                  recipientAddress1: "",
+                  recipientPh: "",
+                  recipientCity: "",
+                  recipientState: "",
+                  recipientZip: "",
+                  trackingNumber: "",
+                  barcodeImg: '',
+                  weight: "",
+                  length:"",
+                  height:"",
+                  width:""
+                });
+
               } else {
                 alert(result.msg || "Failed to generate label. Please try again.");
               }
@@ -363,9 +409,9 @@ try {
       const selectedCarrier = e.target.value;
 
       // Default vendors for USPS
-      const uspsVendors = ["Shippo", "Rollo","Evs"];
+      const uspsVendors = ["Shippo", "Rollo","Evs","ATFM"];
       const upsVendors = ["UPS 2nd Day Air", "UPS 3 Day", "UPS Ground", "UPS Next Day"];
-       const uspsPreVendors = ['ATFM']
+       const uspsPreVendors = ['Easypost']
       
 
       // Find the selected carrier from allowedCarriers
@@ -392,7 +438,7 @@ try {
 
   // Handle Vendor Selection
   const handleVendorChange = (e) => {
-    const ATFMLabelTypes = ['preship']
+    const ATFMLabelTypes = ['ground_advantage']
     const EasypostLabelTypes = ['preship']
     const ShippoLabelTypes = ['ground_advantage','priority']
     const EvsLabelTypes = ['ground_advantage','priority']
@@ -426,6 +472,29 @@ try {
 
   return (
     <div>
+
+<ReactModal
+        isOpen={successMessage}
+        onRequestClose={() => setSuccessMessage(false)}
+        contentLabel="Label Generated Successfully"
+        style={{
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+          },
+        }}
+      >
+        <div className="tick-container">
+    <div className="tick">✓</div> {/* Unicode tick symbol */}
+  </div>
+        <h2>Label Generated Successfully!</h2>
+        <button className="modal_close_btn" onClick={() => setSuccessMessage(false)}>X</button>
+      </ReactModal>
       {/* <Dashboardhead /> */}
     <div className="container">
   
@@ -513,6 +582,7 @@ try {
 
             {/* Weight, Height, Width, Length */}
             <div className="form-row">
+              <div className="form-input-main">           
               <input
                 type="number"
                 name="weight"
@@ -521,6 +591,10 @@ try {
                 onChange={handleChange}
                 className="form-input"
               />
+                {errors.weight && <p style={{ color: "red" }}>{errors.weight}</p>}
+                </div>
+                <div className="form-input-main">           
+
                <input
                 type="number"
                 name="length"
@@ -529,6 +603,10 @@ try {
                 onChange={handleChange}
                 className="form-input"
               />
+              {errors.length && <p style={{ color: "red" }}>{errors.length}</p>}
+              </div>
+              <div className="form-input-main">           
+
                  <input
                 type="number"
                 name="width"
@@ -537,6 +615,9 @@ try {
                 onChange={handleChange}
                 className="form-input"
               />
+              {errors.width && <p style={{ color: "red" }}>{errors.width}</p>}
+              </div>
+              <div className="form-input-main">
               <input
                 type="number"
                 name="height"
@@ -545,6 +626,9 @@ try {
                 onChange={handleChange}
                 className="form-input"
               />
+             {errors.height && <p style={{ color: "red" }}>{errors.height}</p>}
+
+              </div>
            
              
             </div>
@@ -609,7 +693,7 @@ try {
                     --- Select State ---
                   </option>
                   {usStates.map((state, index) => (
-                    <option key={index} value={state.name}>
+                    <option key={index} value={state.abbreviation}>
                       {state.name} ({state.abbreviation})
                     </option>
                   ))}
@@ -687,7 +771,7 @@ try {
                     --- Select State ---
                   </option>
                   {usStates.map((state, index) => (
-                    <option key={index} value={state.name}>
+                    <option key={index} value={state.abbreviation}>
                      {state.name} ({state.abbreviation})
                     </option>
                   ))}
@@ -719,7 +803,7 @@ try {
               Generate Label
             </button>
             )}
-            {showLabel && <HandleLabel formData={formData} barcodeImg={barcodeImg} />}
+            {showLabel && <HandleLabel formData={labelData} barcodeImg={barcodeImg} />}
           </div>
         </div>
       </div>

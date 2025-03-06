@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import * as XLSX from "xlsx";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
@@ -6,14 +6,17 @@ import AuthContext from "../context/AuthContext";
 import BulkDownloadLabels from "./BulkDownloadLabels"; // Import new component
 import Sidebar from "./Sidebar";
 import Dashboardhead from "./Dashboardhead";
+import ReactModal from 'react-modal';
 
 const BulkUpload = () => {
   const { user, updateUser } = useContext(AuthContext);
+  const [stateValidationErrors, setStateValidationErrors] = useState([]); // State for validation errors
+
   const [file, setFile] = useState(null);
   const [labelsGenerated, setLabelsGenerated] = useState(0);
   const [totalRows, setTotalRows] = useState(0);
-    const [trackingNumber, setTrackingNumber] = useState(null)
-  
+  const [trackingNumber, setTrackingNumber] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(false);
   const [generatedLabels, setGeneratedLabels] = useState([]); // Store processed label data
   const [allowedCarriers, setAllowedCarriers] = useState([]);
   const [availableVendors, setAvailableVendors] = useState([]);
@@ -22,9 +25,60 @@ const BulkUpload = () => {
       const [barcodeImg, setBarcodeImg] = useState(null);
       let  [missRow,setmissrows] = useState([]);
         const [loading, setLoading] = useState(false); // New state for loading
-      
+        const fileInputRef = useRef(null); // Ref for file input
+
       
   let errors =[];
+  const validStates = new Set([
+    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", 
+    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+  ]);
+
+
+  const validateStates = (rows) => {
+    const errors = [];
+    const requiredFields = [
+      "senderName",
+      "senderAddress",
+      "senderCity",
+      "senderState",
+      "senderZip",
+      "recipientName",
+      "recipientAddress",
+      "recipientCity",
+      "recipientState",
+      "recipientZip",
+      "weight",
+      "length",
+      "width",
+      "height",
+    ];
+  
+    rows.forEach((row, index) => {
+      // Check for missing required fields
+      requiredFields.forEach((field) => {
+        if (!row[field]) {
+          errors.push(`Row ${index + 2}: Missing required field "${field}".`);
+        }
+      });
+  
+      // Validate state abbreviations
+      const senderState = row.senderState?.toUpperCase();
+      const recipientState = row.recipientState?.toUpperCase();
+  
+      if (senderState && !validStates.has(senderState)) {
+        errors.push(`Row ${index + 2}: Invalid senderState "${row.senderState}". Use a valid U.S. state abbreviation (e.g., NY for New York).`);
+      }
+      if (recipientState && !validStates.has(recipientState)) {
+        errors.push(`Row ${index + 2}: Invalid recipientState "${row.recipientState}". Use a valid U.S. state abbreviation (e.g., NY for New York).`);
+      }
+    });
+  
+    return errors;
+  };
 
   const [formData, setFormData] = useState({
     carrier: "",
@@ -54,9 +108,9 @@ const BulkUpload = () => {
         "recipientCity": "22611",
         "recipientState": "22611",
         "recipientZip": "22611",
-        "length":"",
-        "width":"",
-        "height":"",
+        "length":"11",
+        "width":"11",
+        "height":"11",
         "weight": "6"
       },
     
@@ -99,7 +153,11 @@ const BulkUpload = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+  const resetFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Reset file input value
+    }
+  };
   useEffect(() => {
     const fetchAllowedCarriers = async () => {
       try {
@@ -163,10 +221,21 @@ const BulkUpload = () => {
       const workbook = XLSX.read(data, { type: "array" });
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(worksheet);
+
       if (rows.length > 40) {
         alert("Only 40 labels can be created at a time.");
         return; // Stop further execution
       }
+      const stateErrors = validateStates(rows);
+      if (stateErrors.length > 0) {
+        setLoading(false);
+        setStateValidationErrors(stateErrors);
+        resetFileInput();
+        // Set validation errors
+        return; // Stop processing if validation fails
+      }
+
+      setStateValidationErrors([])
       setTotalRows(rows.length);
       setLabelsGenerated(0);
       const labelHistory = [];
@@ -176,16 +245,16 @@ const BulkUpload = () => {
 for (let i = 0; i < rows.length; i++) {
   const row = rows[i];
 
-  if (
-    !row.senderName || !row.senderAddress || !row.senderCity || 
-    !row.senderState || !row.senderZip || 
-    !row.recipientName || !row.recipientAddress || !row.recipientCity || 
-    !row.recipientState || !row.recipientZip
-  ) {
-    errors.push(`Row ${i + 2}: Missing required fields.`);
-    setmissrows(errors)
-    continue; // Skip this row
-  }
+  // if (
+  //   !row.senderName || !row.senderAddress || !row.senderCity || 
+  //   !row.senderState || !row.senderZip || 
+  //   !row.recipientName || !row.recipientAddress || !row.recipientCity || 
+  //   !row.recipientState || !row.recipientZip || !row.weight || !row.length || !row.width || !row.height
+  // ) {
+  //   errors.push(`Row ${i + 2}: Missing required fields.`);
+  //   setmissrows(errors)
+  //   continue; // Skip this row
+  // }
   // if (errors.length > 0) {
   //   alert("Some rows were skipped due to missing data:\n" + errors.join("\n"));
   // }
@@ -193,13 +262,6 @@ for (let i = 0; i < rows.length; i++) {
     alert("Insufficient balance to generate labels.");
     return;
   }
-
-
- 
-
-
-
-
 
   ///// one start here 
 
@@ -320,6 +382,9 @@ for (let i = 0; i < rows.length; i++) {
           recipientState: row.recipientState,
           recipientZip: row.recipientZip,
           weight: row.weight,
+          height: row.height,
+          width: row.width,
+          length: row.length,
           barcodeImg : newBarcodeImg,
           trackingNumber: pulledTrackingNumber,
         };
@@ -383,6 +448,15 @@ for (let i = 0; i < rows.length; i++) {
 
         const result = await response.json();
         if (response.ok) {
+
+          setSuccessMessage(true)
+          setFormData({
+            carrier: "",
+            vendor: "",
+            labelType: "",
+          });
+          resetFileInput();
+
           // console.log("Bulk label history updated successfully", result);
         } else {
           console.error("Error updating bulk label history:", result.msg);
@@ -402,9 +476,9 @@ for (let i = 0; i < rows.length; i++) {
     const selectedCarrier = e.target.value;
 
     // Default vendors for USPS
-    const uspsVendors = ["Shippo", "Rollo","Evs"];
+    const uspsVendors = ["Shippo", "Rollo","Evs",'ATFM'];
     const upsVendors = ["UPS 2nd Day Air", "UPS 3 Day", "UPS Ground", "UPS Next Day"];
-     const uspsPreVendors = ['ATFM']
+     const uspsPreVendors = ['Easypost']
     
 
     // Find the selected carrier from allowedCarriers
@@ -431,7 +505,7 @@ for (let i = 0; i < rows.length; i++) {
 
   // Handle Vendor Selection
   const handleVendorChange = (e) => {
-    const ATFMLabelTypes = ['preship']
+    const ATFMLabelTypes = ['ground_advantage']
     const ShippoLabelTypes = ['ground_advantage','priority']
     const EvsLabelTypes = ['ground_advantage','priority']
     const RolloLabelTypes = ['ground_advantage','priority']
@@ -462,6 +536,31 @@ for (let i = 0; i < rows.length; i++) {
 
   return (
     <div>
+      <ReactModal
+  isOpen={successMessage}
+  onRequestClose={() => setSuccessMessage(false)}
+  contentLabel="Labels Generated Successfully"
+  style={{
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      textAlign: 'center',
+      borderRadius: '10px',
+      padding: '20px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    },
+  }}
+>
+  <div className="tick-container">
+    <div className="tick">✓</div> {/* Unicode tick symbol */}
+  </div>
+  <h2>Labels Generated Successfully!</h2>
+  <button className="modal_close_btn" onClick={() => setSuccessMessage(false)}>X</button>
+</ReactModal>
       {/* <Dashboardhead /> */}
       <div className="container">
         <div className="dashboard_Sec">
@@ -554,7 +653,7 @@ for (let i = 0; i < rows.length; i++) {
         <h4>Upload CSV</h4>
         
       
-            <input type="file" accept="" onChange={handleFileUpload} />
+            <input type="file" accept="" onChange={handleFileUpload} ref={fileInputRef} />
             {loading ? (<button
         
               className="download_button"
@@ -577,6 +676,17 @@ for (let i = 0; i < rows.length; i++) {
 
           
             {generatedLabels.length > 0 && <BulkDownloadLabels labelDataList={generatedLabels} uploadedExcelFile={file} />}
+
+            {stateValidationErrors.length > 0 && (
+        <div style={{ marginTop: '24px', color: 'red' }}>
+          <h4>Validation Errors:</h4>
+          <ul>
+            {stateValidationErrors.map((error, idx) => (
+              <li key={idx}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
 
             {missRow.length > 0 && (

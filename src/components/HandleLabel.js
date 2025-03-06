@@ -24,11 +24,11 @@ const HandleLabel = ({ formData, barcodeImg }) => {
       // Generate the PDF417 barcode
       bwipjs.toCanvas(canvas, {
         bcid: 'pdf417', // Barcode type (PDF417)
-        text: '8997793739744739', // Data to encode
-        scale: .5, // Scaling factor
-        height: 17, // Barcode height
-        width: 75, // Barcode width
-        includetext: true, // Show the encoded text below the barcode
+        text: '9405503699300722330828', // Data to encode
+        // scale: 1, // Scaling factor
+        // height: 5, // Barcode height
+        // width: 22, // Barcode width
+        // includetext: true, // Show the encoded text below the barcode
         textxalign: 'center', // Center the text
       });
     }
@@ -256,7 +256,21 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                     <span className="paid_text">US POSTAGE AND FEES PAID</span>
                     <img src={easyLogo}></img>
                   </div>
-                  <div>            <canvas ref={canvasRef}></canvas>
+                  <div style={{display:'flex', alignItems:'center',justifyContent:'space-between'}}>            
+                    <div style={{textAlign:'left'}}>
+                   <p style={{fontSize:'12px'}}>2025-02-25</p>
+                   <p style={{fontSize:'12px'}}>{formData.senderZip}</p>
+                   <p style={{fontSize:'12px'}}>C341973474</p>
+                   <p style={{fontSize:'12px'}}>Commercial</p>
+                   <p style={{fontSize:'12px'}}> {formData.weight} LB Zone</p>
+
+                    </div>
+                    <div>
+                      <div style={{marginBottom:"15px"}} className="ep_upbarcode">
+                    <canvas ref={canvasRef}></canvas>
+                    </div>
+                    <div style={{fontSize:'12px'}}>0901000065406</div>
+                    </div>
                   
                   </div>
                   
@@ -268,7 +282,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
               {formData.labelType === 'ground_advantage' ? (
                 <>GROUND ADVANTAGE<sup>TM</sup></>
               ) : (
-                <>USPS PRIORITY MAIL</>
+                <>PRIORITY MAIL</>
               )}
             </h3>
             <div className="info" id="labelInfo">
@@ -280,18 +294,19 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                   <br />
                 </div>
                 <div className="parcel_info">
-                   Mailed From: {formData.senderZip} <br />
-                  WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
+                    0003
                 </div>
               </div>
+              <div className="parcel_ref">
+                <p className="parcelref_no">C041</p>
+              </div>
               <div className="from_address_info">
-              Ship <br></br>
-              To:
+              <canvas ref={sbarcode} />
+
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
-                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
-                  <br />
+                  {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}
                 </div>
               </div>
             </div>
@@ -299,6 +314,13 @@ const HandleLabel = ({ formData, barcodeImg }) => {
               <div className="tracking_heading">USPS TRACKING # EP</div>
               <img style={{width:'100%'}} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
+            </div>
+            <div className="end_label_container">
+              <div>
+               
+           
+              <canvas ref={sbarcode1} />
+              </div>
             </div>
           </div>
           </div>
