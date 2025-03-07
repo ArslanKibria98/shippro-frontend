@@ -638,7 +638,8 @@ for (let i = 0; i < rows.length; i++) {
                 </option>
                 {vendorLabelType.length > 0
                   ? vendorLabelType.map((labelType, index) => (
-                      <option key={index} value={labelType}>
+                      <option key={index} value={formData.vendor == 'ATFM' && labelType == 'ground_advantage' 
+                        ? 'ground_advantage_tm':labelType }>
                         {labelType == 'preship' ? 'priority' : labelType}
                       </option>
                     ))
