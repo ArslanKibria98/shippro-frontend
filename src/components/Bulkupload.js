@@ -105,13 +105,14 @@ const BulkUpload = () => {
         "recipientAddress1": "22611",
         "recipientPh": "1234",
         "recipientCompany": "",
-        "recipientCity": "22611",
-        "recipientState": "22611",
+        "recipientCity": "Utica",
+        "recipientState": "NY",
         "recipientZip": "22611",
+         "weight": "6",
         "length":"11",
         "width":"11",
         "height":"11",
-        "weight": "6"
+       
       },
     
     ];
@@ -209,10 +210,7 @@ const BulkUpload = () => {
       return;
     }
 
-    if (user.availableBalance <= user.rate) {
-      alert("Insufficient balance to generate labels.");
-      return;
-    }
+  
     setLoading(true); // Disable button and show loader
 
     const reader = new FileReader();
@@ -224,6 +222,8 @@ const BulkUpload = () => {
 
       if (rows.length > 40) {
         alert("Only 40 labels can be created at a time.");
+        setLoading(false);// Disable button and show loader
+        resetFileInput();
         return; // Stop further execution
       }
       const stateErrors = validateStates(rows);
@@ -235,11 +235,19 @@ const BulkUpload = () => {
         return; // Stop processing if validation fails
       }
 
+      if (user.availableBalance < (user.rate)*(rows.length)) {
+        setLoading(false);
+        resetFileInput();
+        alert(`Insufficient balance! Balance: ${user.availableBalance}, Required Balance ${(user.rate)*(rows.length)}`);
+        return;
+      }
       setStateValidationErrors([])
       setTotalRows(rows.length);
       setLabelsGenerated(0);
       const labelHistory = [];
       const newLabels = [];
+
+    
 
 
 for (let i = 0; i < rows.length; i++) {
@@ -258,10 +266,7 @@ for (let i = 0; i < rows.length; i++) {
   // if (errors.length > 0) {
   //   alert("Some rows were skipped due to missing data:\n" + errors.join("\n"));
   // }
-  if (user.availableBalance <= user.rate) {
-    alert("Insufficient balance to generate labels.");
-    return;
-  }
+
 
   ///// one start here 
 
@@ -270,8 +275,8 @@ for (let i = 0; i < rows.length; i++) {
   // console.log("API Vendor:", apiVendor);
   // console.log("Label Type:", formData.labelType);
   let newBarcodeImg;
-  try {
-    // Fetch tracking number from the API
+   try {
+  //   // Fetch tracking number from the API
   
     const backendResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/get/vtno`, {
       method: 'POST',
@@ -285,7 +290,9 @@ for (let i = 0; i < rows.length; i++) {
     });
   
     if (!backendResponse.ok) {
-      throw new Error(`Failed to fetch tracking number: ${backendResponse.statusText}`);
+      alert('Server Error Wait Our team try to fix');
+      // throw new Error(`Failed to fetch tracking number: ${backendResponse.statusText}`);
+     return
     }
   
     const data = await backendResponse.json();
@@ -307,7 +314,10 @@ for (let i = 0; i < rows.length; i++) {
     );
   
     if (!barcodeResponse.ok) {
-      throw new Error(`Failed to fetch barcode: ${barcodeResponse.statusText}`);
+      alert('Server Error Wait Our team try to fix');
+      // throw new Error(`Failed to fetch barcode: ${barcodeResponse.statusText}`);
+      return
+      
     }
   
     const barcodeData = await barcodeResponse.json();
@@ -433,6 +443,8 @@ for (let i = 0; i < rows.length; i++) {
       setGeneratedLabels(newLabels); // Update state with generated labels
       const bulkId = Date.now().toString();
 
+      
+
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/auth/add-bulk-label-history/${user.id}`,
@@ -476,7 +488,7 @@ for (let i = 0; i < rows.length; i++) {
     const selectedCarrier = e.target.value;
 
     // Default vendors for USPS
-    const uspsVendors = ["Shippo", "Rollo","Evs",'ATFM'];
+    const uspsVendors = ["Shippo", "Rollo","Evs",'ATFM',''];
     const upsVendors = ["UPS 2nd Day Air", "UPS 3 Day", "UPS Ground", "UPS Next Day"];
      const uspsPreVendors = ['Easypost']
     

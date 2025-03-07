@@ -161,7 +161,7 @@ const CreateLabel = () => {
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
   const handleGenerateLabel = async () => {
-    if (loginUser.availableBalance <= loginUser.rate) {
+    if (loginUser.availableBalance < loginUser.rate) {
       alert("Insufficient balance to generate a label.");
       return;
     }
