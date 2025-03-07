@@ -147,12 +147,12 @@ const DownloadHistory = ({ formData }) => {
             <div className="label-container" id="label" ref={labelRef}>
                <div className="header">
                 <div id="large-letter" className="large-letter">
-                  {formData.labelType === 'ground_advantage' ? 'G' : 'P'}
+                  {formData.labelType === 'ground_advantage_tm' ? 'G' : 'P'}
                 </div>
                 <div>
                   <div className="label_reference">
                     <span id="label_reference_type">
-                      {formData.labelType === 'ground_advantage' ? 'USPS GROUND ADVANTAGE' : 'PRIORITY MAIL'}
+                      {formData.labelType === 'ground_advantage_tm' ? 'USPS GROUND ADVANTAGE' : 'PRIORITY MAIL'}
                     </span>
                     <br />
                     U.S. POSTAGE PAID<br />
@@ -163,7 +163,7 @@ const DownloadHistory = ({ formData }) => {
                 </div>
               </div>
               <h3 className="label_type">
-                {formData.labelType === 'ground_advantage' ? (
+                {formData.labelType === 'ground_advantage_tm' ? (
                   <>GROUND ADVANTAGE<sup>TM</sup></>
                 ) : (
                   <>USPS PRIORITY MAIL<sup>®</sup></>
