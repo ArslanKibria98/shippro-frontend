@@ -25,13 +25,52 @@ const DownloadHistory = ({ formData }) => {
     //   }
     // }, [formData.trackingNumber]);
   
+
+
+    const formatZipCode = (zip) => {
+      // Convert input to string if it's not already a string
+      const zipString = String(zip || '');
+    
+      // Split into parts based on the dash and take only the part before the dash
+      const [zipPart1] = zipString.split('-');
+    
+      // Remove non-numeric characters and ensure the first part is at least 5 digits long
+      const formattedZip = zipPart1.replace(/\D/g, '').padStart(5, '0');
+    
+      // Return the formatted ZIP code
+      return formattedZip;
+    };
+  
+  
+    const formatZipCodeBeforeDash = (zip) => {
+      // Convert input to string if it's not already a string
+      const zipString = String(zip || '');
+    
+      // Check if the ZIP code contains a dash
+      const hasDash = zipString.includes('-');
+    
+      // Split into parts only if it has a dash
+      let zipPart1 = zipString;
+      let zipPart2 = '';
+    
+      if (hasDash) {
+        [zipPart1, zipPart2] = zipString.split('-');
+      }
+    
+      // Remove non-numeric characters and ensure the first part is at least 5 digits long
+      zipPart1 = zipPart1.replace(/\D/g, '').padStart(5, '0');
+    
+      // Return formatted ZIP code with or without the second part
+      return zipPart2 ? `${zipPart1}-${zipPart2}` : zipPart1;
+    };
+
     const generateBarcode = (canvasRef) => {
       if (formData.trackingNumber && canvasRef) {
   
         try {
           bwipjs.toCanvas(canvasRef, {
             bcid: "datamatrix", // Generates a DataMatrix barcode
-            text: "42022124 " + cleanTrackingNumber, // Content
+            text: "420" + formatZipCode(formData.recipientZip) + cleanTrackingNumber,
             scale: 4,  
             height: 5,  
             width: 5,
@@ -119,7 +158,7 @@ const DownloadHistory = ({ formData }) => {
                   <div>
                     {formData.recipientName}<br />
                     {formData.recipientAddress} {formData.recipientAddress1}<br />
-                    {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
+                    {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                     <br />
                   </div>
                 </div>
@@ -188,7 +227,7 @@ const DownloadHistory = ({ formData }) => {
                   <div>
                     {formData.recipientName}<br />
                     {formData.recipientAddress} {formData.recipientAddress1}<br />
-                    {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
+                    {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                     <br />
                   </div>
                 </div>
@@ -250,7 +289,7 @@ const DownloadHistory = ({ formData }) => {
                   <div>
                     {formData.recipientName}<br />
                     {formData.recipientAddress} {formData.recipientAddress1}<br />
-                    {formData.recipientCity} {formData.recipientState} {formData.recipientZip}<br />
+                    {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                     <br />
                   </div>
                 </div>
@@ -305,7 +344,7 @@ const DownloadHistory = ({ formData }) => {
                   <div>
                     {formData.recipientName}<br />
                     {formData.recipientAddress} {formData.recipientAddress1}<br />
-                    {formData.recipientCity}, {formData.recipientState}, {formData.recipientZip}<br />
+                    {formData.recipientCity}, {formData.recipientState}, {formatZipCodeBeforeDash(formData.recipientZip)}<br />
                     <br />
                   </div>
                 </div>
