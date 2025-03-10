@@ -246,7 +246,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
           </div>
         );
         case 'Easypost':
-        return (<div >
+        return (<div style={{display:'none'}}>
           <div className="label-container easypost_label"  style={{border:'1px solid'}} id="label easypost_label" ref={labelRef}>
              <div className="header">
               <div id="large-letter" className="large-letter">
@@ -329,7 +329,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
         );
 
       case 'Evs':
-        return (<div style={{display:''}}>
+        return (<div style={{display:'none'}}>
           <div className="label-container evs_label" id="label" ref={labelRef} >
             <div className="header">
               <div id="large-letter" className="large-letter">
@@ -390,7 +390,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
           </div>
         );
         case 'Rollo':
-        return (<div style={{display:''}}>
+        return (<div style={{display:'none'}}>
           <div className="label-container rollo_label" id="label" ref={labelRef}>
             <div className="header">
               <div id="large-letter" className="large-letter">
