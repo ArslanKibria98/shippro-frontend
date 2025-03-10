@@ -39,6 +39,7 @@ function App() {
                         <Route path="/create/bulk" element={<BulkUpload />} />
                         <Route path="/admin/dashboard" element={<AdminDashboard />} />
                         <Route path="/download-history" element={<DisplayHistory />} />
+                        
                     </Routes>
                 </Router>
 

@@ -85,13 +85,17 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
   // Barcode generation for DataMatrix
 
     
+  const [randomNumber] = useState(
+    () => Math.floor(Math.random() * 3) + 1
+  );
 
+  
   const generateBarcode = (canvasRef) => {
     if (formData.trackingNumber && canvasRef) {
       try {
         bwipjs.toCanvas(canvasRef, {
           bcid: "datamatrix",
-          text: "420" + formatZipCode(formData.recipientZip) + cleanTrackingNumber,
+          text: "]C1420"+formatZipCode(formData.recipientZip) +' '+ cleanTrackingNumber,
           scale: 4,
           height: 5,
           width: 5,
@@ -102,6 +106,8 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
       }
     }
   };
+
+  
 
   useEffect(() => {
     generateBarcode(sbarcode1.current);
@@ -162,7 +168,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 </div>
                 <div className="parcel_info">
                   Ship Date: {new Date().toLocaleDateString('en-US')}<br />
-                  WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
+                  WT: {formData.weight} {formData.labelType == 'ground_advantage' ? 'oz' : 'lb'}
                 </div>
               </div>
               <div className="from_address_info">
@@ -229,7 +235,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 </div>
                 <div className="parcel_info">
                    Mailed From: {formData.senderZip} <br />
-                  WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
+                  WT: {formData.weight} {formData.labelType == 'ground_advantage_tm' ? 'oz' : 'lb'}
                 </div>
               </div>
               <div className="from_address_info">
@@ -291,7 +297,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 <div className="parcel_info">
                   <div style={{textAlign:'center'}}>{new Date().toLocaleDateString('en-US')}</div>
                    Mailed From: {formData.senderZip} <br />
-                  WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'} 0 ozs
+                  WT: {formData.weight} {formData.labelType == 'ground_advantage' ? 'lb' : 'lb'} 0 oz
                 </div>
               </div>
               <div className="from_address_info">
@@ -346,8 +352,9 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 </div>
                 <div className="parcel_info">
                   Ship Date: {new Date().toLocaleDateString('en-US')}<br />
-                  Weight: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'} 0 oz <br />
-                  <p className="parcel_no">0004</p>
+                  Weight: {formData.weight} {formData.labelType == 'ground_advantage' ? 'lb' : 'lb'} 0 oz <br />
+                  <p className="parcel_no">{String(randomNumber).padStart(4, '0')}
+                  </p>
                 </div>
               </div>
               <div className="from_address_info">

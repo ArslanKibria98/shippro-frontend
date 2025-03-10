@@ -22,6 +22,8 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link href="https://fonts.cdnfonts.com/css/helvetica-neue-55?styles=16008,16022,15985,16012,16014" rel="stylesheet">
+                
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bwip-js/3.0.0/bwip-js.min.js"></script>
@@ -438,6 +440,7 @@ a{
               height: 152.4mm;  /* 6 inches */
               /* padding: 10px 0px; */
               text-align: center;
+              color: #000000e0;
               background-color: white;
               font-family: Arial, sans-serif!important;
           }
@@ -457,20 +460,21 @@ a{
           }
           .to_address_info{
             max-width: 50%;
+            text-transform: uppercase;
           }
           .header .large-letter {
-              font-size: 90px;
+      font-size: 90px;
       /* font-weight: bold; */
       font-weight: 600;
       border-right: 1.5px solid black;
       
-      padding: 0px 20px;
+      padding: 0px 12px;
       /* border-bottom: none; */
           }
           .header .label_reference{
    font-size: 12px;
    font-weight: bold;
-      border: 2px solid;
+      border: 1.5px solid black;
       margin-right: 10px;
       padding: 5px;
       /* padding-bottom: 19px; */
@@ -484,21 +488,29 @@ a{
       margin: 0px;
       padding: 4px 0px;
       font-weight: 600;
-      font-size: 22px;
+      font-size: 20px;
+          }
+          .label_type sup{
+            font-size: 14px;
           }
           .info {
               padding: 0px 10px;
               text-align: left;
               margin-top: 10px;
               font-size: 12px;
+              height: 220px;
+           display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-bottom: 16px;
           }
           .parcel_info{
               text-align: right;
           }
           .barcode {
           
-              border-top: 1.5px solid black;
-      border-bottom: 1.5px solid;
+      border-top: 3px solid black;
+      border-bottom: 3px solid black;
       padding: 5px 0px;
           }
           input, button {
@@ -507,8 +519,9 @@ a{
               font-size: 16px;
           }
           #label {
-              height: 152.4mm;  /* 6 inches */
-              width: 101.6mm;
+      height: 152.4mm;  /* 6 inches */
+      width: 101.6mm;
+      color: #000000e0;
       /* padding: 10px; */
       /* padding-right:20px; */
       background: white;
@@ -524,13 +537,14 @@ a{
           .address_label_info{
               display: flex;
               justify-content: space-between;
-              margin-bottom: 40px;
+              /* margin-bottom: 40px; */
           }
           .from_address_info{
               display: flex;
               gap: 10px;
+              text-transform: uppercase;
               font-size: 13px;
-              margin-bottom: 40px;
+              /* margin-bottom: 40px; */
               padding-left: 20px;
           }
           #tracking-number{
@@ -805,13 +819,12 @@ body.sidebar-open {
   font-weight: normal;
   margin-top: 20px;
   font-size: 11px;
+  padding-right: 30px;
 }
 .evs_label .header{
   align-items: normal;
 }
-.evs_label .large-letter{
-  font-size: 105px;
-}
+
 .rollo_label{
   border: 1.5px solid;
   font-weight: bold;
@@ -952,6 +965,39 @@ body.sidebar-open {
 }
 .easypost_label .large-letter{
 font-size: 105px;
+}
+
+
+.download-button {
+  background-color: #ffffff;
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+}
+
+.download-button:hover:not(:disabled) {
+  background-color: #f8fafc;
+}
+
+.download-button:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: #93c5fd;
+}
+
+.download-button svg {
+  transition: stroke-dashoffset 0.5s ease-out;
+  height: 11px!important;
+  width: 11px!important;
+}
+
+
+.rollo_label{
+  font-family: 'Helvetica Neue', sans-serif !important;
+    font-weight: 600;
+}
+.rollo_label .label_reference{
+  padding-right: 30px;
 }
       </style>
     <title>Ship Pro</title>

@@ -3,6 +3,9 @@ import AuthContext from "../context/AuthContext";
 import DownloadHistory from "./DownloadHistory";
 import DownloadBulkHistory from "./DownloadBulkHistory";
 import Loader from "./Loader";
+import * as XLSX from "xlsx";
+import { FaFileExcel, FaDownload } from 'react-icons/fa'; // For Excel and download icons
+
 
 const LabelsHistory = () => {
   const { user } = useContext(AuthContext);
@@ -95,6 +98,36 @@ const LabelsHistory = () => {
 
   if (loading) return <p><Loader /></p>;
   if (error) return <p>Error: {error}</p>;
+
+
+  const generateTrackingExcel = (labels) => {
+    // Create worksheet data
+    const trackingData = labels.map((label, index) => ({
+      "Tracking Number": label.trackingNumber
+    }));
+  
+    // Create worksheet
+    const worksheet = XLSX.utils.json_to_sheet(trackingData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tracking Numbers");
+  
+    // Generate Excel file
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array"
+    });
+  
+    // Create blob and trigger download
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `tracking_numbers_${Date.now()}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="container">
@@ -204,37 +237,46 @@ const LabelsHistory = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentBulkHistory.map((event, bulkIndex) => {
-                      // Group tracking numbers into chunks of 20
-                      const trackingGroups = groupTrackingNumbers(event.labels.map((label) => label.trackingNumber));
 
-                      return (
-                        <tr key={event._id || bulkIndex}>
-                          <td>{event.labels[0].carrier}_Labels.zip</td>
-                          <td>{event.labels.length}</td>
-                          <td>Ready to Download</td>
-                          <td>{event.labels[0].vendor}</td>
-                          <td>{new Date(event.generatedAt).toLocaleString()}</td>
-                          <td>
-                            {/* Render buttons for each group of tracking numbers */}
-                            {trackingGroups.map((group, index) => (
-                              <button
-                                key={index}
-                                onClick={() => handleBulkTrack(group)}
-                                className="track-button download_button"
-                              >
-                                {index === 0
-                                  ? "1-20"
-                                  : `${index * 20 + 1}-${Math.min((index + 1) * 20, event.labels.length)}`}
-                              </button>
-                            ))}
-                          </td>
-                          <td>
-                            <DownloadBulkHistory labelDataList={event.labels} />
-                          </td>
-                        </tr>
-                      );
-                    })}
+
+                  {currentBulkHistory.map((event, bulkIndex) => {
+  const trackingGroups = groupTrackingNumbers(event.labels.map(label => label.trackingNumber));
+
+  return (
+    <tr key={event._id || bulkIndex}>
+      <td>{event.labels[0].carrier}_Labels.zip</td>
+      <td>{event.labels.length}</td>
+      <td>Ready to Download</td>
+      <td>{event.labels[0].vendor}</td>
+      <td>{new Date(event.generatedAt).toLocaleString()}</td>
+      <td>
+        {trackingGroups.map((group, index) => (
+          <button
+            key={index}
+            onClick={() => handleBulkTrack(group)}
+            className="track-button download_button"
+          >
+            {index === 0
+              ? "1-20"
+              : `${index * 20 + 1}-${Math.min((index + 1) * 20, event.labels.length)}`}
+          </button>
+        ))}
+      </td>
+      <td style={{display:'flex'}}>
+        {/* Add Excel download button */}
+        <button 
+          onClick={() => generateTrackingExcel(event.labels)}
+          className="download_button"
+          style={{ marginLeft: '8px' }}
+        >
+          <FaFileExcel />
+        </button>
+        <DownloadBulkHistory labelDataList={event.labels} />
+      </td>
+    </tr>
+  );
+})}
+                  
                   </tbody>
                 </table>
                 {/* Pagination Controls */}

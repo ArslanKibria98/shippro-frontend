@@ -3,13 +3,15 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import html2pdf from "html2pdf.js";
 import * as XLSX from "xlsx";
+import { PDFDocument } from "pdf-lib";
 import BulkHandleLabel from "./BulkHandleLabel";
 
 const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
   const labelRefs = useRef([]);
-  const [modifiedExcelBlob, setModifiedExcelBlob] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState(0);
 
+  // Generate individual PDF
   const generatePDF = async (refElement, index) => {
     const options = {
       margin: [0, 0, 0, 0],
@@ -30,9 +32,21 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
     return await html2pdf().set(options).from(refElement).outputPdf("blob");
   };
 
+  // Merge all PDFs into single file
+  const mergePDFs = async (pdfBlobs) => {
+    const mergedPdf = await PDFDocument.create();
+    for (const pdfBlob of pdfBlobs) {
+      const pdfBytes = await pdfBlob.arrayBuffer();
+      const pdf = await PDFDocument.load(pdfBytes);
+      const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+      copiedPages.forEach(page => mergedPdf.addPage(page));
+    }
+    return await mergedPdf.save();
+  };
+
+  // Modify Excel with tracking numbers (FIXED)
   const modifyExcelFile = async () => {
     if (!uploadedExcelFile) return null;
-
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -49,6 +63,8 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
 
           const updatedWorksheet = XLSX.utils.json_to_sheet(updatedData);
           const updatedWorkbook = XLSX.utils.book_new();
+          
+          // CORRECTED METHOD NAME
           XLSX.utils.book_append_sheet(updatedWorkbook, updatedWorksheet, "Sheet1");
 
           const excelBinaryString = XLSX.write(updatedWorkbook, {
@@ -56,25 +72,19 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
             bookType: "xlsx",
           });
 
-          const excelBlob = new Blob([s2ab(excelBinaryString)], {
+          return resolve(new Blob([s2ab(excelBinaryString)], {
             type: "application/octet-stream",
-          });
-
-          setModifiedExcelBlob(excelBlob);
-          resolve(excelBlob);
+          }));
         } catch (error) {
           reject(error);
         }
       };
-
-      reader.onerror = (error) => {
-        reject(error);
-      };
-
+      reader.onerror = (error) => reject(error);
       reader.readAsArrayBuffer(uploadedExcelFile);
     });
   };
 
+  // Binary conversion helper
   const s2ab = (s) => {
     const buf = new ArrayBuffer(s.length);
     const view = new Uint8Array(buf);
@@ -82,26 +92,49 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
     return buf;
   };
 
+  // Main download handler
   const downloadZip = async () => {
     setIsDownloading(true);
+    setDownloadProgress(0);
     const zip = new JSZip();
+    let processedCount = 0;
+    const totalLabels = labelDataList.length;
+    const hasExcel = !!uploadedExcelFile;
+    const totalSteps = totalLabels + (hasExcel ? 1 : 0) + 1; // +1 for merged PDF
+    const pdfBlobs = [];
 
     try {
-      // Add PDF files
-      for (let i = 0; i < labelRefs.current.length; i++) {
+      // Generate individual PDFs
+      for (let i = 0; i < totalLabels; i++) {
         const pdfBlob = await generatePDF(labelRefs.current[i], i);
+        pdfBlobs.push(pdfBlob);
         zip.file(`Label_${i + 1}.pdf`, pdfBlob);
+        processedCount++;
+        setDownloadProgress(Math.round((processedCount / totalSteps) * 100));
       }
 
-      // Add modified Excel file
-      const excelBlob = await modifyExcelFile();
-      if (excelBlob) {
-        zip.file("Updated_Tracking_List.xlsx", excelBlob);
+      // Add merged PDF
+      if (pdfBlobs.length > 0) {
+        const mergedPdfBytes = await mergePDFs(pdfBlobs);
+        zip.file("All_Labels_Merged.pdf", mergedPdfBytes);
+        processedCount++;
+        setDownloadProgress(Math.round((processedCount / totalSteps) * 100));
       }
 
-      // Generate and download ZIP
+      // Add modified Excel
+      if (hasExcel) {
+        const excelBlob = await modifyExcelFile();
+        if (excelBlob) {
+          zip.file("Updated_Tracking_List.xlsx", excelBlob);
+          processedCount++;
+          setDownloadProgress(Math.round((processedCount / totalSteps) * 100));
+        }
+      }
+
+      // Generate and save ZIP
       const content = await zip.generateAsync({ type: "blob" });
       saveAs(content, "Labels_and_Tracking.zip");
+      setDownloadProgress(100);
     } catch (error) {
       console.error("Error generating files:", error);
       alert("Failed to generate download files. Please try again.");
@@ -115,12 +148,43 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
       <h2 className="text-lg font-semibold mb-4">Download Generated Labels</h2>
       <button 
         onClick={downloadZip} 
-        className="download_button"
+        className="download-button relative h-12 w-48 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed transition-opacity"
         disabled={isDownloading}
       >
-        {isDownloading ? "Downloading..." : "Download All Labels as ZIP"}
+        {isDownloading ? (
+          <div className="relative w-12 h-12">
+            <svg className="w-full h-full transform -rotate-90">
+              <circle
+                cx="24"
+                cy="24"
+                r="20"
+                className="stroke-current text-gray-200"
+                strokeWidth="4"
+                fill="none"
+              />
+              <circle
+                cx="24"
+                cy="24"
+                r="20"
+                className="stroke-current text-blue-600"
+                strokeWidth="4"
+                fill="none"
+                strokeDasharray="125.6"
+                strokeDashoffset={125.6 - (125.6 * downloadProgress) / 100}
+                strokeLinecap="round"
+              />
+            </svg>
+            <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm font-semibold text-gray-700">
+              {downloadProgress}%
+            </span>
+          </div>
+        ) : (
+          <span className="text-blue-600 font-medium">Download All Labels as ZIP</span>
+        )}
       </button>
-      <div style={{ display: "none" }}>
+      
+      {/* Hidden label renderer */}
+      <div style={{ display: 'none' }}>
         {labelDataList.map((formData, index) => (
           <BulkHandleLabel
             key={index}

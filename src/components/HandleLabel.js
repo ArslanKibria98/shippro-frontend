@@ -78,21 +78,21 @@ const HandleLabel = ({ formData, barcodeImg }) => {
   };
 
   const generateBarcode = (canvasRef) => {
-    if (formData.trackingNumber && canvasRef) {
-      try {
-        bwipjs.toCanvas(canvasRef, {
-          bcid: "datamatrix",
-          text: "420" + formatZipCode(formData.recipientZip) + cleanTrackingNumber,
-          scale: 4,
-          height: 5,
-          width: 5,
-          includetext: false,
-        });
-      } catch (error) {
-        console.error("Barcode generation error:", error);
+      if (formData.trackingNumber && canvasRef) {
+        try {
+          bwipjs.toCanvas(canvasRef, {
+            bcid: "datamatrix",
+            text: "]C1420"+formatZipCode(formData.recipientZip) +' '+ cleanTrackingNumber,
+            scale: 4,
+            height: 5,
+            width: 5,
+            includetext: false,
+          });
+        } catch (error) {
+          console.error("Barcode generation error:", error);
+        }
       }
-    }
-  };
+    };
 
   useEffect(() => {
     generateBarcode(sbarcode1.current);
@@ -111,6 +111,9 @@ const HandleLabel = ({ formData, barcodeImg }) => {
       html2pdf().set(options).from(labelRef.current).save();
     }
   };
+   const [randomNumber] = useState(
+      () => Math.floor(Math.random() * 3) + 1
+    );
 
   // Render vendor-specific HTML
   const renderVendorLabel = () => {
@@ -131,7 +134,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                   <br />
                   U.S. POSTAGE PAID<br />
                   <span id="vendor_brand">{formData.vendor}</span><br />
-                  e-Postage
+                  ePostage
                 </div>
                 <span id="additional_info">{formData.vendor === 'Shippo' ? 'Cubic' : ''}</span>
               </div>
@@ -153,7 +156,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 </div>
                 <div className="parcel_info">
                   Ship Date: {new Date().toLocaleDateString('en-US')}<br />
-                  WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
+                  WT: {formData.weight} {formData.labelType == 'ground_advantage' ? 'oz' : 'lb'}
                 </div>
               </div>
               <div className="from_address_info">
@@ -199,7 +202,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                   <br />
                   U.S. POSTAGE PAID<br />
                   <span id="vendor_brand">{formData.vendor}</span><br />
-                  e-Postage
+                  ePostage
                 </div>
               </div>
             </div>
@@ -220,7 +223,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 </div>
                 <div className="parcel_info">
                    Mailed From: {formData.senderZip} <br />
-                  WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
+                  WT: {formData.weight} {formData.labelType == 'ground_advantage_tm' ? 'oz' : 'lb'}
                 </div>
               </div>
               <div className="from_address_info">
@@ -326,7 +329,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
         );
 
       case 'Evs':
-        return (<div style={{display:'none'}}>
+        return (<div style={{display:''}}>
           <div className="label-container evs_label" id="label" ref={labelRef} >
             <div className="header">
               <div id="large-letter" className="large-letter">
@@ -362,9 +365,9 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                   <br />
                 </div>
                 <div className="parcel_info">
-                  <div style={{textAlign:'center'}}>{new Date().toLocaleDateString('en-US')}</div>
+                  <div>{new Date().toLocaleDateString('en-US')}</div>
                    Mailed From: {formData.senderZip} <br />
-                  WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'} 0 ozs
+                  WT: {formData.weight} {formData.labelType == 'ground_advantage' ? 'lb' : 'lb'} 0 oz
                 </div>
               </div>
               <div className="from_address_info">
@@ -387,7 +390,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
           </div>
         );
         case 'Rollo':
-        return (<div style={{display:'none'}}>
+        return (<div style={{display:''}}>
           <div className="label-container rollo_label" id="label" ref={labelRef}>
             <div className="header">
               <div id="large-letter" className="large-letter">
@@ -396,7 +399,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
               <div>
                 <div style={{textAlign:'left'}} className="label_reference" >
                   U.S. POSTAGE PAID<br />
-                  <span id="vendor_brand">{formData.vendor}</span><br />
+                  <span id="vendor_brand">ROLLO</span><br />
                   ePostage
                 </div>
                 <span id="additional_info">{formData.vendor === 'Shippo' ? 'Cubic' : ''}</span>
@@ -419,8 +422,8 @@ const HandleLabel = ({ formData, barcodeImg }) => {
                 </div>
                 <div className="parcel_info">
                   Ship Date: {new Date().toLocaleDateString('en-US')}<br />
-                  Weight: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'} 0 oz <br />
-                  <p className="parcel_no">0004</p>
+                  Weight: {formData.weight} {formData.labelType == 'ground_advantage' ? 'lb' : 'lb'} 0 oz <br />
+                  <p className="parcel_no">{String(randomNumber).padStart(4, '0')}</p>
                 </div>
               </div>
               <div className="from_address_info">

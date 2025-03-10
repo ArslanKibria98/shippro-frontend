@@ -1,4 +1,4 @@
-import React, { useEffect, useRef }  from "react";
+import React, { useEffect, useRef, useState }  from "react";
 import JsBarcode from "jsbarcode";
 import html2pdf from "html2pdf.js";
 // import jsPDF from "jspdf";
@@ -63,6 +63,9 @@ const DownloadHistory = ({ formData }) => {
       // Return formatted ZIP code with or without the second part
       return zipPart2 ? `${zipPart1}-${zipPart2}` : zipPart1;
     };
+    const [randomNumber] = useState(
+          () => Math.floor(Math.random() * 3) + 1
+        );
 
     const generateBarcode = (canvasRef) => {
       if (formData.trackingNumber && canvasRef) {
@@ -70,7 +73,7 @@ const DownloadHistory = ({ formData }) => {
         try {
           bwipjs.toCanvas(canvasRef, {
             bcid: "datamatrix", // Generates a DataMatrix barcode
-            text: "420" + formatZipCode(formData.recipientZip) + cleanTrackingNumber,
+            text: "]C1420"+formatZipCode(formData.recipientZip) +' '+ cleanTrackingNumber,
             scale: 4,  
             height: 5,  
             width: 5,
@@ -150,7 +153,7 @@ const DownloadHistory = ({ formData }) => {
                   </div>
                   <div className="parcel_info">
                     Ship Date: {new Date().toLocaleDateString('en-US')}<br />
-                    WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
+                    WT: {formData.weight} {formData.labelType == 'ground_advantage' ? 'oz' : 'lb'} 
                   </div>
                 </div>
                 <div className="from_address_info">
@@ -218,7 +221,7 @@ const DownloadHistory = ({ formData }) => {
                   </div>
                   <div className="parcel_info">
                      Mailed From: {formData.senderZip} <br />
-                    WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'}
+                    WT: {formData.weight} {formData.labelType == 'ground_advantage_tm' ? 'oz' : 'lb'}
                   </div>
                 </div>
                 <div className="from_address_info">
@@ -280,7 +283,7 @@ const DownloadHistory = ({ formData }) => {
                   <div className="parcel_info">
                     <div style={{textAlign:'center'}}>{new Date().toLocaleDateString('en-US')}</div>
                      Mailed From: {formData.senderZip} <br />
-                    WT: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'} 0 ozs
+                    WT: {formData.weight} {formData.labelType == 'ground_advantage' ? 'lb' : 'lb'} 0 ozs
                   </div>
                 </div>
                 <div className="from_address_info">
@@ -312,7 +315,7 @@ const DownloadHistory = ({ formData }) => {
                 <div>
                   <div style={{textAlign:'left'}} className="label_reference" >
                     U.S. POSTAGE PAID<br />
-                    <span id="vendor_brand">{formData.vendor}</span><br />
+                    <span id="vendor_brand">ROLLO</span><br />
                     ePostage
                   </div>
                   <span id="additional_info">{formData.vendor === 'Shippo' ? 'Cubic' : ''}</span>
@@ -335,8 +338,8 @@ const DownloadHistory = ({ formData }) => {
                   </div>
                   <div className="parcel_info">
                     Ship Date: {new Date().toLocaleDateString('en-US')}<br />
-                    Weight: {formData.weight} {formData.weight <= 1 ? 'lb' : 'lbs'} 0 oz <br />
-                    <p className="parcel_no">0004</p>
+                    Weight: {formData.weight} {formData.labelType == 'ground_advantage' ? 'lb' : 'lb'} 0 oz <br />
+                    <p className="parcel_no">{String(randomNumber).padStart(4, '0')}</p>
                   </div>
                 </div>
                 <div className="from_address_info">

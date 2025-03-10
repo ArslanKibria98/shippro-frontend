@@ -155,8 +155,9 @@ const CreateLabel = () => {
     if (!formData.weight) newErrors.weight = "weight is required";
     if (!formData.length) newErrors.length = "length is required";
     if (!formData.width) newErrors.width = "width is required";
+    if (!formData.width) newErrors.width = "width is required";
+    if (formData.weight > 70) newErrors.weight = "Max 70 lbs allowed";
     if (!formData.height) newErrors.height = "height is required";
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
@@ -292,9 +293,9 @@ try {
 
 
 
-//         // for online get tracking url end here 
+// //         // for online get tracking url end here 
 
-// // Fetch the barcode image
+// // // Fetch the barcode image
 //         const textData = {
 //           barcode_data_url:
 //             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",

@@ -64,7 +64,12 @@ const BulkUpload = () => {
           errors.push(`Row ${index + 2}: Missing required field "${field}".`);
         }
       });
-  
+    
+      if(row.weight > 70){
+        errors.push(`Row ${index + 2} has greater weight: Max Allowed 70 lbs.`);
+
+      }
+       
       // Validate state abbreviations
       const senderState = row.senderState?.toUpperCase();
       const recipientState = row.recipientState?.toUpperCase();
@@ -220,12 +225,12 @@ const BulkUpload = () => {
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(worksheet);
 
-      if (rows.length > 40) {
-        alert("Only 40 labels can be created at a time.");
-        setLoading(false);// Disable button and show loader
-        resetFileInput();
-        return; // Stop further execution
-      }
+      // if (rows.length > 40) {
+      //   alert("Only 40 labels can be created at a time.");
+      //   setLoading(false);// Disable button and show loader
+      //   resetFileInput();
+      //   return; // Stop further execution
+      // }
       const stateErrors = validateStates(rows);
       if (stateErrors.length > 0) {
         setLoading(false);
@@ -291,7 +296,6 @@ for (let i = 0; i < rows.length; i++) {
   
     if (!backendResponse.ok) {
       alert('Server Error Wait Our team try to fix');
-      // throw new Error(`Failed to fetch tracking number: ${backendResponse.statusText}`);
      return
     }
   
@@ -315,7 +319,6 @@ for (let i = 0; i < rows.length; i++) {
   
     if (!barcodeResponse.ok) {
       alert('Server Error Wait Our team try to fix');
-      // throw new Error(`Failed to fetch barcode: ${barcodeResponse.statusText}`);
       return
       
     }
@@ -478,6 +481,12 @@ for (let i = 0; i < rows.length; i++) {
       }
       finally {
         setLoading(false); // Re-enable button after processing
+        setFormData({
+          carrier: "",
+          vendor: "",
+          labelType: "",
+        });
+        resetFileInput();
       }
     };
 
