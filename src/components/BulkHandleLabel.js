@@ -146,7 +146,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                   <br />
                   U.S. POSTAGE PAID<br />
                   <span id="vendor_brand">{formData.vendor}</span><br />
-                  e-Postage
+                  ePostage
                 </div>
                 <span id="additional_info">{formData.vendor === 'Shippo' ? 'Cubic' : ''}</span>
               </div>
@@ -214,7 +214,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                   <br />
                   U.S. POSTAGE PAID<br />
                   <span id="vendor_brand">{formData.vendor}</span><br />
-                  e-Postage
+                  ePostage
                 </div>
               </div>
             </div>
@@ -329,7 +329,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
               <div>
                 <div style={{textAlign:'left'}} className="label_reference" >
                   U.S. POSTAGE PAID<br />
-                  <span id="vendor_brand">{formData.vendor}</span><br />
+                  <span id="vendor_brand">ROLLO</span><br />
                   ePostage
                 </div>
                 <span id="additional_info">{formData.vendor === 'Shippo' ? 'Cubic' : ''}</span>
