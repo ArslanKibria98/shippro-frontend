@@ -297,8 +297,8 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
                   </div>
                   <div style={{display:'flex',justifyContent:'space-between'}}>            
                     <div style={{textAlign:'left'}}>
-                   <p style={{fontSize:'10px'}}>2025-02-25</p>
-                   <p style={{fontSize:'10px'}}>{formData.senderZip}</p>
+                  <p style={{ fontSize: '10px' }}>{new Date().toISOString().split('T')[0]}</p>
+                    <p style={{fontSize:'10px'}}>{formData.senderZip}</p>
                    <p style={{ fontSize: "10px" }}>
   C34197{Math.floor(1000 + Math.random() * 9000)}
 </p>                   <p style={{fontSize:'10px'}}>Commercial</p>

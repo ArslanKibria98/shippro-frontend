@@ -37,8 +37,11 @@ const LabelsHistory = () => {
         }
 
         const data = await response.json();
-        setSingleHistory(data.labelHistory || []);
-        setBulkHistory(data.bulkLabelHistory || []);
+
+        // setSingleHistory(data.labelHistory || []);
+        // setBulkHistory(data.bulkLabelHistory || []);
+        setSingleHistory((data.labelHistory || []).sort((a, b) => new Date(b.generatedAt) - new Date(a.generatedAt)));
+      setBulkHistory((data.bulkLabelHistory || []).sort((a, b) => new Date(b.generatedAt) - new Date(a.generatedAt)));
         setLoading(false);
       } catch (err) {
         setError(err.message);
