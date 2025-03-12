@@ -13,6 +13,45 @@ const CreateLabel = () => {
   const { user, updateUser } = useContext(AuthContext);
   const [labelData, setLabelData] = useState(null); // New state for label data
 
+
+ const [sender, setSender] = useState({
+  senderName: "",
+    senderAddress: "",
+    senderAddress1: "",
+    senderCity:"",
+    senderPh:"",
+    senderState:"",
+    senderZip:""
+  });
+
+
+  const [savedSender, setSavedSender] = useState(null);
+  const [showSuggestion, setShowSuggestion] = useState(false);
+
+  useEffect(() => {
+    // Load saved sender from localStorage
+    const storedSender = localStorage.getItem("savedSender");
+    if (storedSender) {
+      setSavedSender(JSON.parse(storedSender));
+    }
+  }, []);
+
+  const handleInputChange = (e) => {
+    setSender({ ...sender, [e.target.name]: e.target.value });
+  };
+
+  const handleSaveSender = () => {
+    localStorage.setItem("savedSender", JSON.stringify(sender));
+    setSavedSender(sender);
+    alert("Sender saved for later use!");
+  };
+
+  const handleFillSender = () => {
+    if (savedSender) {
+      setSender(savedSender);
+      setShowSuggestion(false);
+    }
+  };
  const usStates = [
     { name: "Alabama", abbreviation: "AL" },
     { name: "Alaska", abbreviation: "AK" },
@@ -644,6 +683,7 @@ try {
                   name="senderName"
                   placeholder="Name"
                   value={formData.senderName}
+                  
                   onChange={handleChange}
                   className="form-input"
                 />

@@ -7,9 +7,9 @@
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="Ship label pro provide Ecommerce Solution like VA, product Listing etc... "
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -507,6 +507,10 @@ a{
           .parcel_info{
               text-align: right;
           }
+          .easypost_label .parcel_info{
+            font-size: 14px;
+            font-weight: bold;
+          }
           .barcode {
           
       border-top: 3px solid black;
@@ -857,18 +861,19 @@ body.sidebar-open {
 
 .easypost_label .header{
   display: flex;
-    justify-content: normal;
     align-items: normal;
+    justify-content: normal;
     border-bottom: 1.5px solid black;
 }
 .easypost_label .header_right{
-  padding-left: 10px;
-  padding-top: 5px;
+  padding-left: 20px;
+}
+.easypost_label .info{
+  justify-content: normal;
 }
 .ep_upbarcode canvas{
-  width: 155px;
-    height: 38px;
-    margin-right: 10px;
+  width: 181px;
+  height: 34px;
 }
 .easypost_label .header_right .paid_text{
   font-weight: 700;
@@ -880,12 +885,15 @@ body.sidebar-open {
     justify-content: end;
     padding-right: 44px;
 }
+.easypost_label .parcel_ref{
+  padding-right: 30px;
+}
 .easypost_label .from_address_info canvas{
   height: 35px !important;
     width: 35px !important;
 }
 .easypost_label .from_address_info{
-  font-size: 16px;
+  /* font-size: 16px; */
   align-items: center;
 }
 .easypost_label .end_label_container canvas {
@@ -894,11 +902,11 @@ body.sidebar-open {
 }
 .easypost_label .end_label_container{
   display: flex;
-  padding: 4px 10px;
+  padding: 12px 10px;
   justify-content: flex-end;
 }
 .easypost_label .label_type {
-    font-size: 28px;
+    font-size: 20px;
 }
 .parcelref_no{
   border: 2px solid;
@@ -906,6 +914,16 @@ body.sidebar-open {
     padding: 2px 3px;
     font-size: 18px;
     line-height: 1.2;
+}
+.easypost_label .parcelref_no{
+  border: 1px solid;
+  font-size: 16px;
+  border: 1px solid;
+  font-weight: 400;
+
+}
+.easypost_label .header_right p{
+  line-height: 1.4;
 }
 /* Tick Animation */
 .tick-container {
@@ -951,7 +969,7 @@ body.sidebar-open {
   font-size: 12px;
     font-weight: 700;
 } */
-.easypost_label .header_right img{
+.easypost_label .header_right .easypost_logo{
   filter: brightness(0);
     height: 20px;
     margin-left: 11px;
@@ -963,8 +981,26 @@ body.sidebar-open {
     align-items: center;
     margin-top: 5px;
 }
+.easypost_logo .headerR-top{
+  justify-content: left;
+}
+.ep_upbarcode{
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+.easypost_label .pdf_417{
+  width: 189px;
+    height: 42px;
+    margin-top: 6px;
+    margin-left: 11px;
+    padding-top: 0px;
+}
+.easy_post .headerR-top{
+  justify-content: normal!important;
+
+}
 .easypost_label .large-letter{
-font-size: 105px;
+font-size: 90px;
 }
 
 

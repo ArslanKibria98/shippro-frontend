@@ -14,6 +14,8 @@ import CreateLabel from "./components/createlabel";
 import BulkUpload from "./components/Bulkupload";
 import LabelsHistory from "./components/labelsHistory";
 import DisplayHistory from "./components/displayHistory";
+import SenderForm from "./components/Senderlocal";
+import HaversineTest from "./components/Harversinetest";
 
 // Private Route Component for Protected Pages
 const PrivateRoute = ({ element }) => {
@@ -39,7 +41,9 @@ function App() {
                         <Route path="/create/bulk" element={<BulkUpload />} />
                         <Route path="/admin/dashboard" element={<AdminDashboard />} />
                         <Route path="/download-history" element={<DisplayHistory />} />
-                        
+                        <Route path="/sender" element={<SenderForm />} />
+                        <Route path="/test" element={<HaversineTest />} />
+
                     </Routes>
                 </Router>
 

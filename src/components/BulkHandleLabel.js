@@ -3,6 +3,10 @@ import JsBarcode from "jsbarcode";
 import html2pdf from "html2pdf.js";
 import bwipjs from "bwip-js";
 import shippoLogo from './one2.svg';
+import easyLogo from './easypost_logo.png';
+import zipcodes from "zipcodes"; // Ensure zipcodes package is installed
+import Easypost_b from './easy_b.jpeg'
+
 
 const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
   const labelRef = useRef(null);
@@ -28,8 +32,44 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
     // Return the formatted ZIP code
     return formattedZip;
   };
-  
 
+  const letters = ["R", "H", "C"];
+  const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+  const lastDigitOptions = [1, 2, 3];
+const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOptions.length)];
+const calculateUSPSZone = (senderZip, recipientZip) => {
+    const loc1 = zipcodes.lookup(senderZip);
+    const loc2 = zipcodes.lookup(recipientZip);
+  
+    if (!loc1 || !loc2) return { distance: "", zone: "" };
+  
+    const toRad = (value) => (value * Math.PI) / 180;
+    const R = 3958.8; // Radius of Earth in miles
+    const dLat = toRad(loc2.latitude - loc1.latitude);
+    const dLon = toRad(loc2.longitude - loc1.longitude);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(loc1.latitude)) * Math.cos(toRad(loc2.latitude)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in miles
+  
+    // USPS Zone Mapping based on distance
+    const getUSPSZone = (dist) => {
+      if (dist <= 150) return 2;
+      if (dist <= 300) return 3;
+      if (dist <= 600) return 4;
+      if (dist <= 1000) return 5;
+      if (dist <= 1400) return 6;
+      if (dist <= 1800) return 7;
+      return dist > 1800 ? 8 : 9;
+    };
+  
+    return {
+      // distance: distance.toFixed(2) + " miles",
+      zone: getUSPSZone(distance)
+    };
+  };
   const formatZipCodeBeforeDash = (zip) => {
     // Convert input to string if it's not already a string
     const zipString = String(zip || '');
@@ -257,6 +297,88 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
           </div>
           </div>
         );
+         case 'Easypost':
+                return (<div style={{display:'none'}}>
+                  <div className="label-container easypost_label"  style={{border:'1px solid'}} id="label easypost_label" ref={ref}>
+                     <div className="header">
+                      <div id="large-letter" className="large-letter">
+                        {formData.labelType === 'preship' ? 'P' : 'P'}
+                      </div>
+                      <div>
+                        <div className="header_right">
+                          <div className="headerR-top">
+                            <span className="paid_text">US POSTAGE AND FEES PAID</span>
+                            <img className="easypost_logo" src={easyLogo}></img>
+                          </div>
+                          <div style={{display:'flex',justifyContent:'space-between'}}>            
+                            <div style={{textAlign:'left'}}>
+                           <p style={{fontSize:'10px'}}>2025-02-25</p>
+                           <p style={{fontSize:'10px'}}>{formData.senderZip}</p>
+                           <p style={{ fontSize: "10px" }}>
+          C34197{Math.floor(1000 + Math.random() * 9000)}
+        </p>                   <p style={{fontSize:'10px'}}>Commercial</p>
+                           <p style={{fontSize:'10px'}}> {formData.weight} LB Zone {calculateUSPSZone(formData.senderZip, formData.recipientZip).zone}</p>
+        
+                            </div>
+                            <div>
+                              <div className="ep_upbarcode">
+                            {/* <canvas ref={canvasRef}></canvas> */}
+                            <img className="pdf_417" src={Easypost_b}></img>
+                            </div>
+                            <div style={{fontSize:'12px', textAlign:"right",marginRight:"-8px"}}>  09010000{Math.floor(10000 + Math.random() * 90000)}
+                            </div>
+                            </div>
+                          
+                          </div>
+                          
+                          
+                        </div>
+                      </div>
+                    </div>
+                    <h3 className="label_type">
+                      {formData.labelType === 'ground_advantage' ? (
+                        <>GROUND ADVANTAGE<sup>TM</sup></>
+                      ) : (
+                        <>USPS PRIORITY MAIL</>
+                      )}
+                    </h3>
+                    <div className="info" id="labelInfo">
+                      <div className="address_label_info">
+                        <div className="to_address_info">
+                          {formData.senderName}<br />
+                          {formData.senderAddress} {formData.senderAddress1}<br />
+                          {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
+                          <br />
+                        </div>
+                        <div className="parcel_info">
+                            000{randomLastDigit}
+                        </div>
+                      </div>
+                      <div className="parcel_ref">
+                        <p className="parcelref_no">{randomLetter}0{Math.floor(10 + Math.random() * 90)}</p>
+                      </div>
+                      <div className="from_address_info">
+                      <canvas ref={sbarcode} />
+                        <div>
+                          {formData.recipientName}<br />
+                          {formData.recipientAddress} {formData.recipientAddress1}<br />
+                          {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="barcode">
+                      <div className="tracking_heading">USPS TRACKING # EP</div>
+                      <img style={{width:'100%'}} src={formData.barcodeImg}></img>
+                      <div id="tracking-number">{formattedTracking}</div>
+                    </div>
+                    <div className="end_label_container">
+                      <div>
+                      <canvas ref={sbarcode1} />
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                );
 
       case 'Evs':
         return (<div style={{display:'none'}}>

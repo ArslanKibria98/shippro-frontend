@@ -280,106 +280,104 @@ for (let i = 0; i < rows.length; i++) {
   // console.log("API Vendor:", apiVendor);
   // console.log("Label Type:", formData.labelType);
   let newBarcodeImg;
-   try {
-  //   // Fetch tracking number from the API
-  
-    const backendResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/get/vtno`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        vendor: apiVendor,
-        labelType: formData.labelType,
-      }),
-    });
-  
-    if (!backendResponse.ok) {
-      alert('Server Error Wait Our team try to fix');
-     return
-    }
-  
-    const data = await backendResponse.json();
-    pulledTrackingNumber = data.trackingNumber;
-  
-    // Update formData with the new tracking number
-    setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
-  
-   
+  try {
+    //   // Fetch tracking number from the API
     
-
-    const formattedZip = formatZipCode(row.recipientZip)
-
-    const barcodeResponse = await fetch(
-      `${process.env.REACT_APP_API_URL}/api/admin/set/barcode?zip=${formattedZip}&tracking=${pulledTrackingNumber}`,
-      {
-        method: 'GET', // Explicitly specify GET
+      const backendResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/get/vtno`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          vendor: apiVendor,
+          labelType: formData.labelType,
+        }),
+      });
+    
+      if (!backendResponse.ok) {
+        alert('Server Error Wait Our team try to fix');
+       return
       }
-    );
-  
-    if (!barcodeResponse.ok) {
-      alert('Server Error Wait Our team try to fix');
-      return
-      
-    }
-  
-    const barcodeData = await barcodeResponse.json();
-    setBarcodeImg(barcodeData.barcode_data_url);
-    newBarcodeImg = barcodeData.barcode_data_url;
-
-
-    // for local testing data
-
-      //  for local 
-  //   const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Authorization: `Bearer ${user.token}`,
-  //   },
-  //   body: JSON.stringify({
-  //     labelType: formData.labelType,
-  //     carrier: formData.carrier.toLowerCase(),
-  //   }),
-  // });
-
-  // if (!pullResponse.ok) {
-  //   const errText = await pullResponse.text();
-  //   alert(errText);
-  //   throw new Error(`Pull shipment error: ${errText}`);
-  // }
-
-  // const shipmentResult = await pullResponse.json();
-  // // alert(shipmentResult.shipment.tracking)
-
-  // if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
-  //   pulledTrackingNumber = shipmentResult.shipment.tracking;
-  //   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
-  //   setTrackingNumber(pulledTrackingNumber);
-  // } else {
-  //   console.error("Invalid shipment data:", shipmentResult);
-  //   alert("Failed to retrieve tracking number.");
-  // }
-
-  // const textData = {
-  //   barcode_data_url:
-  //     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
-  //   success: true,
-  // };
-
-  //      setBarcodeImg(textData.barcode_data_url);
-  //       newBarcodeImg = textData.barcode_data_url;
-
-
-
     
-  } catch (error) {
-    console.error('Error:', error);
-    // Handle the error (e.g., show a message to the user)
-  }
-
-
-        const labelData = {
+      const data = await backendResponse.json();
+      pulledTrackingNumber = data.trackingNumber;
+    
+      // Update formData with the new tracking number
+      setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+    
+     
+      
+  
+      const formattedZip = formatZipCode(row.recipientZip)
+  
+      const barcodeResponse = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/admin/set/barcode?zip=${formattedZip}&tracking=${pulledTrackingNumber}`,
+        {
+          method: 'GET', // Explicitly specify GET
+        }
+      );
+    
+      if (!barcodeResponse.ok) {
+        alert('Server Error Wait Our team try to fix');
+        return
+        
+      }
+    
+      const barcodeData = await barcodeResponse.json();
+      setBarcodeImg(barcodeData.barcode_data_url);
+      newBarcodeImg = barcodeData.barcode_data_url;
+  
+  
+      // for local testing data
+  
+        //  for local 
+    //   const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${user.token}`,
+    //   },
+    //   body: JSON.stringify({
+    //     labelType: formData.labelType,
+    //     carrier: formData.carrier.toLowerCase(),
+    //   }),
+    // });
+  
+    // if (!pullResponse.ok) {
+    //   const errText = await pullResponse.text();
+    //   alert(errText);
+    //   throw new Error(`Pull shipment error: ${errText}`);
+    // }
+  
+    // const shipmentResult = await pullResponse.json();
+    // // alert(shipmentResult.shipment.tracking)
+  
+    // if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
+    //   pulledTrackingNumber = shipmentResult.shipment.tracking;
+    //   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
+    //   setTrackingNumber(pulledTrackingNumber);
+    // } else {
+    //   console.error("Invalid shipment data:", shipmentResult);
+    //   alert("Failed to retrieve tracking number.");
+    // }
+  
+    // const textData = {
+    //   barcode_data_url:
+    //     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
+    //   success: true,
+    // };
+  
+    //      setBarcodeImg(textData.barcode_data_url);
+    //       newBarcodeImg = textData.barcode_data_url;
+  
+  
+  
+      
+    } catch (error) {
+      console.error('Error:', error);
+      // Handle the error (e.g., show a message to the user)
+    }
+          const labelData = {
           userId: user.id,
           carrier: formData.carrier, // Use selected carrier from form
           vendor: formData.vendor, // Use selected vendor from form
@@ -530,6 +528,7 @@ for (let i = 0; i < rows.length; i++) {
     const ShippoLabelTypes = ['ground_advantage','priority']
     const EvsLabelTypes = ['ground_advantage','priority']
     const RolloLabelTypes = ['ground_advantage','priority']
+    const EasypostLabelTypes = ['preship']
 
     if(e.target.value == 'Shippo'){
       setVendorLabelType(ShippoLabelTypes)
@@ -542,6 +541,9 @@ for (let i = 0; i < rows.length; i++) {
     }
     else if(e.target.value == 'Rollo'){
       setVendorLabelType(RolloLabelTypes)
+    }
+    else if(e.target.value == 'Easypost'){
+      setVendorLabelType(EasypostLabelTypes)
     }
     else{
       setVendorLabelType('')
