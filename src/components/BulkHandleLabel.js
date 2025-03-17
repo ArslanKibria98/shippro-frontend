@@ -155,17 +155,17 @@ const calculateUSPSZone = (senderZip, recipientZip) => {
   }, [formData.trackingNumber]);
 
   // PDF download functionality
-  const downloadLabel = () => {
-    if (labelRef.current) {
-      const options = {
-        margin: [0, 0, 0, 0],
-        filename: 'USPS_Label.pdf',
-        html2canvas: { scale: 3, dpi: 300, letterRendering: true, useCORS: true, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: [101.6, 152.4], orientation: 'portrait' },
-      };
-      html2pdf().set(options).from(labelRef.current).save();
-    }
-  };
+  // const downloadLabel = () => {
+  //   if (labelRef.current) {
+  //     const options = {
+  //       margin: [0, 0, 0, 0],
+  //       filename: 'USPS_Label.pdf',
+  //       html2canvas: { scale: 3, dpi: 300, letterRendering: true, useCORS: true, scrollY: 0 },
+  //       jsPDF: { unit: 'mm', format: [101.6, 152.4], orientation: 'portrait' },
+  //     };
+  //     html2pdf().set(options).from(labelRef.current).save();
+  //   }
+  // };
 
   // Render vendor-specific HTML
   const renderVendorLabel = () => {
@@ -208,7 +208,7 @@ const calculateUSPSZone = (senderZip, recipientZip) => {
                 </div>
                 <div className="parcel_info">
                   Ship Date: {new Date().toLocaleDateString('en-US')}<br />
-                  WT: {formData.weight} {formData.labelType == 'ground_advantage' ? 'oz' : 'lb'}
+                  WT: {formData.weight} {formData.weight == '1' ? 'lb' : 'lbs'}
                 </div>
               </div>
               <div className="from_address_info">
@@ -275,7 +275,7 @@ const calculateUSPSZone = (senderZip, recipientZip) => {
                 </div>
                 <div className="parcel_info">
                    Mailed From: {formData.senderZip} <br />
-                  WT: {formData.weight} {formData.labelType == 'ground_advantage_tm' ? 'oz' : 'lb'}
+                  WT: {formData.weight} {formData.weight == '1' ? 'lb' : 'lbs'}
                 </div>
               </div>
               <div className="from_address_info">
@@ -419,7 +419,7 @@ const calculateUSPSZone = (senderZip, recipientZip) => {
                 <div className="parcel_info">
                   <div style={{textAlign:'center'}}>{new Date().toLocaleDateString('en-US')}</div>
                    Mailed From: {formData.senderZip} <br />
-                  WT: {formData.weight} {formData.labelType == 'ground_advantage' ? 'lb' : 'lb'} 0 oz
+                  WT: {formData.weight} {formData.weight == '1' ? 'lb' : 'lbs'}
                 </div>
               </div>
               <div className="from_address_info">
@@ -474,7 +474,7 @@ const calculateUSPSZone = (senderZip, recipientZip) => {
                 </div>
                 <div className="parcel_info">
                   Ship Date: {new Date().toLocaleDateString('en-US')}<br />
-                  Weight: {formData.weight} {formData.labelType == 'ground_advantage' ? 'lb' : 'lb'} 0 oz <br />
+                  Weight: {formData.weight} {formData.weight == '1' ? 'lb' : 'lbs'}<br />
                   <p className="parcel_no">{String(randomNumber).padStart(4, '0')}
                   </p>
                 </div>
@@ -513,9 +513,9 @@ const calculateUSPSZone = (senderZip, recipientZip) => {
   return (
     <div>
       {renderVendorLabel()}
-      <button onClick={downloadLabel} className="bg-green-500 text-white px-4 py-2 rounded mt-4">
+      {/* <button onClick={downloadLabel} className="bg-green-500 text-white px-4 py-2 rounded mt-4">
         Download Label
-      </button>
+      </button> */}
     </div>
   );
 });

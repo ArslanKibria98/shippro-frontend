@@ -9,6 +9,9 @@ import Dashboardhead from "./Dashboardhead";
 import ReactModal from 'react-modal';
 
 const BulkUpload = () => {
+
+
+  
   const { user, updateUser } = useContext(AuthContext);
   const [stateValidationErrors, setStateValidationErrors] = useState([]); // State for validation errors
 
@@ -34,7 +37,7 @@ const BulkUpload = () => {
     "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
     "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
     "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
-    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY","PR"
   ]);
 
 
@@ -296,7 +299,7 @@ for (let i = 0; i < rows.length; i++) {
     
       if (!backendResponse.ok) {
         alert('Server Error Wait Our team try to fix');
-       return
+       
       }
     
       const data = await backendResponse.json();
@@ -319,8 +322,7 @@ for (let i = 0; i < rows.length; i++) {
     
       if (!barcodeResponse.ok) {
         alert('Server Error Wait Our team try to fix');
-        return
-        
+        continue
       }
     
       const barcodeData = await barcodeResponse.json();
@@ -346,7 +348,8 @@ for (let i = 0; i < rows.length; i++) {
     // if (!pullResponse.ok) {
     //   const errText = await pullResponse.text();
     //   alert(errText);
-    //   throw new Error(`Pull shipment error: ${errText}`);
+    //   return;
+    //   // throw new Error(`Pull shipment error: ${errText}`);
     // }
   
     // const shipmentResult = await pullResponse.json();
@@ -356,6 +359,7 @@ for (let i = 0; i < rows.length; i++) {
     //   pulledTrackingNumber = shipmentResult.shipment.tracking;
     //   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
     //   setTrackingNumber(pulledTrackingNumber);
+      
     // } else {
     //   console.error("Invalid shipment data:", shipmentResult);
     //   alert("Failed to retrieve tracking number.");

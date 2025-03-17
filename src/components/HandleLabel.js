@@ -193,7 +193,7 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
                 </div>
                 <div className="parcel_info">
                   Ship Date: {new Date().toLocaleDateString('en-US')}<br />
-                  WT: {formData.weight} {formData.labelType == 'ground_advantage' ? 'oz' : 'lb'}
+                  WT: {formData.weight} {formData.weight == '1' ? 'lb' : 'lbs'}
                 </div>
               </div>
               <div className="from_address_info">
@@ -260,7 +260,7 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
                 </div>
                 <div className="parcel_info">
                    Mailed From: {formData.senderZip} <br />
-                  WT: {formData.weight} {formData.labelType == 'ground_advantage_tm' ? 'oz' : 'lb'}
+                  WT: {formData.weight} {formData.weight == '1' ? 'lb' : 'lbs'}
                 </div>
               </div>
               <div className="from_address_info">
@@ -407,7 +407,7 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
                 <div className="parcel_info">
                   <div>{new Date().toLocaleDateString('en-US')}</div>
                    Mailed From: {formData.senderZip} <br />
-                  WT: {formData.weight} {formData.labelType == 'ground_advantage' ? 'lb' : 'lb'} 0 oz
+                  WT: {formData.weight} {formData.weight == '1' ? 'lb' : 'lbs'}
                 </div>
               </div>
               <div className="from_address_info">
@@ -462,7 +462,7 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
                 </div>
                 <div className="parcel_info">
                   Ship Date: {new Date().toLocaleDateString('en-US')}<br />
-                  Weight: {formData.weight} {formData.labelType == 'ground_advantage' ? 'lb' : 'lb'} 0 oz <br />
+                  Weight: {formData.weight} {formData.weight == '1' ? 'lb' : 'lbs'}<br />
                   <p className="parcel_no">{String(randomNumber).padStart(4, '0')}</p>
                 </div>
               </div>

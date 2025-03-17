@@ -1,5 +1,5 @@
 // CreateLabel.js
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import HandleLabel from "./HandleLabel";
 import AuthContext from "../context/AuthContext";
@@ -13,45 +13,6 @@ const CreateLabel = () => {
   const { user, updateUser } = useContext(AuthContext);
   const [labelData, setLabelData] = useState(null); // New state for label data
 
-
- const [sender, setSender] = useState({
-  senderName: "",
-    senderAddress: "",
-    senderAddress1: "",
-    senderCity:"",
-    senderPh:"",
-    senderState:"",
-    senderZip:""
-  });
-
-
-  const [savedSender, setSavedSender] = useState(null);
-  const [showSuggestion, setShowSuggestion] = useState(false);
-
-  useEffect(() => {
-    // Load saved sender from localStorage
-    const storedSender = localStorage.getItem("savedSender");
-    if (storedSender) {
-      setSavedSender(JSON.parse(storedSender));
-    }
-  }, []);
-
-  const handleInputChange = (e) => {
-    setSender({ ...sender, [e.target.name]: e.target.value });
-  };
-
-  const handleSaveSender = () => {
-    localStorage.setItem("savedSender", JSON.stringify(sender));
-    setSavedSender(sender);
-    alert("Sender saved for later use!");
-  };
-
-  const handleFillSender = () => {
-    if (savedSender) {
-      setSender(savedSender);
-      setShowSuggestion(false);
-    }
-  };
  const usStates = [
     { name: "Alabama", abbreviation: "AL" },
     { name: "Alaska", abbreviation: "AK" },
@@ -91,6 +52,7 @@ const CreateLabel = () => {
     { name: "Oklahoma", abbreviation: "OK" },
     { name: "Oregon", abbreviation: "OR" },
     { name: "Pennsylvania", abbreviation: "PA" },
+    { name: "Puerto Rico", abbreviation: "PR" },
     { name: "Rhode Island", abbreviation: "RI" },
     { name: "South Carolina", abbreviation: "SC" },
     { name: "South Dakota", abbreviation: "SD" },
@@ -102,7 +64,8 @@ const CreateLabel = () => {
     { name: "Washington", abbreviation: "WA" },
     { name: "West Virginia", abbreviation: "WV" },
     { name: "Wisconsin", abbreviation: "WI" },
-    { name: "Wyoming", abbreviation: "WY" }
+    { name: "Wyoming", abbreviation: "WY" },
+
 ];
   const loginUser = user;
   // console.log('the user data is ',user)
@@ -163,6 +126,62 @@ const CreateLabel = () => {
         width:""
     });
 
+    const [savedSenders, setSavedSenders] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [showSaveButton, setShowSaveButton] = useState(false);
+
+    useEffect(() => {
+      const storedSenders = JSON.parse(localStorage.getItem("savedSenders")) || [];
+      setSavedSenders(storedSenders);
+    }, []);
+
+
+
+    const saveSenderToLocal = () => {
+      const senderData = {
+        senderName: formData.senderName,
+        senderAddress: formData.senderAddress,
+        senderAddress1: formData.senderAddress1,
+        senderCity: formData.senderCity,
+        senderPh: formData.senderPh,
+        senderState: formData.senderState,
+        senderZip: formData.senderZip
+      };
+  
+      // Prevent duplicate sender entries
+      const exists = savedSenders.some(sender =>
+        sender.senderName === senderData.senderName &&
+        sender.senderAddress === senderData.senderAddress &&
+        sender.senderCity === senderData.senderCity &&
+        sender.senderZip === senderData.senderZip
+      );
+  
+      if (exists) {
+        alert("Sender information is already saved!");
+        return;
+      }
+  
+      // Save only sender details in local storage
+      const updatedSenders = [...savedSenders, senderData];
+      localStorage.setItem("savedSenders", JSON.stringify(updatedSenders));
+      setSavedSenders(updatedSenders);
+      setShowSaveButton(false);
+      alert("Sender details saved successfully!");
+    };
+  
+    // Autofill sender details when selecting a saved sender
+    const fillSenderDetails = (selectedSender) => {
+      setFormData((prev) => ({
+        ...prev, // Keep existing values (like carrier, vendor, length, width, etc.)
+        ...selectedSender, // Only update sender-related fields
+      }));
+    
+      setShowSuggestions(false);
+      setShowSaveButton(false);
+    };
+
+
+
     const [showLabel, setShowLabel] = useState(false);
 
 
@@ -170,10 +189,40 @@ const CreateLabel = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    // Clear error for the field being updated
-    setErrors({ ...errors, [name]: "" });
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "senderName") {
+      setShowSuggestions(true);
+    }
+
+    const exists = savedSenders.some(sender =>
+      sender.senderName === formData.senderName &&
+      sender.senderAddress === formData.senderAddress &&
+      sender.senderCity === formData.senderCity &&
+      sender.senderZip === formData.senderZip
+    );
+    setShowSaveButton(!exists);
   };
+  const inputRef = useRef(null);
+  const suggestionsRef = useRef(null);
+
+  const handleFocus = () => {
+    setShowSuggestions(true);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Only check if the click is outside the input
+      if (inputRef.current && !inputRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    };
+  
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
@@ -253,7 +302,9 @@ try {
   });
 
   if (!backendResponse.ok) {
-    throw new Error(`Failed to fetch tracking number: ${backendResponse.statusText}`);
+    alert('Server Error Our team trying to fix');
+    return;
+    // throw new Error(`Failed to fetch tracking number: ${backendResponse.statusText}`);
   }
 
   const data = await backendResponse.json();
@@ -599,6 +650,7 @@ try {
                 name="labelType"
                 value={formData.labelType}
                 onChange={handleChange}
+
                
               >
                 <option value="" disabled>
@@ -678,15 +730,29 @@ try {
             <div className="form-columns">
               <div className="form-column">
                 <h3 className="form_heading">Sender Information</h3>
-                <input
+                <div className="sender_info" style={{position:'relative'}}>
+                 <input
+                  ref={inputRef} // Attach the ref to the input element
                   type="text"
                   name="senderName"
                   placeholder="Name"
                   value={formData.senderName}
-                  
+                  autocomplete="off"
                   onChange={handleChange}
+                  onFocus={handleFocus}
                   className="form-input"
                 />
+
+{showSuggestions && savedSenders.length > 0 && (
+        <ul style={{ listStyle: "none", padding: 0, border: "1px solid black", maxHeight: "150px", overflowY: "auto" }}>
+          {savedSenders.map((sender, index) => (
+            <li key={index} onClick={() => fillSenderDetails(sender)} style={{ padding: "5px", cursor: "pointer", background: "aliceblue", borderBottom: "1px solid black" }}>
+              {sender.senderName}
+            </li>
+          ))}
+        </ul>
+      )}
+      </div>
              {errors.senderName && <p style={{ color: "red" }}>{errors.senderName}</p>}
 
                 <input
@@ -695,6 +761,7 @@ try {
                   placeholder="Address"
                   value={formData.senderAddress}
                   onChange={handleChange}
+autocomplete="off"
                   className="form-input"
                 />
             {errors.senderAddress && <p style={{ color: "red" }}>{errors.senderAddress}</p>}
@@ -705,6 +772,7 @@ try {
                   placeholder="Address 1"
                   value={formData.senderAddress1}
                   onChange={handleChange}
+autocomplete="off"
                   className="form-input"
                 />
                 <input
@@ -713,6 +781,7 @@ try {
                   placeholder="Phone no"
                   value={formData.senderPh}
                   onChange={handleChange}
+autocomplete="off"
                   className="form-input"
                 />
                 <input
@@ -720,7 +789,8 @@ try {
                   name="senderCity"
                   placeholder="City"
                   value={formData.senderCity}
-                  onChange={handleChange}
+                                onChange={handleChange}
+autocomplete="off"
                   className="form-input"
                 />
                 {errors.senderCity && <p style={{ color: "red" }}>{errors.senderCity}</p>}
@@ -729,6 +799,7 @@ try {
                   name="senderState"
                   value={formData.senderState}
                   onChange={handleChange}
+
                   className="form-select_state"
                 >
                   <option value="" disabled>
@@ -748,6 +819,7 @@ try {
                   placeholder="ZIP Code"
                   value={formData.senderZip}
                   onChange={handleChange}
+autocomplete="off"
                   className="form-input"
                 />
                              
@@ -850,6 +922,7 @@ try {
         </div>
       </div>
     </div>
+    <button onClick={saveSenderToLocal}>Save Address</button>
     </div>
   );
 };
