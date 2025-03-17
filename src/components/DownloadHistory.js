@@ -9,7 +9,7 @@ const DownloadHistory = ({ formData }) => {
     const barcodeRef = useRef(null);
    const sbarcode = useRef(null);
    const sbarcode1 = useRef(null);
-   var cleanTrackingNumber = formData.trackingNumber.replace(/\s+/g, ''); // This removes all spaces
+   var cleanTrackingNumber = formData?.trackingNumber?.replace(/\s+/g, ''); // This removes all spaces
    var formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
     // useEffect(() => {
     //   if (formData.trackingNumber) {

@@ -299,7 +299,7 @@ for (let i = 0; i < rows.length; i++) {
     
       if (!backendResponse.ok) {
         alert('Server Error Wait Our team try to fix');
-       
+        setGeneratedLabels(newLabels); // Update state with generated labels
       }
     
       const data = await backendResponse.json();
@@ -322,7 +322,8 @@ for (let i = 0; i < rows.length; i++) {
     
       if (!barcodeResponse.ok) {
         alert('Server Error Wait Our team try to fix');
-        continue
+        return
+        
       }
     
       const barcodeData = await barcodeResponse.json();
@@ -348,6 +349,7 @@ for (let i = 0; i < rows.length; i++) {
     // if (!pullResponse.ok) {
     //   const errText = await pullResponse.text();
     //   alert(errText);
+    //   setGeneratedLabels(newLabels);
     //   return;
     //   // throw new Error(`Pull shipment error: ${errText}`);
     // }
