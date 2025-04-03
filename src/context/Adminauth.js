@@ -60,8 +60,10 @@ export const AuthProvider = ({ children }) => {
             const { token, userData } = res.data;
             localStorage.setItem("token", token);
             const completeAdmin = { token, ...userData };
+            console.log(userData, "userData")
             localStorage.setItem("adminData", JSON.stringify(completeAdmin));
             setUser(completeAdmin);
+            console.log(completeAdmin, "completeAdmin")
             // Set the token in axios headers
             axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             return true; // Indicate successful login

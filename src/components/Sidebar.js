@@ -1,64 +1,73 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom'; // Use NavLink instead of Link
+import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
+import { NavLink } from "react-router-dom";
+import { FaHome, FaTags, FaBoxOpen, FaDownload } from "react-icons/fa";
+// Use NavLink instead of Link
 
-const Sidebar = () => {
+const LayoutBar = () => {
+  const location = window.location;
   return (
-    <aside className="bg-gray-800 text-white min-h-screen w-64 p-4">
-      <nav>
-        <ul>
-          <li className="mb-4">
+    <Sidebar className="min-h-screen bg-gray-900 text-white">
+      <Menu iconShape="square">
+        <MenuItem
+          rootStyles={{
+            backgroundColor: location.pathname === "/dashboard" ? "#1E40AF" : "",
+            color: location.pathname === "/dashboard" ? "#fff" : "",
+          }}
+          icon={<FaHome size={20} />}
+          component={
             <NavLink
               to="/dashboard"
               className={({ isActive }) =>
-                ` ${
-                  isActive ? 'active' : ''
-                }`
+                isActive ? "text-blue-500 bg-gray-700" : "text-black"
               }
-            >
-              Dashboard
-            </NavLink>
-          </li>
-          <li className="mb-4">
+            />
+          }
+        >
+          Dashboard
+        </MenuItem>
+        <MenuItem
+          icon={<FaTags size={20} />}
+          component={
             <NavLink
               to="/create-label"
               className={({ isActive }) =>
-                `${
-                  isActive ? 'active' : ''
-                }`
+                isActive ? "text-blue-500 bg-gray-700" : "text-white"
               }
-            >
-              Create Label
-            </NavLink>
-          </li>
-          <li className="mb-4">
+            />
+          }
+        >
+          Create Label
+        </MenuItem>
+        <MenuItem
+          icon={<FaBoxOpen size={20} />}
+          component={
             <NavLink
               to="/create/bulk"
               className={({ isActive }) =>
-                `${
-                  isActive ? 'active' : ''
-                }`
+                isActive ? "text-blue-500 bg-gray-700" : "text-white"
               }
-            >
-              Create Bulk Label
-            </NavLink>
-          </li>
-          <li className="mb-4">
+            />
+          }
+        >
+          Create Bulk Label
+        </MenuItem>
+        <MenuItem
+          icon={<FaDownload size={20} />}
+          component={
             <NavLink
               to="/download-history"
               className={({ isActive }) =>
-                ` ${
-                  isActive ? 'active' : ''
-                }`
+                isActive ? "text-blue-500 bg-gray-700" : "text-white"
               }
-            >
-              Download History
-            </NavLink>
-          </li>
-          {/* Add more links as needed */}
-        </ul>
-      </nav>
-    </aside>
+            />
+          }
+        >
+          Download History
+        </MenuItem>
+      </Menu>
+    </Sidebar>
   );
 };
 
-export default Sidebar;
+export default LayoutBar;

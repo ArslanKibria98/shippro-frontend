@@ -332,9 +332,9 @@ const BulkUpload = () => {
     <div>
       <div className="container">
         <div className="dashboard_Sec">
-          <div className="dashboard_left">
+          {/* <div className="dashboard_left">
             <Sidebar />
-          </div>
+          </div> */}
           <div className="dashboard_right">
             <h4 className="create_sec_heading" style={{ marginBottom: "24px" }}>
               Generate Bulk Labels
@@ -360,15 +360,15 @@ const BulkUpload = () => {
                 </option>
                 {allowedCarriers.length > 0
                   ? allowedCarriers.map((carrier, index) => (
-                      <option key={index} value={carrier.carrier}>
-                        {carrier.carrier}
-                      </option>
-                    ))
+                    <option key={index} value={carrier.carrier}>
+                      {carrier.carrier}
+                    </option>
+                  ))
                   : (
-                      <option value="" disabled>
-                        No Allowed Carriers
-                      </option>
-                    )}
+                    <option value="" disabled>
+                      No Allowed Carriers
+                    </option>
+                  )}
               </select>
 
               <select
@@ -382,15 +382,15 @@ const BulkUpload = () => {
                 </option>
                 {availableVendors.length > 0
                   ? availableVendors.map((vendor, index) => (
-                      <option key={index} value={vendor}>
-                        {vendor}
-                      </option>
-                    ))
+                    <option key={index} value={vendor}>
+                      {vendor}
+                    </option>
+                  ))
                   : (
-                      <option value="" disabled>
-                        No Vendors Available
-                      </option>
-                    )}
+                    <option value="" disabled>
+                      No Vendors Available
+                    </option>
+                  )}
               </select>
 
               <select
@@ -404,15 +404,15 @@ const BulkUpload = () => {
                 </option>
                 {vendorLabelType.length > 0
                   ? vendorLabelType.map((labelType, index) => (
-                      <option key={index} value={labelType}>
-                        {labelType === "preship" ? "priority" : labelType}
-                      </option>
-                    ))
+                    <option key={index} value={labelType}>
+                      {labelType === "preship" ? "priority" : labelType}
+                    </option>
+                  ))
                   : (
-                      <option value="" disabled>
-                        No Service Available
-                      </option>
-                    )}
+                    <option value="" disabled>
+                      No Service Available
+                    </option>
+                  )}
               </select>
             </div>
 

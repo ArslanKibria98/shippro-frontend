@@ -64,11 +64,11 @@ const UploadShipments = () => {
 
   return (
     <div className="p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-lg font-semibold mb-4">Upload Shipments</h2>
+      {/* <h2 className="text-lg font-semibold mb-4">Upload Shipments</h2> */}
       <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
       <button
         onClick={handleProcessFile}
-        className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+        className="contact-btn mt-4"
       >
         Process File
       </button>

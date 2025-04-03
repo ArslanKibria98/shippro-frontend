@@ -10,7 +10,7 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
   const labelRefs = useRef([]);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
-
+  console.log(uploadedExcelFile, labelDataList, "uploadedExcelFile")
   // Generate individual PDF
   const generatePDF = async (refElement, index) => {
     const options = {
@@ -59,11 +59,12 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
           const updatedData = jsonData.map((row, index) => ({
             ...row,
             TrackingNumber: labelDataList[index]?.trackingNumber || "N/A",
+            carrier: labelDataList[index]?.carrier || "N/A",
           }));
 
           const updatedWorksheet = XLSX.utils.json_to_sheet(updatedData);
           const updatedWorkbook = XLSX.utils.book_new();
-          
+
           // CORRECTED METHOD NAME
           XLSX.utils.book_append_sheet(updatedWorkbook, updatedWorksheet, "Sheet1");
 
@@ -91,6 +92,10 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
     for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xff;
     return buf;
   };
+  const removeAfterDot = (filename) => {
+    // Find the last dot and slice the string before it
+    return filename.substring(0, filename.lastIndexOf("."));
+  };
 
   // Main download handler
   const downloadZip = async () => {
@@ -116,7 +121,7 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
       // Add merged PDF
       if (pdfBlobs.length > 0) {
         const mergedPdfBytes = await mergePDFs(pdfBlobs);
-        zip.file("All_Labels_Merged.pdf", mergedPdfBytes);
+        zip.file(`${removeAfterDot(uploadedExcelFile.name)}-merged.pdf`, mergedPdfBytes);
         processedCount++;
         setDownloadProgress(Math.round((processedCount / totalSteps) * 100));
       }
@@ -125,7 +130,7 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
       if (hasExcel) {
         const excelBlob = await modifyExcelFile();
         if (excelBlob) {
-          zip.file("Updated_Tracking_List.xlsx", excelBlob);
+          zip.file(`${removeAfterDot(uploadedExcelFile.name)}.xlsx`, excelBlob);
           processedCount++;
           setDownloadProgress(Math.round((processedCount / totalSteps) * 100));
         }
@@ -133,7 +138,7 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
 
       // Generate and save ZIP
       const content = await zip.generateAsync({ type: "blob" });
-      saveAs(content, "Labels_and_Tracking.zip");
+      saveAs(content, `${removeAfterDot(uploadedExcelFile.name)}.zip`);
       setDownloadProgress(100);
     } catch (error) {
       console.error("Error generating files:", error);
@@ -144,10 +149,10 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg mt-6">
-      <h2 className="text-lg font-semibold mb-4">Download Generated Labels</h2>
-      <button 
-        onClick={downloadZip} 
+    <div className="p-6  shadow-md rounded-lg mt-6">
+      {/* <h2 className="text-lg font-semibold mb-4">Download Generated Labels</h2> */}
+      <button
+        onClick={downloadZip}
         className="download-button relative h-12 w-48 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed transition-opacity"
         disabled={isDownloading}
       >
@@ -182,7 +187,7 @@ const BulkDownloadLabels = ({ labelDataList, uploadedExcelFile }) => {
           <span className="text-blue-600 font-medium">Download All Labels as ZIP</span>
         )}
       </button>
-      
+
       {/* Hidden label renderer */}
       <div style={{ display: 'none' }}>
         {labelDataList.map((formData, index) => (

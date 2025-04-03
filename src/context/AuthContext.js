@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-
+import { Toaster, toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -49,8 +50,8 @@ export const AuthProvider = ({ children }) => {
             if (error.response?.status === 401) {
                 // Token is invalid or expired
                 logout();
-                alert("Your session has expired. Please log in again.");
-            window.location.href = "/login";
+                toast.error("Your session has expired. Please log in again.");
+                window.location.href = "/login";
             }
         } finally {
             setLoading(false);
@@ -63,6 +64,11 @@ export const AuthProvider = ({ children }) => {
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { email, password });
             const { token, userData } = res.data;
+            console.log(userData, "userData")
+            if (userData?.isBlocked) {
+                toast.error("You are Blocked Please contact with admin")
+                return false
+            }
             const completeUser = { token, ...userData };
             localStorage.setItem("userData", JSON.stringify(completeUser));
             setUser(completeUser);

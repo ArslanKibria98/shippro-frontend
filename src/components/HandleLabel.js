@@ -8,7 +8,7 @@ import Easypost_b from './easy_b.jpeg'
 import zipcodes from "zipcodes"; // Ensure zipcodes package is installed
 
 import easyLogo from './easypost_logo.png';
-const HandleLabel = ({ formData, barcodeImg }) => {
+const HandleLabel = ({ formData, barcodeImg, setDownloadState, downloadState }) => {
   const labelRef = useRef(null);
   const barcodeRef = useRef(null);
   const sbarcode = useRef(null);
@@ -35,15 +35,15 @@ const HandleLabel = ({ formData, barcodeImg }) => {
       });
     }
   }, [formData.trackingNumber]);
- 
+
 
 
   const calculateUSPSZone = (senderZip, recipientZip) => {
     const loc1 = zipcodes.lookup(senderZip);
     const loc2 = zipcodes.lookup(recipientZip);
-  
+
     if (!loc1 || !loc2) return { distance: "", zone: "" };
-  
+
     const toRad = (value) => (value * Math.PI) / 180;
     const R = 3958.8; // Radius of Earth in miles
     const dLat = toRad(loc2.latitude - loc1.latitude);
@@ -54,7 +54,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c; // Distance in miles
-  
+
     // USPS Zone Mapping based on distance
     const getUSPSZone = (dist) => {
       if (dist <= 150) return 2;
@@ -65,7 +65,7 @@ const HandleLabel = ({ formData, barcodeImg }) => {
       if (dist <= 1800) return 7;
       return dist > 1800 ? 8 : 9;
     };
-  
+
     return {
       // distance: distance.toFixed(2) + " miles",
       zone: getUSPSZone(distance)
@@ -77,13 +77,13 @@ const HandleLabel = ({ formData, barcodeImg }) => {
   const formatZipCode = (zip) => {
     // Convert input to string if it's not already a string
     const zipString = String(zip || '');
-  
+
     // Split into parts based on the dash and take only the part before the dash
     const [zipPart1] = zipString.split('-');
-  
+
     // Remove non-numeric characters and ensure the first part is at least 5 digits long
     const formattedZip = zipPart1.replace(/\D/g, '').padStart(5, '0');
-  
+
     // Return the formatted ZIP code
     return formattedZip;
   };
@@ -93,48 +93,48 @@ const HandleLabel = ({ formData, barcodeImg }) => {
   const formatZipCodeBeforeDash = (zip) => {
     // Convert input to string if it's not already a string
     const zipString = String(zip || '');
-  
+
     // Check if the ZIP code contains a dash
     const hasDash = zipString.includes('-');
-  
+
     // Split into parts only if it has a dash
     let zipPart1 = zipString;
     let zipPart2 = '';
-  
+
     if (hasDash) {
       [zipPart1, zipPart2] = zipString.split('-');
     }
-  
+
     // Remove non-numeric characters and ensure the first part is at least 5 digits long
     zipPart1 = zipPart1.replace(/\D/g, '').padStart(5, '0');
-  
+
     // Return formatted ZIP code with or without the second part
     return zipPart2 ? `${zipPart1}-${zipPart2}` : zipPart1;
   };
 
   const generateBarcode = (canvasRef) => {
-      if (formData.trackingNumber && canvasRef) {
-        try {
-          bwipjs.toCanvas(canvasRef, {
-            bcid: "datamatrix",
-            text: "]C1420"+formatZipCode(formData.recipientZip) +' '+ cleanTrackingNumber,
-            scale: 4,
-            height: 5,
-            width: 5,
-            includetext: false,
-          });
-        } catch (error) {
-          console.error("Barcode generation error:", error);
-        }
+    if (formData.trackingNumber && canvasRef) {
+      try {
+        bwipjs.toCanvas(canvasRef, {
+          bcid: "datamatrix",
+          text: "]C1420" + formatZipCode(formData.recipientZip) + ' ' + cleanTrackingNumber,
+          scale: 4,
+          height: 5,
+          width: 5,
+          includetext: false,
+        });
+      } catch (error) {
+        console.error("Barcode generation error:", error);
       }
-    };
+    }
+  };
 
   useEffect(() => {
     generateBarcode(sbarcode1.current);
     generateBarcode(sbarcode.current);
   }, [formData.trackingNumber]);
-const lastDigitOptions = [1, 2, 3];
-const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOptions.length)];
+  const lastDigitOptions = [1, 2, 3];
+  const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOptions.length)];
 
   // PDF download functionality
   const downloadLabel = () => {
@@ -148,15 +148,15 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
       html2pdf().set(options).from(labelRef.current).save();
     }
   };
-   const [randomNumber] = useState(
-      () => Math.floor(Math.random() * 3) + 1
-    );
+  const [randomNumber] = useState(
+    () => Math.floor(Math.random() * 3) + 1
+  );
 
   // Render vendor-specific HTML
   const renderVendorLabel = () => {
     switch (formData.vendor) {
       case 'Shippo':
-        return (<div style={{display:'none'}}>
+        return (<div style={{ display: 'none' }}>
 
           <div className="label-container" id="label" ref={labelRef}>
             <div className="header">
@@ -209,7 +209,7 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # EP</div>
               {/* <svg ref={barcodeRef}></svg> */}
-              <img style={{width:'100%'}} src={barcodeImg}></img>
+              <img style={{ width: '100%' }} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
             <div className="end_label_container">
@@ -221,13 +221,13 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
               <canvas ref={sbarcode1} />
             </div>
           </div>
-          </div>
+        </div>
         );
 
       case 'ATFM':
-        return (<div style={{display:'none'}}>
+        return (<div style={{ display: 'none' }}>
           <div className="label-container" id="label" ref={labelRef}>
-             <div className="header">
+            <div className="header">
               <div id="large-letter" className="large-letter">
                 {formData.labelType === 'ground_advantage_tm' ? 'G' : 'P'}
               </div>
@@ -259,13 +259,13 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
                   <br />
                 </div>
                 <div className="parcel_info">
-                   Mailed From: {formData.senderZip} <br />
+                  Mailed From: {formData.senderZip} <br />
                   WT: {formData.weight} {formData.weight == '1' ? 'lb' : 'lbs'}
                 </div>
               </div>
               <div className="from_address_info">
-              Ship <br></br>
-              To:
+                Ship <br></br>
+                To:
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
@@ -276,16 +276,16 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
             </div>
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # EP</div>
-              <img style={{width:'100%'}} src={barcodeImg}></img>
+              <img style={{ width: '100%' }} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
           </div>
-          </div>
+        </div>
         );
-        case 'Easypost':
-        return (<div style={{display:''}}>
-          <div className="label-container easypost_label"  style={{border:'1px solid'}} id="label easypost_label" ref={labelRef}>
-             <div className="header">
+      case 'Easypost':
+        return (<div style={{ display: '' }}>
+          <div className="label-container easypost_label" style={{ border: '1px solid' }} id="label easypost_label" ref={labelRef}>
+            <div className="header">
               <div id="large-letter" className="large-letter">
                 {formData.labelType === 'preship' ? 'P' : 'P'}
               </div>
@@ -295,28 +295,28 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
                     <span className="paid_text">US POSTAGE AND FEES PAID</span>
                     <img className="easypost_logo" src={easyLogo}></img>
                   </div>
-                  <div style={{display:'flex',justifyContent:'space-between'}}>            
-                    <div style={{textAlign:'left'}}>
-                  <p style={{ fontSize: '10px' }}>{new Date().toISOString().split('T')[0]}</p>
-                    <p style={{fontSize:'10px'}}>{formData.senderZip}</p>
-                   <p style={{ fontSize: "10px" }}>
-  C34197{Math.floor(1000 + Math.random() * 9000)}
-</p>                   <p style={{fontSize:'10px'}}>Commercial</p>
-                   <p style={{fontSize:'10px'}}> {formData.weight} LB Zone {calculateUSPSZone(formData.senderZip, formData.recipientZip).zone}</p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={{ fontSize: '10px' }}>{new Date().toISOString().split('T')[0]}</div>
+                      <div style={{ fontSize: '10px' }}>{formData.senderZip}</div>
+                      <div style={{ fontSize: "10px" }}>
+                        C34197{Math.floor(1000 + Math.random() * 9000)}
+                      </div>                   <div style={{ fontSize: '10px' }}>Commercial</div>
+                      <div style={{ fontSize: '10px' }}> {formData.weight} LB Zone {calculateUSPSZone(formData.senderZip, formData.recipientZip).zone}</div>
 
                     </div>
                     <div>
                       <div className="ep_upbarcode">
-                    {/* <canvas ref={canvasRef}></canvas> */}
-                    <img className="pdf_417" src={Easypost_b}></img>
+                        {/* <canvas ref={canvasRef}></canvas> */}
+                        <img className="pdf_417" src={Easypost_b}></img>
+                      </div>
+                      <div style={{ fontSize: '12px', textAlign: "right", marginRight: "-8px" }}>  09010000{Math.floor(10000 + Math.random() * 90000)}
+                      </div>
                     </div>
-                    <div style={{fontSize:'12px', textAlign:"right",marginRight:"-8px"}}>  09010000{Math.floor(10000 + Math.random() * 90000)}
-                    </div>
-                    </div>
-                  
+
                   </div>
-                  
-                  
+
+
                 </div>
               </div>
             </div>
@@ -329,23 +329,23 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
             </h3>
             <div className="info" id="labelInfo">
               <div className="address_label_info">
-                <div className="to_address_info">
+                <div className="to_address_info" style={{ lineHeight: "15px" }}>
                   {formData.senderName}<br />
                   {formData.senderAddress} {formData.senderAddress1}<br />
                   {formData.senderCity} {formData.senderState} {formData.senderZip}<br />
                   <br />
                 </div>
                 <div className="parcel_info">
-                    000{randomLastDigit}
+                  000{randomLastDigit}
                 </div>
               </div>
               <div className="parcel_ref">
-                <p className="parcelref_no">{randomLetter}0{Math.floor(10 + Math.random() * 90)}</p>
+                <div className="parcelref_no">{randomLetter}0{Math.floor(10 + Math.random() * 90)}</div>
               </div>
               <div className="from_address_info">
-              <canvas ref={sbarcode} />
+                <canvas ref={sbarcode} />
 
-                <div>
+                <div style={{ lineHeight: "15px" }}>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
                   {formData.recipientCity} {formData.recipientState} {formatZipCodeBeforeDash(formData.recipientZip)}
@@ -354,22 +354,22 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
             </div>
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # EP</div>
-              <img style={{width:'100%'}} src={barcodeImg}></img>
+              <img style={{ width: '100%' }} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
             <div className="end_label_container">
               <div>
-               
-           
-              <canvas ref={sbarcode1} />
+
+
+                <canvas ref={sbarcode1} />
               </div>
             </div>
           </div>
-          </div>
+        </div>
         );
 
       case 'Evs':
-        return (<div style={{display:'none'}}>
+        return (<div style={{ display: 'none' }}>
           <div className="label-container evs_label" id="label" ref={labelRef} >
             <div className="header">
               <div id="large-letter" className="large-letter">
@@ -383,9 +383,9 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
                   {/* <br /> */}
                   U.S. POSTAGE PAID<br />
                   PERMIT NO. 49493<br />
-                  <span id="vendor_brand" style={{textAlign:'left'}}>{formData.vendor == 'Evs' ? 'eVS':''}</span><br />
+                  <span id="vendor_brand" style={{ textAlign: 'left' }}>{formData.vendor == 'Evs' ? 'eVS' : ''}</span><br />
 
-                  </div>
+                </div>
                 <span id="additional_info">{formData.vendor === 'Shippo' ? 'Cubic' : ''}</span>
               </div>
             </div>
@@ -406,13 +406,13 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
                 </div>
                 <div className="parcel_info">
                   <div>{new Date().toLocaleDateString('en-US')}</div>
-                   Mailed From: {formData.senderZip} <br />
+                  Mailed From: {formData.senderZip} <br />
                   WT: {formData.weight} {formData.weight == '1' ? 'lb' : 'lbs'}
                 </div>
               </div>
               <div className="from_address_info">
-              <br></br>
-              
+                <br></br>
+
                 <div>
                   {formData.recipientName}<br />
                   {formData.recipientAddress} {formData.recipientAddress1}<br />
@@ -423,21 +423,21 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
             </div>
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # eVS</div>
-              <img style={{width:'100%'}} src={barcodeImg}></img>
+              <img style={{ width: '100%' }} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
           </div>
-          </div>
+        </div>
         );
-        case 'Rollo':
-        return (<div style={{display:'none'}}>
+      case 'Rollo':
+        return (<div style={{ display: 'none' }}>
           <div className="label-container rollo_label" id="label" ref={labelRef}>
             <div className="header">
               <div id="large-letter" className="large-letter">
                 {formData.labelType === 'ground_advantage' ? 'G' : 'P'}
               </div>
               <div>
-                <div style={{textAlign:'left'}} className="label_reference" >
+                <div style={{ textAlign: 'left' }} className="label_reference" >
                   U.S. POSTAGE PAID<br />
                   <span id="vendor_brand">ROLLO</span><br />
                   ePostage
@@ -478,17 +478,17 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
             </div>
             <div className="barcode">
               <div className="tracking_heading">USPS TRACKING # EP</div>
-              <img style={{width:'100%'}} src={barcodeImg}></img>
+              <img style={{ width: '100%' }} src={barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
             <div className="end_label_container">
               <div id="end_label">
-               
+
               </div>
               <canvas ref={sbarcode1} />
             </div>
           </div>
-          </div>
+        </div>
         );
 
 
@@ -496,11 +496,18 @@ const randomLastDigit = lastDigitOptions[Math.floor(Math.random() * lastDigitOpt
         return <div>Unsupported Vendor</div>;
     }
   };
-
+  const hasRun = useRef(false);
+  useEffect(() => {
+    if (!hasRun.current && downloadState) {
+      downloadLabel();
+      setDownloadState(false);
+      hasRun.current = true; // Mark as run
+    }
+  }, []);
   return (
-    <div>
+    <div className="">
       {renderVendorLabel()}
-      <button onClick={downloadLabel} className="download_button">
+      <button onClick={downloadLabel} className="contact-btn mt-3">
         Download
       </button>
     </div>

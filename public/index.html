@@ -10,20 +10,26 @@
       content="Ship label pro provide Ecommerce Solution like VA, product Listing etc... "
     />
     <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link href="https://fonts.cdnfonts.com/css/helvetica-neue-55?styles=16008,16022,15985,16012,16014" rel="stylesheet">
-                
+    <link
+      href="https://fonts.cdnfonts.com/css/helvetica-neue-55?styles=16008,16022,15985,16012,16014"
+      rel="stylesheet"
+    />
+
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.0/JsBarcode.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bwip-js/3.0.0/bwip-js.min.js"></script>
@@ -39,1015 +45,1110 @@
     -->
     <style>
       * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-         }
-         :root{
-            --theme_color : #f16821;
-         }
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --theme_color: #f16821;
+        width: 100%;
+      }
 
-   body {
-font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;;
-  font-style: normal;
-              /* margin: 20px; */
-          }
-          navbar{
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            padding: 25px;
-          }
-          .navbar-list{
-            display: flex;
-            gap: 40px;
-            align-items: center;
-          }
-          p{
-            line-height: 1.5;
-            font-size: 1rem;
-          }
-        
-            .container {
+      body {
+        font-family: "Montserrat", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+        background-color: #dbe5ff !important;
+        /* background: "#2FB95D";
+        background-color: "#2FB95D"; */
+        /* margin: 20px; */
+      }
+      navbar {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        padding: 25px;
+      }
+      .navbar-list {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+      }
+      p {
+        line-height: 1.5;
+        font-size: 1rem;
+      }
+
+      .container {
         max-width: 1100px;
-        margin:auto;
-        
-    }
-    .loader2 {
-    width: 18px;
-    height: 18px;
-    display: inline-block;
-    position: relative;
-    border-width: 3px 2px 3px 2px;
-    border-style: solid dotted solid dotted;
-    border-color: #fff rgba(255, 255, 255,0.3) #fff rgba(151, 107, 93, 0.3);
-    border-radius: 50%;
-    box-sizing: border-box;
-    animation: 1s rotate linear infinite;
- }
- .loader2:before , .loader2:after{
-    /* content: ''; */
-    top: 0;
-    left: 0;
-    position: absolute;
-    border: 10px solid transparent;
-    border-bottom-color:#fff;
-    transform: translate(-10px, 19px) rotate(-35deg);
-  }
- .loader2:after {
-    border-color: #de3500 #0000 #0000 #0000 ;
-    transform: translate(32px, 3px) rotate(-35deg);
-  }
-   @keyframes rotate {
-    100%{    transform: rotate(360deg)}
-  }
-        .home_box_container{
-            background: url('https://preview.colorlib.com/theme/logis/images/hero_bg_2.jpg.webp');
-            background-position: 50% -25px;
-            height: 600px;
-            position: relative;
+        margin: auto;
+      }
+      .loader2 {
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+        position: relative;
+        border-width: 3px 2px 3px 2px;
+        border-style: solid dotted solid dotted;
+        border-color: #fff rgba(255, 255, 255, 0.3) #fff rgba(151, 107, 93, 0.3);
+        border-radius: 50%;
+        box-sizing: border-box;
+        animation: 1s rotate linear infinite;
+      }
+      .loader2:before,
+      .loader2:after {
+        /* content: ''; */
+        top: 0;
+        left: 0;
+        position: absolute;
+        border: 10px solid transparent;
+        border-bottom-color: #fff;
+        transform: translate(-10px, 19px) rotate(-35deg);
+      }
+      .loader2:after {
+        border-color: #de3500 #0000 #0000 #0000;
+        transform: translate(32px, 3px) rotate(-35deg);
+      }
+      @keyframes rotate {
+        100% {
+          transform: rotate(360deg);
         }
-    .home_box_container:before {
-    position: absolute;
-    content: "";
-    left: 0;
-    bottom: 0;
-    right: 0;
-    top: 0;
-    /* z-index: -1; */
-    background: rgba(0, 0, 0, 0.4);
-}
+      }
+      .home_box_container {
+        background: url("https://preview.colorlib.com/theme/logis/images/hero_bg_2.jpg.webp");
+        background-position: 50% -25px;
+        height: 600px;
+        position: relative;
+      }
+      .home_box_container:before {
+        position: absolute;
+        content: "";
+        left: 0;
+        bottom: 0;
+        right: 0;
+        top: 0;
+        /* z-index: -1; */
+        background: rgba(0, 0, 0, 0.4);
+      }
 
+      .text-white {
+        color: #fff;
+      }
+      h1 {
+        font-size: 50px;
+      }
+      .main-box-content {
+        display: flex;
+        justify-content: center;
+        position: relative;
+        align-items: center;
+        flex-direction: column;
+        margin: 120px 0px;
+      }
 
-.text-white{
-    color: #fff;
-}
-h1{
-    font-size: 50px;
-}
-        .main-box-content{
-            display: flex;
-    justify-content: center;
-    position: relative;
-    align-items: center;
-    flex-direction: column;
-    margin: 120px 0px;
-        }
+      .about_us {
+        display: flex;
+        margin-top: 100px;
+      }
+      .sec-distance {
+        margin-top: 100px;
+      }
+      .about_left {
+        flex: 0 0 50%;
+      }
+      .work_style_container {
+        background-image: url("https://preview.colorlib.com/theme/logis/images/hero_bg_4.jpg.webp");
+        position: relative;
+      }
+      .work_style_container::before {
+        position: absolute;
+        content: "";
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.7);
+      }
+      .work_style_container .heading_main {
+        text-align: center;
+        position: relative;
+        font-size: 30px;
+        color: white;
+        margin-bottom: 40px;
+        z-index: 1;
+      }
+      .how-it-work-body h2 {
+        color: #fff;
+        font-size: 22px;
+        margin-bottom: 30px;
+      }
+      .how-it-work-body p {
+        color: #fff;
+        line-height: 2.1;
+      }
+      .work_style_head {
+        display: flex;
+      }
+      .work_style_head .how-it-work-item {
+        padding: 12px;
+      }
+      .login_body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .login_body h2 {
+        margin-bottom: 20px;
+        color: var(--theme_color);
+      }
+      a {
+        text-decoration: none;
+      }
 
-        .about_us{
-            display: flex;
-            margin-top: 100px;
-        }
-        .sec-distance{
-          margin-top: 100px;
-        }
-        .about_left{
-            flex: 0 0 50%;
-        }
-        .work_style_container{
-            background-image: url('https://preview.colorlib.com/theme/logis/images/hero_bg_4.jpg.webp');
-            position: relative;
-        }
-     .work_style_container::before {
-    position: absolute;
-    content: "";
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.7);
-}
-.work_style_container .heading_main {
-    text-align: center;
-    position: relative;
-    font-size: 30px;
-    color: white;
-    margin-bottom: 40px;
-    z-index: 1;
-}
-.how-it-work-body h2{
-  color: #fff;
-  font-size: 22px;
-  margin-bottom: 30px;
-}
-.how-it-work-body p{
-  color: #fff;
-  line-height: 2.1;
-}
-.work_style_head{
-    display: flex;
-}
-.work_style_head .how-it-work-item{
-    padding: 12px;
-}
-.login_body{
-    height: 100vh;
-    display: flex
-;
-    justify-content: center;
-    align-items: center;
-}
-.login_body h2{
-    margin-bottom: 20px;
-    color: var(--theme_color);
-}
-a{
-    text-decoration: none;
-}
-
-.dashboard_Sec{
-    display: flex;
-    gap: 24px;
-    min-height: 100vh;
-    margin-top: 50px;
-}
-.dashboard_left{
-    height: auto;
-    padding: 10px 0px;
-}
-.create_sec_heading{
-  background: black;
-    margin-bottom: 24px;
-    color: white;
-    padding: 10px 7px;
-    border-radius: 4px;
-}
-.form_heading{
-  font-size: 20px;
-    color: var(--theme_color);
-    padding: 10px;
-    padding-top: 0px;
-}
-/* .dashboard_right{
+      .dashboard_Sec {
+        display: flex;
+        gap: 24px;
+        min-height: 100vh;
+        margin-top: 50px;
+      }
+      .dashboard_left {
+        height: auto;
+        padding: 10px 0px;
+      }
+      .create_sec_heading {
+        background: black;
+        margin-bottom: 24px;
+        color: white;
+        padding: 10px 7px;
+        border-radius: 4px;
+      }
+      .form_heading {
+        font-size: 20px;
+        color: var(--theme_color);
+        padding: 10px;
+        padding-top: 0px;
+      }
+      /* .dashboard_right{
     flex: 0 0 100%;
 } */
-/* HTML: <div class="loader"></div> */
-.loader {
-  width: 50px;
-  aspect-ratio: 1;
-  --_c:no-repeat radial-gradient(farthest-side,var(--theme_color) 92%,#0000);
-  background: 
-    var(--_c) top,
-    var(--_c) left,
-    var(--_c) right,
-    var(--_c) bottom;
-  background-size: 12px 12px;
-  animation: l7 1s infinite;
-}
-@keyframes l7 {to{transform: rotate(.5turn)}}
-.login_Container{
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-}
-.login_Container button{
-    background: var(--theme_color);
-    color: white;
-    border: none;
-    padding: 6px 18px;
-    border-radius: 3px;
-    display: block;
-}
-.dashbox_icon{
-  font-size: 18px;
-}
-.dashbox_heading{
-  font-size: 14px;
-}
-.dashbox_stat{
-  font-size: 22px;
-  font-weight: bold;
-}
-.dash_box{
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 20px;
-     height: 130px;
-    flex: 0 0 31.5%;
-    background-color: var(--theme_color);
-    color: #fff!important;
-    border-radius: 5px;
-}
-#dash_box2{
-  background-color: #000;
-}
-.historysec_heading{
-  color: #fff;
-    padding: 15px 10px;
-    margin-bottom: 24px;
-    background: #000;
-    border-radius: 6px;
-    font-size: 25px;
-}
-.styled-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-.download_button{
-  background: var(--theme_color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.5s ease-in-out;
-}
-.download_button:hover{
-  background-color: #000;
-}
-.styled-table th,
-.styled-table td {
-  width: 16.66%; /* 100% divided by 6 columns */
-  text-align: left;
-  padding: 8px;
-  border-bottom: 1px solid #ddd; /* Add border to the bottom of each row */
-}
-.pagination {
-  display: flex;
-  list-style: none;
-  padding: 0;
-}
-
-.page-item {
-  margin: 0 5px;
-}
-
-.page-link {
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  background-color: #f2f2f2;
-  cursor: pointer;
-}
-
-.page-item.active .page-link {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
-}
-.filter-buttons {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.filter-button {
-  padding: 10px 20px;
-  border: 1px solid #ddd;
-  background-color: #f2f2f2;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.filter-button.active {
-  background-color:var(--theme_color);
-  color: white;
-  border-color: var(--theme_color);
-}
-
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-.about_left p{
-  line-height: 2;
-}
-.pagination-controls button {
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  background-color: #f2f2f2;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.pagination-controls button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.styled-table th {
-  background-color: #000;
-    color: white;
-    padding: 10px; /* Optional: Add background color to header */
-}
-.dashboard_right{
-  width: 100%;
-}
-.dashboard_left ul li a{
-    padding: 12px;
-    color: #fff;
-    /* background-color: rgb(98 97 97 / 44%); */
-    /* background: white; */
-    color: var(--theme_color);
-    color: black;
-    display: block;
-    margin-bottom: 5px;
-    /* border-radius: 10px; */
-    font-size: 14px;
-}
-
-.dashboard_left ul li a:hover,.dashboard_left ul li .active{
-  color: #f16821;
-  background-color: #ebebeb;
-}
-.dashboard_left ul li {
-  border-bottom: 1px solid;
-}
-
-.dashboard_left{
-    border: 1px solid gray;
-    background-color: none!important;
-    border-radius: 10px;
-    flex: 0 0 25%;
-}
-.how-it-work-item .number {
-    width: 50px;
-    height: 50px;
-    border: 4px solid #fff;
-    background: #f16821;
-    color: #fff;
-    line-height: 44px;
-    font-weight: 300;
-    display: inline-block;
-    text-align: center;
-    font-size: 20px;
-    border-radius: 50%;
-    margin-bottom: 40px;
-}
-        .about_right {
-    flex: 0 0 50%;
-    /* padding: 0 50px; */
-    padding-left: 60px;
-}
-        .about_right img{
-            width: 100%;
-            border-radius: 10px;
+      /* HTML: <div class="loader"></div> */
+      .loader {
+        width: 50px;
+        aspect-ratio: 1;
+        --_c: no-repeat
+          radial-gradient(farthest-side, var(--theme_color) 92%, #0000);
+        background: var(--_c) top, var(--_c) left, var(--_c) right,
+          var(--_c) bottom;
+        background-size: 12px 12px;
+        animation: l7 1s infinite;
+      }
+      @keyframes l7 {
+        to {
+          transform: rotate(0.5turn);
         }
-          li{
-            list-style: none;
-          }
-          .label-container {
-              width: 101.6mm;   /* 4 inches */
-              height: 152.4mm;  /* 6 inches */
-              /* padding: 10px 0px; */
-              text-align: center;
-              color: #000000e0;
-              background-color: white;
-              font-family: Arial, sans-serif!important;
-          }
-          #label_type_container{
-              width: 100%;
-              padding: 10px;
-          }
-          .header {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              border-bottom: 1.5px solid black;
-          }
-          #impbBarcodeImg,#impbBarcode2Img{
-              height: 45px!important;
-              width: 45px!important;
-          }
-          .to_address_info{
-            max-width: 50%;
-            text-transform: uppercase;
-          }
-          .header .large-letter {
-      font-size: 90px;
-      /* font-weight: bold; */
-      font-weight: 600;
-      border-right: 1.5px solid black;
-      
-      padding: 0px 12px;
-      /* border-bottom: none; */
-          }
-          .header .label_reference{
-   font-size: 12px;
-   font-weight: bold;
-      border: 1.5px solid black;
-      margin-right: 10px;
-      padding: 5px;
-      /* padding-bottom: 19px; */
-          }
-          .from_address_info canvas, .end_label_container canvas{
-            height: 45px!important;
-            width: 45px!important;
-          }
-          .label_type{
-      border-bottom: 1.5px solid black;
-      margin: 0px;
-      padding: 4px 0px;
-      font-weight: 600;
-      font-size: 20px;
-          }
-          .label_type sup{
-            font-size: 14px;
-          }
-          .info {
-              padding: 0px 10px;
-              text-align: left;
-              margin-top: 10px;
-              font-size: 12px;
-              height: 220px;
-           display: flex;
+      }
+      .login_Container {
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      }
+      .login_Container button {
+        background: var(--theme_color);
+        color: white;
+        border: none;
+        padding: 6px 18px;
+        border-radius: 3px;
+        display: block;
+      }
+      .dashbox_icon {
+        font-size: 18px;
+      }
+      .dashbox_heading {
+        font-size: 14px;
+      }
+      .dashbox_stat {
+        font-size: 22px;
+        font-weight: bold;
+      }
+      .dash_box {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 24px;
+        height: 130px;
+        flex: 0 0 24.5%;
+        background-color: var(--theme_color);
+        color: #fff !important;
+        border-radius: 5px;
+      }
+      #dash_box2 {
+        background-color: #000;
+      }
+      .historysec_heading {
+        color: #fff;
+        padding: 15px 10px;
+        margin-bottom: 24px;
+        background: #000;
+        border-radius: 6px;
+        font-size: 25px;
+      }
+      .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .download_button {
+        background: var(--theme_color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: 0.5s ease-in-out;
+      }
+      .download_button:hover {
+        background-color: #000;
+      }
+      .styled-table th,
+      .styled-table td {
+        width: 16.66%; /* 100% divided by 6 columns */
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #ddd; /* Add border to the bottom of each row */
+      }
+      .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+      }
+
+      .page-item {
+        margin: 0 5px;
+      }
+
+      .page-link {
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        background-color: #f2f2f2;
+        cursor: pointer;
+      }
+
+      .page-item.active .page-link {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+      .filter-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .filter-button {
+        padding: 10px 20px;
+        border: 1px solid #ddd;
+        background-color: #f2f2f2;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .filter-button.active {
+        background-color: var(--theme_color);
+        color: white;
+        border-color: var(--theme_color);
+      }
+
+      .pagination-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .about_left p {
+        line-height: 2;
+      }
+      .pagination-controls button {
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        background-color: #f2f2f2;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .pagination-controls button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .styled-table th {
+        background-color: #000;
+        color: white;
+        padding: 10px; /* Optional: Add background color to header */
+      }
+      .dashboard_right {
+        width: 100%;
+      }
+      .dashboard_left ul li a {
+        padding: 12px;
+        color: #fff;
+        /* background-color: rgb(98 97 97 / 44%); */
+        /* background: white; */
+        color: var(--theme_color);
+        color: black;
+        display: block;
+        margin-bottom: 5px;
+        /* border-radius: 10px; */
+        font-size: 14px;
+      }
+
+      .dashboard_left ul li a:hover,
+      .dashboard_left ul li .active {
+        color: #f16821;
+        background-color: #ebebeb;
+      }
+      .dashboard_left ul li {
+        border-bottom: 1px solid;
+      }
+
+      .dashboard_left {
+        border: 1px solid gray;
+        background-color: none !important;
+        border-radius: 10px;
+        flex: 0 0 25%;
+      }
+      .how-it-work-item .number {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #fff;
+        background: #f16821;
+        color: #fff;
+        line-height: 44px;
+        font-weight: 300;
+        display: inline-block;
+        text-align: center;
+        font-size: 20px;
+        border-radius: 50%;
+        margin-bottom: 40px;
+      }
+      .about_right {
+        flex: 0 0 50%;
+        /* padding: 0 50px; */
+        padding-left: 60px;
+      }
+      .about_right img {
+        width: 100%;
+        border-radius: 10px;
+      }
+      li {
+        list-style: none;
+      }
+      .label-container {
+        width: 101.6mm; /* 4 inches */
+        height: 152.4mm; /* 6 inches */
+        /* padding: 10px 0px; */
+        text-align: center;
+        color: #000000e0;
+        background-color: white;
+        font-family: Arial, sans-serif !important;
+      }
+      #label_type_container {
+        width: 100%;
+        padding: 10px;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1.5px solid black;
+      }
+      #impbBarcodeImg,
+      #impbBarcode2Img {
+        height: 45px !important;
+        width: 45px !important;
+      }
+      .to_address_info {
+        max-width: 50%;
+        text-transform: uppercase;
+      }
+      .header .large-letter {
+        font-size: 90px;
+        /* font-weight: bold; */
+        font-weight: 600;
+        border-right: 1.5px solid black;
+
+        padding: 0px 12px;
+        /* border-bottom: none; */
+      }
+      .header .label_reference {
+        font-size: 12px;
+        font-weight: bold;
+        border: 1.5px solid black;
+        margin-right: 10px;
+        padding: 5px;
+        /* padding-bottom: 19px; */
+      }
+      .from_address_info canvas,
+      .end_label_container canvas {
+        height: 45px !important;
+        width: 45px !important;
+      }
+      .label_type {
+        border-bottom: 1.5px solid black;
+        margin: 0px;
+        padding: 4px 0px;
+        font-weight: 600;
+        font-size: 20px;
+      }
+      .label_type sup {
+        font-size: 14px;
+      }
+      .info {
+        padding: 0px 10px;
+        text-align: left;
+        margin-top: 10px;
+        font-size: 12px;
+        height: 220px;
+        display: flex;
         flex-direction: column;
         justify-content: space-between;
         padding-bottom: 16px;
-          }
-          .parcel_info{
-              text-align: right;
-          }
-          .easypost_label .parcel_info{
-            font-size: 14px;
-            font-weight: bold;
-          }
-          .barcode {
-          
-      border-top: 3px solid black;
-      border-bottom: 3px solid black;
-      padding: 5px 0px;
-          }
-          input, button {
-              margin: 5px;
-              padding: 5px;
-              font-size: 16px;
-          }
-          #label {
-      height: 152.4mm;  /* 6 inches */
-      width: 101.6mm;
-      color: #000000e0;
-      /* padding: 10px; */
-      /* padding-right:20px; */
-      background: white;
-      display: block;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      word-wrap: break-word;
-      overflow: hidden; /* Prevents content from overflowing */
-  }
-          .address_label_info{
-              display: flex;
-              justify-content: space-between;
-              /* margin-bottom: 40px; */
-          }
-          .from_address_info{
-              display: flex;
-              gap: 10px;
-              text-transform: uppercase;
-              font-size: 13px;
-              /* margin-bottom: 40px; */
-              padding-left: 20px;
-          }
-          #tracking-number{
-              font-weight: 600;
-      font-size: 16px;
-          }
-          .tracking_heading{
-              font-size: 16px;
-              font-weight: bold;
-          }
-          .barcode svg text {
-      font-size: 15px !important;
-    
-  }
-  .shippo-logo img{
-      margin-top: 4px!important;
-      max-width: 120px!important;
-  
-  }
-  #vendor_type_container{
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 16px;
-  }
-  
-  .end_label_container{
-      display: flex;
-      padding: 4px 10px;
-      justify-content: flex-end;
-  }
-  #end_label{
-      flex: 0 0 80%;
-  }
-  #additional_info{
-      font-size: 12px;
-      font-weight: 600;
-  }
+      }
+      .parcel_info {
+        text-align: right;
+      }
+      .easypost_label .parcel_info {
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .barcode {
+        border-top: 3px solid black;
+        border-bottom: 3px solid black;
+        padding: 5px 0px;
+      }
+      input,
+      button {
+        margin: 5px;
+        padding: 5px;
+        font-size: 16px;
+      }
+      #label {
+        height: 152.4mm; /* 6 inches */
+        width: 101.6mm;
+        color: #000000e0;
+        /* padding: 10px; */
+        /* padding-right:20px; */
+        background: white;
+        display: block;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        word-wrap: break-word;
+        overflow: hidden; /* Prevents content from overflowing */
+      }
+      .address_label_info {
+        display: flex;
+        justify-content: space-between;
+        /* margin-bottom: 40px; */
+      }
+      .from_address_info {
+        display: flex;
+        gap: 10px;
+        text-transform: uppercase;
+        font-size: 13px;
+        /* margin-bottom: 40px; */
+        padding-left: 20px;
+      }
+      #tracking-number {
+        font-weight: 600;
+        font-size: 16px;
+      }
+      .tracking_heading {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .barcode svg text {
+        font-size: 15px !important;
+      }
+      .shippo-logo img {
+        margin-top: 4px !important;
+        max-width: 120px !important;
+      }
+      #vendor_type_container {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+      }
 
+      .end_label_container {
+        display: flex;
+        padding: 4px 10px;
+        justify-content: flex-end;
+      }
+      #end_label {
+        flex: 0 0 80%;
+      }
+      #additional_info {
+        font-size: 12px;
+        font-weight: 600;
+      }
 
-  /* Dashboardhead.css */
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #ddd;
-}
+      /* Dashboardhead.css */
+      .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 20px;
+        background-color: #e3ebff;
+        border-bottom: 1px solid #ddd;
+      }
 
-.logo-container h4 {
-  margin: 0;
-  font-size: 24px;
-  color: #333;
-}
+      .logo-container h4 {
+        margin: 0;
+        font-size: 24px;
+        color: #333;
+      }
 
-.user-icon-container {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
+      .user-icon-container {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
 
-.user-icon {
-  font-size: 32px;
-  color: #333;
-}
+      .user-icon {
+        font-size: 32px;
+        color: #333;
+      }
 
-.username {
-  margin-left: 10px;
-  font-size: 16px;
-  color: #333;
-}
+      .username {
+        margin-left: 10px;
+        font-size: 16px;
+        color: #333;
+      }
 
-.sidebar {
-  position: fixed;
-  top: 0;
-  right: -250px; /* Hide sidebar by default */
-  width: 250px;
-  height: 100vh;
-  background-color: #fff;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  transition: right 0.3s ease;
-}
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: -250px; /* Hide sidebar by default */
+        width: 250px;
+        height: 100vh;
+        background-color: #fff;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        transition: right 0.3s ease;
+      }
 
-.sidebar.open {
-  right: 0; /* Show sidebar when open */
-}
+      .sidebar.open {
+        right: 0; /* Show sidebar when open */
+      }
 
-.sidebar-item {
-  display: flex;
-  align-items: center;
-  padding: 15px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+      .sidebar-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
 
-.sidebar-item:hover {
-  background-color: #f1f1f1;
-}
+      .sidebar-item:hover {
+        background-color: #f1f1f1;
+      }
 
-.sidebar-icon {
-  font-size: 20px;
-  margin-right: 10px;
-  color: #333;
-}
+      .sidebar-icon {
+        font-size: 20px;
+        margin-right: 10px;
+        color: #333;
+      }
 
-.sidebar-item span {
-  font-size: 16px;
-  color: #333;
-}/* Dashboardhead.css */
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #ddd;
-}
+      .sidebar-item span {
+        font-size: 16px;
+        color: #333;
+      } /* Dashboardhead.css */
+      .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 20px;
+        background-color: #e3ebff;
+        border-bottom: 1px solid #ddd;
+      }
 
-.logo-container h4 {
-  margin: 0;
-  font-size: 24px;
-  color: #333;
-}
+      .logo-container h4 {
+        margin: 0;
+        font-size: 24px;
+        color: #333;
+      }
 
-.user-icon-container {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
+      .user-icon-container {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
 
-.user-icon {
-  font-size: 32px;
-  color: #333;
-}
+      .user-icon {
+        font-size: 32px;
+        color: #333;
+      }
 
-.username {
-  margin-left: 10px;
-  font-size: 16px;
-  color: #333;
-}
+      .username {
+        margin-left: 10px;
+        font-size: 16px;
+        color: #333;
+      }
 
-.sidebar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 250px;
-  height: 100vh;
-  background-color: #fff;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  transform: translateX(100%); /* Hide sidebar by default */
-  transition: transform 0.3s ease;
-  z-index: 1000; /* Ensure sidebar is above other content */
-}
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 250px;
+        height: 100vh;
+        background-color: #fff;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        transform: translateX(100%); /* Hide sidebar by default */
+        transition: transform 0.3s ease;
+        z-index: 1000; /* Ensure sidebar is above other content */
+      }
 
-.sidebar.open {
-  transform: translateX(0); /* Show sidebar when open */
-}
+      .sidebar.open {
+        transform: translateX(0); /* Show sidebar when open */
+      }
 
-.sidebar-item {
-  display: flex;
-  align-items: center;
-  padding: 15px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+      .sidebar-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
 
-.sidebar-item:hover {
-  background-color: #f1f1f1;
-}
+      .sidebar-item:hover {
+        background-color: #f1f1f1;
+      }
 
-.sidebar-icon {
-  font-size: 20px;
-  margin-right: 10px;
-  color: #333;
-}
+      .sidebar-icon {
+        font-size: 20px;
+        margin-right: 10px;
+        color: #333;
+      }
 
-.sidebar-item span {
-  font-size: 16px;
-  color: #333;
-}
+      .sidebar-item span {
+        font-size: 16px;
+        color: #333;
+      }
 
-/* Prevent horizontal scrollbar when sidebar is open */
-body.sidebar-open {
-  overflow-x: hidden;
-}
-.barcode img{
-  padding: 6px;
-}
-  /* .shippo-logo{
+      /* Prevent horizontal scrollbar when sidebar is open */
+      body.sidebar-open {
+        overflow-x: hidden;
+      }
+      .barcode img {
+        padding: 6px;
+      }
+      /* .shippo-logo{
   width: 120px!important;
   display: none;
   } */
 
+      /* Container for the form */
+      .form-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+      }
 
+      /* Each row in the form */
+      .form-row {
+        display: flex;
+        gap: 3px;
+        margin-bottom: 20px;
+      }
 
+      /* Select elements */
+      .form-select {
+        width: 100%;
+      }
 
-/* Container for the form */
-.form-container {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-}
+      .form-select select,
+      .bulk_form_select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+      /* .form-select_state {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+      } */
+      /* Input fields */
+      .form-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+      }
 
-/* Each row in the form */
-.form-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
+      /* Columns for sender and recipient information */
+      .form-columns {
+        display: flex;
+        gap: 20px;
+      }
 
-/* Select elements */
-.form-select {
-  width: 100%; 
- 
-}
+      /* Each column */
+      .form-column {
+        flex: 1;
+      }
 
-.form-select select , .bulk_form_select{
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-.form-select_state{
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-/* Input fields */
-.form-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
+      /* Generate Label Button */
+      .generate-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
 
-/* Columns for sender and recipient information */
-.form-columns {
-  display: flex;
-  gap: 20px;
-}
+      .generate-button:hover {
+        background-color: #0056b3;
+      }
 
-/* Each column */
-.form-column {
-  flex: 1;
-}
+      .evs_label .label_reference {
+        text-align: left;
+        font-weight: normal;
+        margin-top: 20px;
+        font-size: 11px;
+        padding-right: 30px;
+      }
+      .evs_label .header {
+        align-items: normal;
+      }
 
-/* Generate Label Button */
-.generate-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 20px;
-}
+      .rollo_label {
+        border: 1.5px solid;
+        font-weight: bold;
+      }
+      .rollo_label .label_reference {
+        text-align: left;
+        font-weight: bold;
+      }
+      .rollo_label .end_label_container {
+        padding-top: 14px;
+      }
+      .sidebar-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+      }
 
-.generate-button:hover {
-  background-color: #0056b3;
-}
-.form-column select{
-    margin-left: 5px;
-}
-.evs_label .label_reference{
-  text-align: left;
-  font-weight: normal;
-  margin-top: 20px;
-  font-size: 11px;
-  padding-right: 30px;
-}
-.evs_label .header{
-  align-items: normal;
-}
+      .close-icon {
+        font-size: 1.5rem;
+        color: #333;
+      }
 
-.rollo_label{
-  border: 1.5px solid;
-  font-weight: bold;
-}
-.rollo_label .label_reference{
-  text-align: left;
-  font-weight: bold;
-}
-.rollo_label .end_label_container{
-  padding-top: 14px;
-}  
-.sidebar-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
-}
+      .close-icon:hover {
+        color: #000;
+      }
 
-.close-icon {
-  font-size: 1.5rem;
-  color: #333;
-}
+      .easypost_label .header {
+        display: flex;
+        align-items: normal;
+        justify-content: normal;
+        border-bottom: 1.5px solid black;
+      }
+      .easypost_label .header_right {
+        padding-left: 20px;
+      }
+      .easypost_label .info {
+        justify-content: normal;
+      }
+      .ep_upbarcode canvas {
+        width: 181px;
+        height: 34px;
+      }
+      .easypost_label .header_right .paid_text {
+        font-weight: 700;
+        text-align: left;
+        font-size: 11px;
+      }
+      .parcel_ref {
+        display: flex;
+        justify-content: end;
+        padding-right: 44px;
+      }
+      .easypost_label .parcel_ref {
+        padding-right: 30px;
+      }
+      .easypost_label .from_address_info canvas {
+        height: 35px !important;
+        width: 35px !important;
+      }
+      .easypost_label .from_address_info {
+        /* font-size: 16px; */
+        align-items: center;
+      }
+      .easypost_label .end_label_container canvas {
+        height: 35px !important;
+        width: 35px !important;
+      }
+      .easypost_label .end_label_container {
+        display: flex;
+        padding: 12px 10px;
+        justify-content: flex-end;
+      }
+      .easypost_label .label_type {
+        font-size: 20px;
+      }
+      .parcelref_no {
+        border: 2px solid;
+        font-weight: bold;
+        padding: 2px 3px;
+        font-size: 18px;
+        line-height: 1.2;
+      }
+      .easypost_label .parcelref_no {
+        border: 1px solid;
+        font-size: 16px;
+        border: 1px solid;
+        font-weight: 400;
+      }
+      .easypost_label .header_right p {
+        line-height: 1.4;
+      }
+      /* Tick Animation */
+      .tick-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 15px;
+      }
 
-.close-icon:hover {
-  color: #000;
-}
-
-
-
-
-.easypost_label .header{
-  display: flex;
-    align-items: normal;
-    justify-content: normal;
-    border-bottom: 1.5px solid black;
-}
-.easypost_label .header_right{
-  padding-left: 20px;
-}
-.easypost_label .info{
-  justify-content: normal;
-}
-.ep_upbarcode canvas{
-  width: 181px;
-  height: 34px;
-}
-.easypost_label .header_right .paid_text{
-  font-weight: 700;
-    text-align: left;
-    font-size: 11px;
-}
-.parcel_ref{
-  display: flex;
-    justify-content: end;
-    padding-right: 44px;
-}
-.easypost_label .parcel_ref{
-  padding-right: 30px;
-}
-.easypost_label .from_address_info canvas{
-  height: 35px !important;
-    width: 35px !important;
-}
-.easypost_label .from_address_info{
-  /* font-size: 16px; */
-  align-items: center;
-}
-.easypost_label .end_label_container canvas {
-    height: 35px !important;
-    width: 35px !important;
-}
-.easypost_label .end_label_container{
-  display: flex;
-  padding: 12px 10px;
-  justify-content: flex-end;
-}
-.easypost_label .label_type {
-    font-size: 20px;
-}
-.parcelref_no{
-  border: 2px solid;
-    font-weight: bold;
-    padding: 2px 3px;
-    font-size: 18px;
-    line-height: 1.2;
-}
-.easypost_label .parcelref_no{
-  border: 1px solid;
-  font-size: 16px;
-  border: 1px solid;
-  font-weight: 400;
-
-}
-.easypost_label .header_right p{
-  line-height: 1.4;
-}
-/* Tick Animation */
-.tick-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.tick {
-  font-size: 60px;
-  color: #4caf50; /* Green color for the tick */
-  opacity: 0;
-  transform: scale(0);
-  animation: tickAnimation 0.5s ease-in-out forwards;
-}
-.modal_close_btn{
-  position: absolute;
-    top: -1px;
-    right: 0;
-    background: black;
-    color: white;
-    border: none;
-    width: 30px;
-    border-radius: 50%;
-    height: 30px;
-}
-@keyframes tickAnimation {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-/* .easypost_label .paid_text{
+      .tick {
+        font-size: 60px;
+        color: #4caf50; /* Green color for the tick */
+        opacity: 0;
+        transform: scale(0);
+        animation: tickAnimation 0.5s ease-in-out forwards;
+      }
+      .modal_close_btn {
+        position: absolute;
+        top: -1px;
+        right: 0;
+        background: black;
+        color: white;
+        border: none;
+        width: 30px;
+        border-radius: 50%;
+        height: 30px;
+      }
+      @keyframes tickAnimation {
+        0% {
+          opacity: 0;
+          transform: scale(0);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      /* .easypost_label .paid_text{
   font-size: 12px;
     font-weight: 700;
 } */
-.easypost_label .header_right .easypost_logo{
-  filter: brightness(0);
-    height: 20px;
-    margin-left: 11px;
-}
-.headerR-top{
-  display: flex
-;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5px;
-}
-.easypost_logo .headerR-top{
-  justify-content: left;
-}
-.ep_upbarcode{
-  margin-top: 2px;
-  margin-bottom: 4px;
-}
-.sender_info ul{
-  position:absolute;
-  left: 10px;
-  width: 50%;
-  border: 2px solid;
-  margin-top: -9px;
-  border-bottom: none!important;
-  border-radius:5px;
-}
-/* .sender_info ul li{
+      .easypost_label .header_right .easypost_logo {
+        filter: brightness(0);
+        height: 20px;
+        margin-left: 11px;
+      }
+      .headerR-top {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 5px;
+      }
+      .easypost_logo .headerR-top {
+        justify-content: left;
+      }
+      .ep_upbarcode {
+        margin-top: 2px;
+        margin-bottom: 4px;
+      }
+      .sender_info ul {
+        position: absolute;
+        left: 10px;
+        width: 50%;
+        border: 2px solid;
+        margin-top: -9px;
+        border-bottom: none !important;
+        border-radius: 5px;
+      }
+      /* .sender_info ul li{
   background-color: white!important;
 } */
-.easypost_label .pdf_417{
-  width: 189px;
-    height: 42px;
-    margin-top: 6px;
-    margin-left: 11px;
-    padding-top: 0px;
-}
-.easy_post .headerR-top{
-  justify-content: normal!important;
+      .easypost_label .pdf_417 {
+        width: 189px;
+        height: 42px;
+        margin-top: 6px;
+        margin-left: 11px;
+        padding-top: 0px;
+      }
+      .easy_post .headerR-top {
+        justify-content: normal !important;
+      }
+      .easypost_label .large-letter {
+        font-size: 80px;
+      }
 
-}
-.easypost_label .large-letter{
-font-size: 90px;
-}
+      .download-button {
+        background-color: #ffffff;
+        border: 2px solid #2563eb;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+      }
 
+      .download-button:hover:not(:disabled) {
+        background-color: #f8fafc;
+      }
 
-.download-button {
-  background-color: #ffffff;
-  border: 2px solid #2563eb;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-}
+      .download-button:focus {
+        outline: none;
+        ring: 2px;
+        ring-color: #93c5fd;
+      }
 
-.download-button:hover:not(:disabled) {
-  background-color: #f8fafc;
-}
+      .download-button svg {
+        transition: stroke-dashoffset 0.5s ease-out;
+        height: 11px !important;
+        width: 11px !important;
+      }
 
-.download-button:focus {
-  outline: none;
-  ring: 2px;
-  ring-color: #93c5fd;
-}
+      .rollo_label {
+        font-family: "Helvetica Neue", sans-serif !important;
+        font-weight: 600;
+      }
+      .rollo_label .label_reference {
+        padding-right: 30px;
+      }
 
-.download-button svg {
-  transition: stroke-dashoffset 0.5s ease-out;
-  height: 11px!important;
-  width: 11px!important;
-}
+      .theme-btn {
+        border-radius: 0.25rem;
+        background: transparent;
+        color: #000000;
+        font-size: 12px;
+        font-weight: 400;
+        white-space: nowrap;
+        border: 2px solid #0155a5;
+        border-radius: 30px;
+        padding: 10px 40px 10px 40px;
+      }
 
+      .contact-btn {
+        border-radius: 0.25rem;
+        background: #0155a5;
+        color: #ffffff;
+        font-size: 21px;
+        font-weight: 600;
+        white-space: nowrap;
+        border: 2px solid #0155a5;
+        border-radius: 30px;
+        padding: 10px 40px 10px 40px;
+      }
+      .navbar-expand-lg {
+        border-bottom: 1px solid #0155a5;
+      }
+      .login-container {
+        background: #f5f5f5;
+      }
 
-.rollo_label{
-  font-family: 'Helvetica Neue', sans-serif !important;
-    font-weight: 600;
-}
-.rollo_label .label_reference{
-  padding-right: 30px;
-}
-      </style>
+      .login-card {
+        width: 500px;
+        border-radius: 10px;
+      }
+      .css-1wvake5 {
+        width: 300px !important;
+        background-color: #0155a5;
+      }
+      .css-1t8x7v1 {
+        background-color: #0155a5;
+      }
+      .css-vj11vy.ps-menu-root {
+        background-color: #0155a5;
+      }
+      .ps-menu-button.active {
+        background-color: #000 !important; /* Tailwind blue-900 */
+        color: white !important;
+
+        transition: all 0.3s ease-in-out;
+      }
+      .css-u4iowa > .ps-menu-button:hover {
+        background-color: "#000" !important;
+      }
+      /* .css-1t8x7v1 > .ps-menu-button {
+        color: red !important;
+      } */
+      .width-sidebar-body {
+        width: calc(100% - 300px) !important;
+        background-color: #dbe5ff !important;
+      }
+      .loader2 {
+        width: 20px;
+        height: 20px;
+        border: 3px solid white;
+        border-top: 3px solid transparent;
+        border-radius: 50%;
+        display: inline-block;
+        animation: spin 1s linear infinite;
+      }
+      .nav-tabs .nav-link.active {
+        background-color: #0155a5 !important;
+        color: #ffffff !important;
+      }
+      .nav-tabs .nav-link {
+        color: #000 !important;
+      }
+      .styled-table th {
+        background-color: #0155a5 !important;
+      }
+      .table th,
+      .table td {
+        text-align: center;
+        vertical-align: middle;
+      }
+      .bg-white {
+        border-radius: 8px;
+      }
+      select {
+        width: 100%;
+        height: 40px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
     <title>Ship Pro</title>
   </head>
   <body>
@@ -1065,52 +1166,50 @@ font-size: 90px;
     -->
     <script>
       async function generateLabel() {
-       var vendor = document.getElementById('vendor_type_container').value;
-       alert('hes')
-       var vendorBrand = document.getElementById('vendor_brand');
-       var addInfo = document.getElementById('additional_info');
-       if (vendor == 'atfm'){
-       document.querySelector('.end_label_container').style.display = 'none';
-       vendorBrand.textContent='ATFM'
-      var label = document.getElementById('label_type_container').value;
-      var labelType = document.querySelector('.label_type');
-      // Check if the selected value is "GROUND ADVANTAGE" and add "TM" to it
-     var labelLogo = document.getElementById('large-letter');
-     var labelReference = document.getElementById('label_reference_type');
-      if (label == "GROUND ADVANTAGE"){
-          labelLogo.textContent = 'G';
-          labelReference.textContent = 'USPS GROUND ADVANTAGE';
-          labelType.innerHTML = label + '<sup>TM</sup>';
-  
-      }
-      else{
-          labelType.innerHTML = label + '<sup>®</sup>';
-          labelLogo.textContent = 'P';
-          labelReference.textContent = 'PRIORITY MAIL';
-  
-      }
-  
-              const fromName = document.getElementById('fromName').value;
-              const fromAddress = document.getElementById('fromAddress').value;
-              const fromCity = document.getElementById('fromCity').value;
-              const fromState = document.getElementById('fromState').value;
-              const fromZip = document.getElementById('fromZip').value;
-              const toName = document.getElementById('toName').value;
-              const toAddress = document.getElementById('toAddress').value;
-              const toCity = document.getElementById('toCity').value;
-              const toState = document.getElementById('toState').value;
-              const toZip = document.getElementById('toZip').value;
-              const trackingNumber = document.getElementById('trackingNumber').value;
-              // const date = document.getElementById('date').value;
-              const weight = document.getElementById('weight').value;
-             const weightText = weight <= '1' ? `${weight} lb` : `${weight} lbs`;
-  
-              if (!trackingNumber) {
-                  alert("Please enter a tracking number.");
-                  return;
-              }
-  
-              document.getElementById('labelInfo').innerHTML = `
+        var vendor = document.getElementById("vendor_type_container").value;
+        alert("hes");
+        var vendorBrand = document.getElementById("vendor_brand");
+        var addInfo = document.getElementById("additional_info");
+        if (vendor == "atfm") {
+          document.querySelector(".end_label_container").style.display = "none";
+          vendorBrand.textContent = "ATFM";
+          var label = document.getElementById("label_type_container").value;
+          var labelType = document.querySelector(".label_type");
+          // Check if the selected value is "GROUND ADVANTAGE" and add "TM" to it
+          var labelLogo = document.getElementById("large-letter");
+          var labelReference = document.getElementById("label_reference_type");
+          if (label == "GROUND ADVANTAGE") {
+            labelLogo.textContent = "G";
+            labelReference.textContent = "USPS GROUND ADVANTAGE";
+            labelType.innerHTML = label + "<sup>TM</sup>";
+          } else {
+            labelType.innerHTML = label + "<sup>®</sup>";
+            labelLogo.textContent = "P";
+            labelReference.textContent = "PRIORITY MAIL";
+          }
+
+          const fromName = document.getElementById("fromName").value;
+          const fromAddress = document.getElementById("fromAddress").value;
+          const fromCity = document.getElementById("fromCity").value;
+          const fromState = document.getElementById("fromState").value;
+          const fromZip = document.getElementById("fromZip").value;
+          const toName = document.getElementById("toName").value;
+          const toAddress = document.getElementById("toAddress").value;
+          const toCity = document.getElementById("toCity").value;
+          const toState = document.getElementById("toState").value;
+          const toZip = document.getElementById("toZip").value;
+          const trackingNumber =
+            document.getElementById("trackingNumber").value;
+          // const date = document.getElementById('date').value;
+          const weight = document.getElementById("weight").value;
+          const weightText = weight <= "1" ? `${weight} lb` : `${weight} lbs`;
+
+          if (!trackingNumber) {
+            alert("Please enter a tracking number.");
+            return;
+          }
+
+          document.getElementById("labelInfo").innerHTML = `
               <div class='address_label_info'>
                   <div class='to_address_info'>
                   ${fromName}<br>
@@ -1133,101 +1232,97 @@ font-size: 90px;
                   <br>
                   </div>
               `;
-  
-              var cleanTrackingNumber = trackingNumber.replace(/\s+/g, ''); // This removes all spaces
-  
-              var formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
-  
-              document.getElementById("tracking-number").innerText = formattedTracking;
-  
-              JsBarcode("#barcode", cleanTrackingNumber, {
-                  format: "CODE128",
-                  lineColor: "black",
-                  width: 1.75,
-                  height: 80,
-                  displayValue: false
-              });
-  
-              document.getElementById('label').style.display = 'block';
-               generatePDF()
-          }
-  
-  
-      
-      else if (vendor == 'shippo'){
-          document.querySelector('.end_label_container').style.display = 'flex';
-  
-          vendorBrand.textContent='Shippo'
-          const currentDate = new Date();
-          const formattedDate = currentDate.toLocaleDateString('en-US');
-          addInfo.textContent = 'CUBIC'
-      var label = document.getElementById('label_type_container').value;
-      var labelType = document.querySelector('.label_type');
-      // Check if the selected value is "GROUND ADVANTAGE" and add "TM" to it
-     var labelLogo = document.getElementById('large-letter');
-     var labelReference = document.getElementById('label_reference_type');
-  
-      if (label == "GROUND ADVANTAGE"){
-          labelLogo.textContent = 'G';
-          labelReference.textContent = 'USPS GROUND ADVANTAGE';
-          labelType.innerHTML = label + '<sup>TM</sup>';
-  
-      }
-      else{
-          labelType.innerHTML = label + '<sup>®</sup>';
-          labelLogo.textContent = 'P';
-          labelReference.textContent = 'PRIORITY MAIL';
-  
-      }
-  
-              const fromName = document.getElementById('fromName').value;
-              const fromAddress = document.getElementById('fromAddress').value;
-              const fromCity = document.getElementById('fromCity').value;
-              const fromState = document.getElementById('fromState').value;
-              const fromZip = document.getElementById('fromZip').value;
-              const toName = document.getElementById('toName').value;
-              const toAddress = document.getElementById('toAddress').value;
-              const toCity = document.getElementById('toCity').value;
-              const toState = document.getElementById('toState').value;
-              const toZip = document.getElementById('toZip').value;
-              const trackingNumber = document.getElementById('trackingNumber').value;
-              // const date = document.getElementById('date').value;
-              const weight = document.getElementById('weight').value;
-              const weightText = weight <= '1' ? `${weight} lb` : `${weight} lbs`;
-              if (!trackingNumber) {
-                  alert("Please enter a tracking number.");
-                  return;
-              }
-  
-      function generateIMpbBarcode(trackingNumber, canvasId, imgId) {
-      let canvas = document.getElementById(canvasId);
-      let img = document.getElementById(imgId);
-  
-      try {
-          var cleanTrackingNumber = trackingNumber.replace(/\s+/g, ''); // This removes all spaces
-  
-          bwipjs.toCanvas(canvas, {
-              bcid: 'datamatrix',  // USPS uses DataMatrix for IMpb barcodes
-              text:42022124+' '+cleanTrackingNumber,
-              scale: 4,  
-              height: 5,  
-              width: 5,
-              includetext: false
+
+          var cleanTrackingNumber = trackingNumber.replace(/\s+/g, ""); // This removes all spaces
+
+          var formattedTracking = cleanTrackingNumber
+            .replace(/(.{4})/g, "$1 ")
+            .trim();
+
+          document.getElementById("tracking-number").innerText =
+            formattedTracking;
+
+          JsBarcode("#barcode", cleanTrackingNumber, {
+            format: "CODE128",
+            lineColor: "black",
+            width: 1.75,
+            height: 80,
+            displayValue: false,
           });
-  
-          // Convert the canvas to an image and replace the canvas
-          setTimeout(() => {
-              img.src = canvas.toDataURL("image/png");
-              img.style.display = "block";
-              canvas.style.display = "none"; // Hide canvas
-          }, 500);  // Wait a short time for barcode to render
-  
-      } catch (e) {
-          console.error("Error generating IMpb barcode:", e);
-      }
-  }
-  
-              document.getElementById('labelInfo').innerHTML = `
+
+          document.getElementById("label").style.display = "block";
+          generatePDF();
+        } else if (vendor == "shippo") {
+          document.querySelector(".end_label_container").style.display = "flex";
+
+          vendorBrand.textContent = "Shippo";
+          const currentDate = new Date();
+          const formattedDate = currentDate.toLocaleDateString("en-US");
+          addInfo.textContent = "CUBIC";
+          var label = document.getElementById("label_type_container").value;
+          var labelType = document.querySelector(".label_type");
+          // Check if the selected value is "GROUND ADVANTAGE" and add "TM" to it
+          var labelLogo = document.getElementById("large-letter");
+          var labelReference = document.getElementById("label_reference_type");
+
+          if (label == "GROUND ADVANTAGE") {
+            labelLogo.textContent = "G";
+            labelReference.textContent = "USPS GROUND ADVANTAGE";
+            labelType.innerHTML = label + "<sup>TM</sup>";
+          } else {
+            labelType.innerHTML = label + "<sup>®</sup>";
+            labelLogo.textContent = "P";
+            labelReference.textContent = "PRIORITY MAIL";
+          }
+
+          const fromName = document.getElementById("fromName").value;
+          const fromAddress = document.getElementById("fromAddress").value;
+          const fromCity = document.getElementById("fromCity").value;
+          const fromState = document.getElementById("fromState").value;
+          const fromZip = document.getElementById("fromZip").value;
+          const toName = document.getElementById("toName").value;
+          const toAddress = document.getElementById("toAddress").value;
+          const toCity = document.getElementById("toCity").value;
+          const toState = document.getElementById("toState").value;
+          const toZip = document.getElementById("toZip").value;
+          const trackingNumber =
+            document.getElementById("trackingNumber").value;
+          // const date = document.getElementById('date').value;
+          const weight = document.getElementById("weight").value;
+          const weightText = weight <= "1" ? `${weight} lb` : `${weight} lbs`;
+          if (!trackingNumber) {
+            alert("Please enter a tracking number.");
+            return;
+          }
+
+          function generateIMpbBarcode(trackingNumber, canvasId, imgId) {
+            let canvas = document.getElementById(canvasId);
+            let img = document.getElementById(imgId);
+
+            try {
+              var cleanTrackingNumber = trackingNumber.replace(/\s+/g, ""); // This removes all spaces
+
+              bwipjs.toCanvas(canvas, {
+                bcid: "datamatrix", // USPS uses DataMatrix for IMpb barcodes
+                text: 42022124 + " " + cleanTrackingNumber,
+                scale: 4,
+                height: 5,
+                width: 5,
+                includetext: false,
+              });
+
+              // Convert the canvas to an image and replace the canvas
+              setTimeout(() => {
+                img.src = canvas.toDataURL("image/png");
+                img.style.display = "block";
+                canvas.style.display = "none"; // Hide canvas
+              }, 500); // Wait a short time for barcode to render
+            } catch (e) {
+              console.error("Error generating IMpb barcode:", e);
+            }
+          }
+
+          document.getElementById("labelInfo").innerHTML = `
               <div class='address_label_info'>
                   <div class='to_address_info'>
                   ${fromName}<br>
@@ -1252,103 +1347,109 @@ font-size: 90px;
                   <br>
                   </div>
               `;
-  generateIMpbBarcode(trackingNumber, "impbBarcode", "impbBarcodeImg");
-  generateIMpbBarcode(trackingNumber, "impbBarcode2", "impbBarcode2Img");
-             
-           
-              var cleanTrackingNumber = trackingNumber.replace(/\s+/g, ''); // This removes all spaces
-  
-              var formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
-  
-              document.getElementById("tracking-number").innerText = formattedTracking;
-  
-              JsBarcode("#barcode", cleanTrackingNumber, {
-                  format: "CODE128",
-                  lineColor: "black",
-                  width: 1.75,
-                  height: 80,
-                  displayValue: false
-              });
-           
+          generateIMpbBarcode(trackingNumber, "impbBarcode", "impbBarcodeImg");
+          generateIMpbBarcode(
+            trackingNumber,
+            "impbBarcode2",
+            "impbBarcode2Img"
+          );
+
+          var cleanTrackingNumber = trackingNumber.replace(/\s+/g, ""); // This removes all spaces
+
+          var formattedTracking = cleanTrackingNumber
+            .replace(/(.{4})/g, "$1 ")
+            .trim();
+
+          document.getElementById("tracking-number").innerText =
+            formattedTracking;
+
+          JsBarcode("#barcode", cleanTrackingNumber, {
+            format: "CODE128",
+            lineColor: "black",
+            width: 1.75,
+            height: 80,
+            displayValue: false,
+          });
+
           // document.getElementById('impbBarcode').style.display = 'block';
-           document.getElementById('label').style.display = 'block';
-           document.getElementById('shippo-logo').style.display = 'block';
-           setTimeout(() => {
-              downloadPDF();
-           },1000);
-          }
+          document.getElementById("label").style.display = "block";
+          document.getElementById("shippo-logo").style.display = "block";
+          setTimeout(() => {
+            downloadPDF();
+          }, 1000);
+        }
       }
       function downloadPDF() {
-      const labelElement = document.getElementById("label");
-      if (!labelElement) {
+        const labelElement = document.getElementById("label");
+        if (!labelElement) {
           alert("Label not found!");
           return;
-      }
-      const images = labelElement.getElementsByTagName("img");
-      let loadedCount = 0;
-  
-      function checkAllImagesLoaded() {
+        }
+        const images = labelElement.getElementsByTagName("img");
+        let loadedCount = 0;
+
+        function checkAllImagesLoaded() {
           loadedCount++;
           if (loadedCount === images.length) {
-              generatePDF(); // Call the PDF function only after all images are loaded
+            generatePDF(); // Call the PDF function only after all images are loaded
           }
-      }
-  
-      // Add load event listener to each image
-      for (let img of images) {
+        }
+
+        // Add load event listener to each image
+        for (let img of images) {
           if (img.complete) {
-              checkAllImagesLoaded();  // If already loaded, count it
+            checkAllImagesLoaded(); // If already loaded, count it
           } else {
-              img.onload = checkAllImagesLoaded;
-              img.onerror = checkAllImagesLoaded; // Count errors too
+            img.onload = checkAllImagesLoaded;
+            img.onerror = checkAllImagesLoaded; // Count errors too
           }
+        }
       }
-  }
-  
-  function generatePDF(){
-      const labelElement = document.getElementById("label");
-  
-      // Create a wrapper to keep the exact design without shifting
-      const wrapper = document.createElement('div');
-      // wrapper.style.width = '100%';
-      // wrapper.style.height = '100%';
-      wrapper.style.overflow = 'hidden';
-      wrapper.style.display = 'flex';
-      wrapper.style.justifyContent = 'center';  // Ensure center alignment
-      wrapper.style.alignItems = 'center';
-      wrapper.style.paddingLeft = '-10px';  // Try adjusting this to fix right shift
-      const clonedLabel = labelElement.cloneNode(true);
-  
-      const shippoLogo = clonedLabel.querySelector('.shippo-logo img');
-      
-      if (shippoLogo) {
-          console.log(shippoLogo)
-          shippoLogo.style.width = '120px';  // Explicitly set width to 120px
-          shippoLogo.style.maxWidth = '120px';  // Prevent it from stretching
-      }
-      wrapper.appendChild(labelElement.cloneNode(true));
-  
-      const options = {
+
+      function generatePDF() {
+        const labelElement = document.getElementById("label");
+
+        // Create a wrapper to keep the exact design without shifting
+        const wrapper = document.createElement("div");
+        // wrapper.style.width = '100%';
+        // wrapper.style.height = '100%';
+        wrapper.style.overflow = "hidden";
+        wrapper.style.display = "flex";
+        wrapper.style.justifyContent = "center"; // Ensure center alignment
+        wrapper.style.alignItems = "center";
+        wrapper.style.paddingLeft = "-10px"; // Try adjusting this to fix right shift
+        const clonedLabel = labelElement.cloneNode(true);
+
+        const shippoLogo = clonedLabel.querySelector(".shippo-logo img");
+
+        if (shippoLogo) {
+          console.log(shippoLogo);
+          shippoLogo.style.width = "120px"; // Explicitly set width to 120px
+          shippoLogo.style.maxWidth = "120px"; // Prevent it from stretching
+        }
+        wrapper.appendChild(labelElement.cloneNode(true));
+
+        const options = {
           margin: [0, -5, 0, 0], // Shift content 5px left to fix right shift
-          filename: 'USPS_Label.pdf',
+          filename: "USPS_Label.pdf",
           // image: { type: 'jpeg', quality: 1 },
-          html2canvas: { 
-              scale: 3,   
-              dpi: 300, 
-              letterRendering: true,
-              useCORS: true, 
-              scrollY: 0  
+          html2canvas: {
+            scale: 3,
+            dpi: 300,
+            letterRendering: true,
+            useCORS: true,
+            scrollY: 0,
           },
-          jsPDF: { 
-              unit: 'mm', 
-              format: [101.6, 152.4],  
-              orientation: 'portrait' 
-          }
-      };
-  
-      html2pdf().set(options).from(wrapper).save();
-  }
-      </script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+          jsPDF: {
+            unit: "mm",
+            format: [101.6, 152.4],
+            orientation: "portrait",
+          },
+        };
+
+        html2pdf().set(options).from(wrapper).save();
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   </body>
 </html>

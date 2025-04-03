@@ -5,12 +5,43 @@ import html2pdf from "html2pdf.js";
 import { PDFDocument } from "pdf-lib";
 import BulkHandleLabel from "./BulkHandleLabel";
 import { FaDownload } from 'react-icons/fa';
-
-const DownloadBulkHistory = ({ labelDataList }) => {
+import * as XLSX from "xlsx";
+const DownloadBulkHistory = ({ labelDataList, file }) => {
   const labelRefs = useRef([]);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const generateTrackingExcelBlob = (labelDataList) => {
+    const trackingData = labelDataList.map((label) => ({
+      "carrier": label.carrier,
+      "vendor": label.vendor,
+      "labelType": label.labelType,
+      "senderName": label.senderName,
+      "senderCity": label.senderCity,
+      "senderZip": label.senderZip,
+      "senderAddress": label.senderAddress,
+      "recipientName": label.recipientName,
+      "recipientCity": label.recipientCity,
+      "recipientZip": label.recipientZip,
+      "recipientAddress": label.recipientAddress,
+      "height": label.height,
+      "length": label.length,
+      "weight": label.weight,
+      "width": label.width,
+      "Tracking Number": label.trackingNumber
 
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(trackingData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tracking Numbers");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    return new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+  };
   const generatePDF = async (refElement, index) => {
     const options = {
       margin: [0, 0, 0, 0],
@@ -63,14 +94,18 @@ const DownloadBulkHistory = ({ labelDataList }) => {
       // Add merged PDF
       if (pdfBlobs.length > 0) {
         const mergedPdfBytes = await mergePDFs(pdfBlobs);
-        zip.file("All_Labels_Merged.pdf", mergedPdfBytes);
+        zip.file(`${file}_Merged.pdf`, mergedPdfBytes);
         processed++;
         setDownloadProgress(Math.round((processed / (totalLabels + 1)) * 100));
       }
-
+      /// excel
+      const excelBlob = generateTrackingExcelBlob(labelDataList);
+      zip.file(`${file}_${Date.now()}.xlsx`, excelBlob);
+      processed++;
+      setDownloadProgress(Math.round((processed / (totalLabels + 2)) * 100));
       // Generate ZIP
       const content = await zip.generateAsync({ type: "blob" });
-      saveAs(content, "Shipping_Labels.zip");
+      saveAs(content, `${file}.zip`);
     } catch (error) {
       console.error("Download failed:", error);
       alert("Error generating download. Please try again.");
@@ -82,13 +117,13 @@ const DownloadBulkHistory = ({ labelDataList }) => {
 
   return (
     <div className="p-6 bg-white shadow-md rounded-lg mt-6">
-      <button 
-        onClick={downloadZip} 
+      <button
+        onClick={downloadZip}
         className="download-button relative h-12 w-48 flex items-center justify-center"
         disabled={isDownloading}
       >
         {isDownloading ? (
-          <div style={{display:'flex', justifyContent:'center'}}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div >
               <svg className="">
                 <circle
@@ -117,7 +152,7 @@ const DownloadBulkHistory = ({ labelDataList }) => {
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-2" style={{maxWidth:'40px'}}>
+          <div className="flex items-center gap-2" style={{ maxWidth: '40px' }}>
             <FaDownload className="text-lg" />
           </div>
         )}

@@ -4,34 +4,60 @@ import Adminauth from "../context/Adminauth";
 import UploadShipments from "../components/UploadShipments";
 import Signup from "../components/signup";
 import Loader from "../components/Loader";
+import Skeleton from "react-loading-skeleton";
+import ReactModal from 'react-modal';
+import { Toaster, toast } from "react-hot-toast";
+import { Pagination } from "react-bootstrap";
+import { FcDeleteRow } from "react-icons/fc";
+import { FiDelete, FiNavigation } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { MdDeleteForever, MdDetails, MdSystemUpdateAlt, MdUpdate, MdEdit, MdInfo } from "react-icons/md";
+import DatePicker from "react-date-picker";
+import "react-date-picker/dist/DatePicker.css";
+import "react-calendar/dist/Calendar.css";
 
 const AdminDashboard = () => {
     const { user, loading: authLoading, logout } = useContext(Adminauth); // Get admin token and loading state
     const [users, setUsers] = useState([]);
     const [originalUsers, setOriginalUsers] = useState([]); // Store original data for comparison
     const [loading, setLoading] = useState(false); // Loader state
-
+    const [successMessage, setSuccessMessage] = useState(false);
+    const [show, setShow] = useState(false);
+    const [totalUsers, setTotalUsers] = useState();
+    const navigate = useNavigate();
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [balancePerDay, setBalancePerDay] = useState([]);
+    const [page, setPage] = useState(() => {
+        return Number(localStorage.getItem("currentPage")) || 1;
+    });
+    useEffect(() => {
+        localStorage.setItem("currentPage", page);
+    }, [page]);
+    const [totalPages, setTotalPages] = useState()
     useEffect(() => {
         // Fetch users only if the admin is authenticated (user.token exists)
         if (user?.token) {
             fetchUsers();
         }
-    }, [user]); // Re-run effect when `user` changes
+    }, [user, page]); // Re-run effect when `user` changes
 
     const fetchUsers = async () => {
         setLoading(true);
 
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users?page=${page}&limit=5`, {
                 headers: { Authorization: `Bearer ${user.token}` },
             });
-
+            console.log(res?.data?.users, "12345")
             // Ensure each user has USPS, UPS, and FedEx in their allowedCarriers
-            const updatedUsers = res.data.map((u) => ({
+            setTotalPages(res?.data?.pagination?.totalPages)
+            setTotalUsers(res?.data?.pagination?.totalUsers)
+            const updatedUsers = res?.data?.users?.map((u) => ({
                 ...u,
                 allowedCarriers: [
-                    { carrier: "USPS", status: false, ...u.allowedCarriers.find((c) => c.carrier === "USPS") },
-                    { carrier: "USPS(Pre Shipment)", status: false, ...u.allowedCarriers.find((c) => c.carrier === "USPS(Pre Shipment)") },
+                    { carrier: "USPS", status: false, ...u?.allowedCarriers.find((c) => c?.carrier === "USPS") },
+                    { carrier: "USPS(Pre Shipment)", status: false, ...u.allowedCarriers.find((c) => c?.carrier === "USPS(Pre Shipment)") },
                     { carrier: "UPS", status: false, ...u.allowedCarriers.find((c) => c.carrier === "UPS") },
                     { carrier: "FedEx", status: false, ...u.allowedCarriers.find((c) => c.carrier === "FedEx") },
                 ],
@@ -43,10 +69,10 @@ const AdminDashboard = () => {
             console.error("Error fetching users:", error.response?.data || error.message);
             if (error.response?.status === 401) {
                 // Unauthorized (token expired or invalid)
-                alert("Session expired. Please log in again.");
+                toast.error("Session expired. Please log in again.");
                 logout(); // Log the admin out
             } else {
-                alert("Failed to fetch users.");
+                toast.error("Failed to fetch users.");
             }
         } finally {
             setLoading(false);
@@ -56,7 +82,7 @@ const AdminDashboard = () => {
     const handleUpdateUser = async (userId, newStatus, newBalance, newIsDealer, newCarriers, newRate) => {
         try {
             const originalUser = originalUsers.find((u) => u._id === userId);
-
+            console.log(newStatus, "newStatus")
             // Update status if changed
             if (newStatus !== originalUser.status) {
                 await axios.put(
@@ -73,7 +99,7 @@ const AdminDashboard = () => {
 
                 await axios.put(
                     `${process.env.REACT_APP_API_URL}/api/admin/users/${userId}/balance`,
-                    { 
+                    {
                         availableBalance: updatedAvailableBalance,
                         totalDeposit: updatedTotalDeposit
                     },
@@ -86,7 +112,7 @@ const AdminDashboard = () => {
 
                 await axios.put(
                     `${process.env.REACT_APP_API_URL}/api/admin/users/${userId}/balance`,
-                    { 
+                    {
                         availableBalance: updatedAvailableBalance,
                         totalDeposit: updatedTotalDeposit
                     },
@@ -125,151 +151,382 @@ const AdminDashboard = () => {
                 );
             }
 
-            alert("User updated successfully!");
+            toast.success("User updated successfully!");
             fetchUsers(); // Refresh user list after update
         } catch (error) {
             console.error("Update failed:", error.response?.data || error.message);
-            alert("Failed to update user.");
+            toast.success("Failed to update user.");
         }
     };
 
     // Show loader if auth is still loading or users are being fetched
-    if (authLoading || loading) {
-        return <Loader />;
-    }
+    // if (authLoading || loading) {
+    //     return <Loader />;
+    // }
+    const handleDelete = async (userId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+        if (!confirmDelete) return;
 
+        try {
+            const res = await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/users/${userId}`, { headers: { Authorization: `Bearer ${user.token}` } });
+            fetchUsers(); // Refresh user list after update
+            console.log(res, "res")
+            toast.success("User deleted successfully!");
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            toast.error("Failed to delete user.");
+        }
+    };
+    const formatDateToLocal = (date, daysToAdd = 0) => {
+        const offset = date.getTimezoneOffset() * 60000; // Offset in milliseconds
+        const adjustedDate = new Date(date - offset);
+        adjustedDate.setDate(adjustedDate.getDate() - daysToAdd); // Add days
+        return adjustedDate.toISOString().split("T")[0];
+    };
+    useEffect(() => {
+        const fetchBalancePerDay = async () => {
+            if (!startDate || !endDate) return;
+            setLoading(true);
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users/total-balance-per-day`, {
+                    params: {
+                        startDate: startDate.toISOString().split("T")[0],
+                        endDate: endDate.toISOString().split("T")[0],
+                    },
+                    headers: { Authorization: `Bearer ${user.token}` }
+                });
+                console.log(response?.data, "123")
+                setBalancePerDay(response?.data?.balancePerDay[0]);
+            } catch (err) {
+                // setError(err.message || "Error fetching balance data");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBalancePerDay();
+    }, [startDate, endDate]);
     return (
-        <div>
-            <h2>Admin Dashboard</h2>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Available Balance</th>
-                        <th>Is Dealer</th>
-                        <th>Rate</th>
-                        <th>Carriers (Enable/Disable)</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr key={user._id}>
-                            <td>{user.name}</td>
-                            <td>{user.email}</td>
-                            <td>
-                                <select
-                                    value={user.status}
-                                    onChange={(e) =>
-                                        setUsers((prevUsers) =>
-                                            prevUsers.map((u) =>
-                                                u._id === user._id ? { ...u, status: e.target.value } : u
-                                            )
-                                        )
-                                    }
-                                >
-                                    <option value="ok">Active</option>
-                                    <option value="block">Blocked</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input
-                                    type="number"
-                                    value={user.availableBalance}
-                                    onChange={(e) =>
-                                        setUsers((prevUsers) =>
-                                            prevUsers.map((u) =>
-                                                u._id === user._id
-                                                    ? { ...u, availableBalance: e.target.value }
-                                                    : u
-                                            )
-                                        )
-                                    }
-                                />
-                            </td>
-                            <td>
-                                <select
-                                    value={user.isDealer}
-                                    onChange={(e) =>
-                                        setUsers((prevUsers) =>
-                                            prevUsers.map((u) =>
-                                                u._id === user._id
-                                                    ? { ...u, isDealer: e.target.value === "true" }
-                                                    : u
-                                            )
-                                        )
-                                    }
-                                >
-                                    <option value="true">Yes</option>
-                                    <option value="false">No</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input
-                                    type="number"
-                                    value={user.rate}
-                                    onChange={(e) =>
-                                        setUsers((prevUsers) =>
-                                            prevUsers.map((u) =>
-                                                u._id === user._id
-                                                    ? { ...u, rate: e.target.value }
-                                                    : u
-                                            )
-                                        )
-                                    }
-                                />
-                            </td>
-                            <td>
-                                {user.allowedCarriers.map((carrier, index) => (
-                                    <div key={carrier.carrier}>
-                                        <label>
+        <div className="container mt-4">
+            <ReactModal
+                isOpen={successMessage}
+                onRequestClose={() => setSuccessMessage(false)}
+                contentLabel="Add User"
+                shouldCloseOnOverlayClick={false}  // Prevents closing when clicking outside
+                style={{
+                    content: {
+                        top: '50%',
+                        left: '50%',
+                        right: 'auto',
+                        bottom: 'auto',
+                        marginRight: '-50%',
+                        padding: "30px",
+                        transform: 'translate(-50%, -50%)',
+                        textAlign: 'center',
+                    },
+                }}
+            >
+                {/* Close button inside modal */}
+                <div>
+                    <div className="text-start">
+                        <h2 className="text-start mb-4 col-6">Add User</h2>
+                    </div>
+
+                    <button
+                        className="modal_close_btn"
+                        onClick={() => setSuccessMessage(false)}
+                        style={{
+                            position: 'absolute',
+                            top: '10px',
+                            right: '15px',
+                            background: 'transparent',
+                            border: 'none',
+                            fontSize: '20px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        ❌
+                    </button>
+                </div>
+
+
+                {/* Display label */}
+                <div className="mt-4">
+                    <Signup onSignupSuccess={fetchUsers} />
+                </div>
+
+            </ReactModal>
+            <ReactModal
+                isOpen={show}
+                onRequestClose={() => setShow(false)}
+                contentLabel="Add User"
+                shouldCloseOnOverlayClick={false}  // Prevents closing when clicking outside
+                style={{
+                    content: {
+                        top: '50%',
+                        left: '50%',
+                        right: 'auto',
+                        bottom: 'auto',
+                        marginRight: '-50%',
+                        padding: "30px",
+                        transform: 'translate(-50%, -50%)',
+                        textAlign: 'center',
+                    },
+                }}
+            >
+                {/* Close button inside modal */}
+                <div>
+                    <div className="text-start">
+                        <h2 className="text-start mb-4 col-6" style={{ textWrap: "nowrap" }}>Upload  Shipments</h2>
+                    </div>
+
+                    <button
+                        className="modal_close_btn"
+                        onClick={() => setShow(false)}
+                        style={{
+                            position: 'absolute',
+                            top: '10px',
+                            right: '15px',
+                            background: 'transparent',
+                            border: 'none',
+                            fontSize: '20px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        ❌
+                    </button>
+                </div>
+
+
+                {/* Display label */}
+                <div className="mt-4">
+                    <UploadShipments />
+                </div>
+
+            </ReactModal>
+            <div className="d-flex">
+                <h2 className="text-start mb-4 col-6">Admin Dashboard</h2>
+                <div className="text-end col-6 gap-2">
+                    <button style={{ fontSize: "14px" }} className="contact-btn me-2" onClick={() => { navigate("/admin/balancePage") }}>
+                        Balance
+                    </button>
+                    <button style={{ fontSize: "14px" }} className="contact-btn me-2" onClick={() => { setShow(true) }}>
+                        Add  Shipments
+                    </button>
+                    <button style={{ fontSize: "14px" }} className="contact-btn" onClick={() => { setSuccessMessage(true) }}>
+                        Add User
+                    </button>
+
+                </div>
+            </div>
+
+            <div className="table-responsive">
+                <table className="table table-bordered table-striped">
+                    <thead className="table-dark">
+                        <tr>
+                            <th>Sr #</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Available Balance</th>
+                            <th>Is Dealer</th>
+                            <th>Rate</th>
+                            <th>Carriers (Enable/Disable)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            loading
+                                ? Array.from({ length: 10 }).map((_, index) => (
+                                    <tr key={index}>
+                                        <td><Skeleton width={20} /></td>
+                                        <td><Skeleton width={100} /></td>
+                                        <td><Skeleton width={150} /></td>
+                                        <td><Skeleton width={80} /></td>
+                                        <td><Skeleton width={100} /></td>
+                                        <td><Skeleton width={80} /></td>
+                                        <td><Skeleton width={80} /></td>
+                                        <td><Skeleton width={120} /></td>
+                                        <td><Skeleton width={80} height={30} />
+                                        </td>
+                                    </tr>
+                                ))
+                                : users.map((user, index) => (
+                                    <tr key={user._id}>
+                                        <td>{index + 1}</td>
+                                        <td>{user.name}</td>
+                                        <td>{user.email}</td>
+                                        <td>
+                                            <select
+                                                className="form-select"
+                                                value={user.isBlocked}
+                                                defaultValue={false}
+                                                onChange={(e) =>
+                                                    setUsers((prevUsers) =>
+                                                        prevUsers.map((u) =>
+                                                            u._id === user._id ? { ...u, isBlocked: e.target.value } : u
+                                                        )
+                                                    )
+                                                }
+                                            >
+                                                <option value={false}>Active</option>
+                                                <option value={true}>Blocked</option>
+                                            </select>
+                                        </td>
+                                        <td>
                                             <input
-                                                type="checkbox"
-                                                checked={carrier.status}
-                                                onChange={() =>
+                                                type="number"
+                                                className="form-control"
+                                                value={user.availableBalance}
+                                                onChange={(e) =>
                                                     setUsers((prevUsers) =>
                                                         prevUsers.map((u) =>
                                                             u._id === user._id
-                                                                ? {
-                                                                    ...u,
-                                                                    allowedCarriers: u.allowedCarriers.map((c, i) =>
-                                                                        i === index ? { ...c, status: !c.status } : c
-                                                                    ),
-                                                                }
+                                                                ? { ...u, availableBalance: e.target.value }
                                                                 : u
                                                         )
                                                     )
                                                 }
                                             />
-                                            {carrier.carrier}
-                                        </label>
-                                    </div>
+                                        </td>
+                                        <td>
+                                            <select
+                                                className="form-select"
+                                                value={user.isDealer}
+                                                onChange={(e) =>
+                                                    setUsers((prevUsers) =>
+                                                        prevUsers.map((u) =>
+                                                            u._id === user._id
+                                                                ? { ...u, isDealer: e.target.value === "true" }
+                                                                : u
+                                                        )
+                                                    )
+                                                }
+                                            >
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                value={user.rate}
+                                                onChange={(e) =>
+                                                    setUsers((prevUsers) =>
+                                                        prevUsers.map((u) =>
+                                                            u._id === user._id
+                                                                ? { ...u, rate: e.target.value }
+                                                                : u
+                                                        )
+                                                    )
+                                                }
+                                            />
+                                        </td>
+                                        <td>
+                                            {user.allowedCarriers.map((carrier, index) => (
+                                                <div key={carrier.carrier} className="form-check">
+                                                    <input
+                                                        className="form-check-input"
+                                                        type="checkbox"
+                                                        checked={carrier.status}
+                                                        onChange={() =>
+                                                            setUsers((prevUsers) =>
+                                                                prevUsers.map((u) =>
+                                                                    u._id === user._id
+                                                                        ? {
+                                                                            ...u,
+                                                                            allowedCarriers: u.allowedCarriers.map((c, i) =>
+                                                                                i === index ? { ...c, status: !c.status } : c
+                                                                            ),
+                                                                        }
+                                                                        : u
+                                                                )
+                                                            )
+                                                        }
+                                                    />
+                                                    <label className="form-check-label ms-1">
+                                                        {carrier.carrier}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </td>
+                                        <td style={{ width: "150px", height: "120px" }} className="d-flex align-items-center">
+                                            <div onClick={() =>
+                                                handleDelete(
+                                                    user._id,
+
+                                                )
+                                            } className="me-2 cursor-pointer" >
+                                                <MdDeleteForever size={24} />
+                                            </div>
+                                            <div
+                                                className=" btn-sm"
+                                                onClick={() =>
+                                                    handleUpdateUser(
+                                                        user._id,
+                                                        user.isBlocked,
+                                                        user.availableBalance,
+                                                        user.isDealer,
+                                                        user.allowedCarriers,
+                                                        user.rate
+                                                    )
+                                                }
+                                            >
+                                                <MdEdit size={24} />
+                                            </div>
+                                            <div className="ms-2" onClick={() => { navigate(`/admin/labelsHistory/${user._id}`) }}>
+                                                <MdInfo size={24} />
+                                            </div>
+
+                                            <div className="ms-2" onClick={() => { navigate(`/admin/${user._id}/history`) }}>
+                                                <FiNavigation size={24} />
+                                            </div>
+
+                                        </td>
+                                    </tr>
                                 ))}
-                            </td>
-                            <td>
-                                <button
-                                    onClick={() =>
-                                        handleUpdateUser(
-                                            user._id,
-                                            user.status,
-                                            user.availableBalance,
-                                            user.isDealer,
-                                            user.allowedCarriers,
-                                            user.rate
-                                        )
-                                    }
+                    </tbody>
+                </table>
+                <div className="col-12 d-flex">
+                    <div className="col-4">
+                        <span style={{ color: "#1C2F41", fontSize: "20px", fontWeight: "600" }}>Total Users:</span> <span style={{ color: "#0155A5", fontSize: "20px", fontWeight: "600" }}>{totalUsers}</span>
+                    </div>
+                    <div className="col-8 d-flex justify-content-end">
+                        <Pagination>
+                            <Pagination.Prev
+                                onClick={() => setPage(page - 1)}
+                                disabled={page === 1}
+                            />
+
+                            {[...Array(totalPages)].map((_, index) => (
+                                <Pagination.Item
+                                    key={index + 1}
+                                    active={index + 1 === page}
+                                    onClick={() => setPage(index + 1)}
                                 >
-                                    Update User
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <UploadShipments />
-            <Signup onSignupSuccess={fetchUsers} />
+                                    {index + 1}
+                                </Pagination.Item>
+                            ))}
+
+                            <Pagination.Next
+                                onClick={() => setPage(page + 1)}
+                                disabled={page === totalPages}
+                            />
+                        </Pagination>
+                    </div>
+
+                </div>
+
+                {users?.length < 1 && !loading && <div className="text-center" style={{ color: "red" }}>
+                    No Data Found
+                </div>
+                }
+            </div>
+            {/* Additional Components */}
+
+
         </div>
     );
 };

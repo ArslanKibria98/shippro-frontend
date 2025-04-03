@@ -17,7 +17,9 @@ h1 {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-input, select, button {
+input,
+select,
+button {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -27,7 +29,7 @@ input, select, button {
 }
 
 button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   cursor: pointer;
 }
@@ -48,4 +50,14 @@ button:hover {
   margin-top: 10px;
   max-width: 100%;
   height: auto;
+}
+.theme-btn {
+  border-radius: 0.25rem;
+  background: linear-gradient(100deg, #def5ff, #90caff) !important;
+  color: #000000;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  border-color: #000000;
+  padding: 0.75rem;
 }
