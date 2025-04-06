@@ -170,7 +170,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
   // Render vendor-specific HTML
   const renderVendorLabel = () => {
     switch (formData.vendor) {
-      case 'Shippo':
+      case 'shippo':
         return (<div style={{ display: 'none' }}>
 
           <div className="label-container" id="label" ref={ref}>
@@ -239,7 +239,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
         </div>
         );
 
-      case 'ATFM':
+      case 'atfm':
         return (<div style={{ display: 'none' }}>
           <div className="label-container" id="label" ref={ref}>
             <div className="header">
@@ -297,7 +297,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
           </div>
         </div>
         );
-      case 'Easypost':
+      case 'easypost':
         return (<div style={{ display: 'none' }}>
           <div className="label-container easypost_label" style={{ border: '1px solid' }} id="label easypost_label" ref={ref}>
             <div className="header">
@@ -380,7 +380,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
         </div>
         );
 
-      case 'Evs':
+      case 'evs':
         return (<div style={{ display: 'none' }}>
           <div className="label-container evs_label" id="label" ref={ref} >
             <div className="header">
@@ -441,7 +441,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
           </div>
         </div>
         );
-      case 'Rollo':
+      case 'rollo':
         return (<div style={{ display: 'none' }}>
           <div className="label-container rollo_label" id="label" ref={ref}>
             <div className="header">

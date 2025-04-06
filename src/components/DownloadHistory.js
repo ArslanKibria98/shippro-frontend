@@ -18,7 +18,7 @@ const DownloadHistory = ({ formData }) => {
   const letters = ["R", "H", "C"];
   const randomLetter = letters[Math.floor(Math.random() * letters.length)];
   var cleanTrackingNumber = formData?.trackingNumber?.replace(/\s+/g, ''); // This removes all spaces
-  var formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
+  var formattedTracking = cleanTrackingNumber?.replace(/(.{4})/g, '$1 ').trim();
   // useEffect(() => {
   //   if (formData.trackingNumber) {
   //     JsBarcode(barcodeRef.current, cleanTrackingNumber, {

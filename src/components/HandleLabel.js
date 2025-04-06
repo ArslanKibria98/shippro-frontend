@@ -14,8 +14,8 @@ const HandleLabel = ({ formData, barcodeImg, setDownloadState, downloadState }) 
   const sbarcode = useRef(null);
   const sbarcode1 = useRef(null);
   // const [barcodeImg, setBarcodeImg] = useState(null); // Use state for barcode image URL
-  const cleanTrackingNumber = formData.trackingNumber.replace(/\s+/g, '');
-  const formattedTracking = cleanTrackingNumber.replace(/(.{4})/g, '$1 ').trim();
+  const cleanTrackingNumber = formData?.trackingNumber?.replace(/\s+/g, '');
+  const formattedTracking = cleanTrackingNumber?.replace(/(.{4})/g, '$1 ').trim();
   const canvasRef = useRef(null);
 
 

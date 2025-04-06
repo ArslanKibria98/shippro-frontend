@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef, use } from "react";
 import * as XLSX from "xlsx";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
@@ -235,7 +235,7 @@ const BulkUpload = () => {
       toast.error("Please select Carrier, Vendor, and Label Type before processing.");
       return;
     }
-
+    setGeneratedLabels([])
 
     setLoading(true); // Disable button and show loader
 
@@ -271,247 +271,81 @@ const BulkUpload = () => {
       setLabelsGenerated(0);
       const labelHistory = [];
       const newLabels = [];
-      for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        console.log(rows, "rowa1234")
-        // if (
-        //   !row.senderName || !row.senderAddress || !row.senderCity || !row.vendor || !row.labelType ||
-        //   !row.senderState || !row.senderZip ||
-        //   !row.recipientName || !row.recipientAddress || !row.recipientCity ||
-        //   !row.recipientState || !row.recipientZip || !row.weight || !row.length || !row.width || !row.height
-        // ) {
-        //   console.log(row.vendor, "row.vendor")
-        //   if (row.vendor != formData?.vendor) {
-        //     errors.push(`Row ${i + 2}: Not match with Vendor:${formData?.vendor}`)
-        //     return
-        //   }
-        //   errors.push(`Row ${i + 2}: Missing required fieldssss.`);
-        //   setmissrows(errors)
-        //   return; // Skip this row
-        // }
-        // if (errors.length > 0) {
-        //   alert("Some rows were skipped due to missing data:\n" + errors.join("\n"));
-        // }
+      console.log(rows, "rowsss")
+      const apiVendor = formData.vendor.toLowerCase();
+      const updatedData = rows.map(item => ({
+        ...item,
+        carrier: formData.carrier, // Use selected carrier from form
+        vendor: apiVendor, // Use selected vendor from form
+        labelType: apiVendor == "easypost" ? "priority_r" : formData.labelType,
+        fileName: removeAfterDot(file?.name)
+      }));
+      console.log(updatedData, "rowsss2345678")
+      try {
+        const backendResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/senders/${user.id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedData),
+        });
+        if (backendResponse) {
 
-
-        ///// one start here 
-
-        let pulledTrackingNumber;
-        const apiVendor = formData.vendor.toLowerCase();
-        // console.log("API Vendor:", apiVendor);
-        // console.log("Label Type:", formData.labelType);
-        let newBarcodeImg;
-        try {
-          //   // Fetch tracking number from the AP
-
-          ///here
-          console.log("hello1")
-          const backendResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/get/vtno`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              vendor: apiVendor,
-              labelType: apiVendor == "easypost" ? "priority_r" : formData.labelType,
-            }),
-          });
-          if (!backendResponse.ok) {
-            alert('Server Error Wait Our team try to fix');
-            setGeneratedLabels(newLabels); // Update state with generated labels
-          }
           const data = await backendResponse.json();
-          pulledTrackingNumber = data.trackingNumber;
-          // Update formData with the new tracking number
-          setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
-          const formattedZip = formatZipCode(row.recipientZip)
-          const barcodeResponse = await fetch(
-            `${process.env.REACT_APP_API_URL}/api/admin/set/barcode?zip=${formattedZip}&tracking=${pulledTrackingNumber}`,
-            {
-              method: 'GET', // Explicitly specify GET
-            }
-          );
+          if (data) {
 
-          if (!barcodeResponse.ok) {
-            toast.error('Server Error Wait Our team try to fix');
-            return
-
-          }
-          const barcodeData = await barcodeResponse.json();
-          setBarcodeImg(barcodeData.barcode_data_url);
-          newBarcodeImg = barcodeData.barcode_data_url;
-
-
-
-          ///// here1
-          // for local testing data
-
-          //  for local 
-          //   const pullResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/pull/shipts`, {
-          //   method: "POST",
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //     Authorization: `Bearer ${user.token}`,
-          //   },
-          //   body: JSON.stringify({
-          //     labelType: formData.labelType,
-          //     carrier: formData.carrier.toLowerCase(),
-          //   }),
-          // });
-
-          // if (!pullResponse.ok) {
-          //   const errText = await pullResponse.text();
-          //   alert(errText);
-          //   setGeneratedLabels(newLabels);
-          //   return;
-          //   // throw new Error(`Pull shipment error: ${errText}`);
-          // }
-
-          // const shipmentResult = await pullResponse.json();
-          // // alert(shipmentResult.shipment.tracking)
-
-          // if (shipmentResult.shipment && shipmentResult.shipment.tracking) {
-          //   pulledTrackingNumber = shipmentResult.shipment.tracking;
-          //   setFormData((prev) => ({ ...prev, trackingNumber: pulledTrackingNumber }));
-          //   setTrackingNumber(pulledTrackingNumber);
-
-          // } else {
-          //   console.error("Invalid shipment data:", shipmentResult);
-          //   alert("Failed to retrieve tracking number.");
-          // }
-
-          // const textData = {
-          //   barcode_data_url:
-          //     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAvoAAAB8AgMAAABlB/yqAAAADFBMVEX///8AAABmVWZmgGYbl+3aAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA70lEQVR4nO3OQUrEQBAF0IoQEPfZi1svkSNkMXUfjzLH8DgexV/BcfbCgIv3CU2lu6v6VYmIyF+z9H6prY/q7uVIsWWne691X27rclSKPov+udOXNY33rpxmp9ZOXbWlyJdrqWdCZk5vZUKeS+N8c+d8Ylrm9D5h7dvpDEnXrOeQ83cm8PPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/M/2i/yL/Ly9Vt+vF+r3j7rNeX8Pz0/5slvWB4NJ8ydid0AAAAASUVORK5CYII=",
-          //   success: true,
-          // };
-
-          //      setBarcodeImg(textData.barcode_data_url);
-          //       newBarcodeImg = textData.barcode_data_url;
-
-
-
-
-        } catch (error) {
-          console.error('Error:', error);
-          // Handle the error (e.g., show a message to the user)
-        }
-        const labelData = {
-          userId: user.id,
-          fileName: removeAfterDot(file?.name),
-          carrier: formData.carrier, // Use selected carrier from form
-          vendor: formData.vendor, // Use selected vendor from form
-          labelType: formData.labelType, // Use selected labelType from form
-          senderName: row.senderName,
-          senderAddress: row.senderAddress,
-          senderCity: row.senderCity,
-          senderState: row.senderState,
-          senderZip: row.senderZip,
-          recipientName: row.recipientName,
-          recipientAddress: row.recipientAddress,
-          recipientCity: row.recipientCity,
-          recipientState: row.recipientState,
-          recipientZip: row.recipientZip,
-          weight: row.weight,
-          height: row.height,
-          width: row.width,
-          length: row.length,
-          barcodeImg: newBarcodeImg,
-          trackingNumber: pulledTrackingNumber,
-        };
-
-        try {
-          const response = await fetch(
-            `${process.env.REACT_APP_API_URL}/api/auth/bulk-generate-label/${user.id}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${user.token}`,
-              },
-              body: JSON.stringify({
-                ...labelData,
-                amount: -(user.rate), // Deduct balance
-                count: 1, // Increment label count
-              }),
-            }
-          );
-
-          const result = await response.json();
-
-          if (response.ok) {
-            setLabelsGenerated((prev) => prev + 1);
-
-            updateUser({
-              availableBalance: result.availableBalance,
-              totalGeneratedLabels: result.totalGeneratedLabels,
+            setFormData({
+              carrier: "",
+              vendor: "",
+              labelType: "",
             });
-
-            newLabels.push(labelData); // Store label data for PDF generation
-            labelHistory.push(labelData);
-
-            // console.log(`Label ${i + 1} generated successfully`);
-          } else {
-            console.error(`Error generating label for row ${i + 1}: ${result.msg}`);
+            resetFileInput();
+            // setSuccessMessage(true)
+            setLoading(false)
           }
-        } catch (error) {
-          console.error("Error processing row:", error);
+          const updatedData = data?.data.map(item => ({
+            barcodeImg: item?.barcode,
+            carrier: item.carrier,
+            fileName: item.fileName,
+            height: item.height,
+            labelType: item.labelType,
+            length: item.length,
+            recipientAddress: item.recipientAddress,
+            recipientCity: item.recipientCity,
+            recipientName: item.recipientName,
+            recipientState: item.recipientState,
+            recipientZip: item.recipientZip,
+            senderAddress: item.senderAddress,
+            senderCity: item.senderCity,
+            senderName: item.senderName,
+            senderState: item.senderState,
+            senderZip: item.senderZip,
+            trackingNumber: item.trackingNumber,
+            userId: user.id,
+            vendor: item.vendor,
+            weight: item.weight,
+            width: item.width
+
+          }));
+          setGeneratedLabels(updatedData)
+          alert("Labels Generated Successfully")
+          console.log(data, "112233")
+
         }
+      }
+      catch (e) {
+        console.log(e, "1122")
+        alert("Error during to get the Tracking Number")
       }
 
       // console.log(labelHistory);
 
-      setGeneratedLabels(newLabels); // Update state with generated labels
-      const bulkId = Date.now().toString();
 
-
-
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/auth/add-bulk-label-history/${user.id}`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${user.token}`,
-            },
-            body: JSON.stringify({ labels: labelHistory }),
-          }
-        );
-
-        const result = await response.json();
-        if (response.ok) {
-
-          // setSuccessMessage(true)
-          toast.success("Labels Generated Successfully")
-          setFormData({
-            carrier: "",
-            vendor: "",
-            labelType: "",
-          });
-          resetFileInput();
-
-          // console.log("Bulk label history updated successfully", result);
-        } else {
-          console.error("Error updating bulk label history:", result.msg);
-        }
-      } catch (error) {
-        console.error("Error sending bulk label history request:", error);
-      }
-      finally {
-        setLoading(false); // Re-enable button after processing
-        setFormData({
-          carrier: "",
-          vendor: "",
-          labelType: "",
-        });
-        resetFileInput();
-      }
     };
 
     reader.readAsArrayBuffer(file);
   };
-
+  console.log(generatedLabels, "generatedlabesls")
   const handleCarrierChange = (e) => {
     const selectedCarrier = e.target.value;
 
@@ -733,7 +567,7 @@ const BulkUpload = () => {
               </button>
             )}
             <p className="ms-4 mt-4">
-              {labelsGenerated} / {totalRows} labels generated
+              {generatedLabels.length} / {totalRows} labels generated
             </p>
 
 
