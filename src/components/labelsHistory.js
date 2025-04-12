@@ -240,7 +240,7 @@ const LabelsHistory = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {bulkHistory?.map((event, bulkIndex) => {
+                        {currentBulkHistory?.map((event, bulkIndex) => {
                           const trackingGroups = groupTrackingNumbers(event.labels.map(label => label.trackingNumber));
 
                           return (

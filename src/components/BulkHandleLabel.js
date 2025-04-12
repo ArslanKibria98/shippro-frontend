@@ -233,7 +233,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                   <img width="120px" src={shippoLogo} alt="Shippo Logo" />
                 </div>
               </div>
-              <canvas ref={sbarcode1} />
+              <canvas className={"pb-2"} ref={sbarcode1} />
             </div>
           </div>
         </div>
@@ -289,7 +289,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 </div>
               </div>
             </div>
-            <div className="barcode">
+            <div className="barcode mb-2">
               <div className="tracking_heading">USPS TRACKING # EP</div>
               <img style={{ width: '100%' }} src={formData.barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
@@ -373,7 +373,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
             </div>
             <div className="end_label_container">
               <div>
-                <canvas ref={sbarcode1} />
+                <canvas className={"pb-2"} ref={sbarcode1} />
               </div>
             </div>
           </div>
@@ -433,7 +433,7 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
                 </div>
               </div>
             </div>
-            <div className="barcode">
+            <div className="barcode mb-2">
               <div className="tracking_heading">USPS TRACKING # eVS</div>
               <img style={{ width: '100%' }} src={formData.barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
@@ -494,11 +494,11 @@ const BulkHandleLabel = React.forwardRef(({ formData }, ref) => {
               <img style={{ width: '100%' }} src={formData.barcodeImg}></img>
               <div id="tracking-number">{formattedTracking}</div>
             </div>
-            <div className="end_label_container">
+            <div className="end_label_container mb-2">
               <div id="end_label">
 
               </div>
-              <canvas ref={sbarcode1} />
+              <canvas className={"pb-2"} ref={sbarcode1} />
             </div>
           </div>
         </div>

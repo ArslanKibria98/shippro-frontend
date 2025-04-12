@@ -57,7 +57,7 @@ const Dashboard = () => {
                                 <div className="dashbox_heading">Total Spent</div>
                                 <div className="d-flex">
                                     <div className="dashbox_icon"> <FaDollarSign /></div>
-                                    <div className="dashbox_stat"> {Math.round(user.totalGeneratedLabels.toFixed(6) * 10) / 10}</div>
+                                    <div className="dashbox_stat"> {(user?.bulkLabelHistory * user?.rate).toFixed(2)}</div>
                                 </div>
 
 

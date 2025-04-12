@@ -218,7 +218,7 @@ const HandleLabel = ({ formData, barcodeImg, setDownloadState, downloadState }) 
                   <img width="120px" src={shippoLogo} alt="Shippo Logo" />
                 </div>
               </div>
-              <canvas ref={sbarcode1} />
+              <canvas className={"pb-2"} ref={sbarcode1} />
             </div>
           </div>
         </div>
@@ -361,7 +361,7 @@ const HandleLabel = ({ formData, barcodeImg, setDownloadState, downloadState }) 
               <div>
 
 
-                <canvas ref={sbarcode1} />
+                <canvas className={"pb-2"} ref={sbarcode1} />
               </div>
             </div>
           </div>
@@ -485,7 +485,7 @@ const HandleLabel = ({ formData, barcodeImg, setDownloadState, downloadState }) 
               <div id="end_label">
 
               </div>
-              <canvas ref={sbarcode1} />
+              <canvas className={"pb-2"} ref={sbarcode1} />
             </div>
           </div>
         </div>

@@ -116,7 +116,7 @@ const DownloadBulkHistory = ({ labelDataList, file }) => {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-lg mt-6">
+    <div className="p-6 shadow-md rounded-lg mt-6">
       <button
         onClick={downloadZip}
         className="download-button relative h-12 w-48 flex items-center justify-center"

@@ -8,6 +8,7 @@ import Sidebar from "./Sidebar";
 import Dashboardhead from "./Dashboardhead";
 import ReactModal from 'react-modal';
 import { Toaster, toast } from "react-hot-toast";
+import DownloadBulkHistory from "./DownloadBulkHistory"
 const BulkUpload = () => {
 
 
@@ -569,9 +570,9 @@ const BulkUpload = () => {
             <p className="ms-4 mt-4">
               {generatedLabels.length} / {totalRows} labels generated
             </p>
+            {generatedLabels.length > 0 && <DownloadBulkHistory labelDataList={generatedLabels} file={file?.name} />}
 
-
-            {generatedLabels.length > 0 && <BulkDownloadLabels labelDataList={generatedLabels} uploadedExcelFile={file} />}
+            {/* {generatedLabels.length > 0 && <BulkDownloadLabels labelDataList={generatedLabels} uploadedExcelFile={file} />} */}
 
             {stateValidationErrors.length > 0 && (
               <div style={{ marginTop: '24px', color: 'red' }}>
