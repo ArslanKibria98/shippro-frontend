@@ -28,7 +28,7 @@ const LabelsHistory = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/label-history/${user.id}`, {
+        const response = await fetch(user?.dealerId ? `${process.env.REACT_APP_API_URL}/api/auth/dealer/${user?.dealerId}/label-history/${user?.id}` : `${process.env.REACT_APP_API_URL}/api/auth/label-history/${user.id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user.token}`,

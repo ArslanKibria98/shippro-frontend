@@ -1,11 +1,13 @@
-import React from 'react';
+import { useContext } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { NavLink } from "react-router-dom";
 import { FaHome, FaTags, FaBoxOpen, FaDownload } from "react-icons/fa";
+import AuthContext from "../context/AuthContext";
 // Use NavLink instead of Link
 
 const LayoutBar = () => {
   const location = window.location;
+  const { user, loading } = useContext(AuthContext);
   return (
     <Sidebar className="min-h-screen bg-gray-900 text-white">
       <Menu iconShape="square">
@@ -65,6 +67,23 @@ const LayoutBar = () => {
         >
           Download History
         </MenuItem>
+        {
+          user?.isDealer &&
+          <MenuItem
+            icon={<FaDownload size={20} />}
+            component={
+              <NavLink
+                to="/dealer-users"
+                className={({ isActive }) =>
+                  isActive ? "text-blue-500 bg-gray-700" : "text-white"
+                }
+              />
+            }
+          >
+            User Management
+          </MenuItem>
+        }
+
       </Menu>
     </Sidebar>
   );

@@ -187,8 +187,7 @@ const BulkUpload = () => {
       try {
         if (!user?.id) return; // Ensure user is loaded
 
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/auth/allowed-carriers/${user.id}`,
+        const response = await fetch(user?.dealerId ? `${process.env.REACT_APP_API_URL}/api/auth/dealer/${user?.dealerId}/sub-users/${user?.id}/allowed-carriers` : `${process.env.REACT_APP_API_URL}/api/auth/allowed-carriers/${user.id}`,
           {
             headers: { Authorization: `Bearer ${user.token}` },
           }
@@ -283,7 +282,7 @@ const BulkUpload = () => {
       }));
       console.log(updatedData, "rowsss2345678")
       try {
-        const backendResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/senders/${user.id}`, {
+        const backendResponse = await fetch(user?.dealerId ? `${process.env.REACT_APP_API_URL}/api/admin/senders/dealer/${user?.dealerId}/sub-user/${user?.id}` : `${process.env.REACT_APP_API_URL}/api/admin/senders/${user.id}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

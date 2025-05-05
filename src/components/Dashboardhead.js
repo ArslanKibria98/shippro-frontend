@@ -65,8 +65,8 @@ const Dashboardhead = () => {
     const token = localStorage.getItem("token"); // Retrieve auth token
 
     const updatePasswordPromise = axios.put(
-      `${process.env.REACT_APP_API_URL}/api/auth/update-password`,
-      { userId: dataUser.id, oldPassword, newPassword },
+      dataUser?.dealerId ? `${process.env.REACT_APP_API_URL}/api/auth/update-password/dealer/${dataUser?.dealerId}/${dataUser?.id}` : `${process.env.REACT_APP_API_URL}/api/auth/update-password`,
+      dataUser?.dealerId ? { oldPassword, newPassword } : { userId: dataUser.id, oldPassword, newPassword },
       { headers: { Authorization: `Bearer ${token}` } }
     );
 

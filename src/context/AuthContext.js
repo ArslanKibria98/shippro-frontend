@@ -101,7 +101,24 @@ export const AuthProvider = ({ children }) => {
             setLoading(false); // Ensure loading is reset
         }
     };
-
+    const signupdealer = async (name, email, password, user) => {
+        setLoading(true); // Reset loading state
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/dealer/${user?.id}/add-subuser`, { name, email, password });
+            if (res.data.token) {
+                const completeUser = { token: res.data.token, ...res.data.userData };
+                localStorage.setItem("userData", JSON.stringify(completeUser));
+                setUser(completeUser);
+                axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
+            }
+            return true;
+        } catch (err) {
+            console.error("Signup failed", err.response?.data || err.message);
+            return false;
+        } finally {
+            setLoading(false); // Ensure loading is reset
+        }
+    };
     // Logout function
     const logout = () => {
         localStorage.removeItem("userData");
@@ -110,7 +127,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, signup, loading, logout, updateUser }}>
+        <AuthContext.Provider value={{ user, login, signup, loading, logout, updateUser, signupdealer }}>
             {children}
         </AuthContext.Provider>
     );

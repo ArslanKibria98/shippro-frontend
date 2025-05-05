@@ -87,7 +87,7 @@ const CreateLabel = () => {
       try {
         if (!user?.id) return; // Ensure user is loaded
 
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/allowed-carriers/${user.id}`, {
+        const response = await fetch(user?.dealerId ? `${process.env.REACT_APP_API_URL}/api/auth/dealer/${user?.dealerId}/sub-users/${user?.id}/allowed-carriers` : `${process.env.REACT_APP_API_URL}/api/auth/allowed-carriers/${user.id}`, {
           headers: { "Authorization": `Bearer ${user.token}` }
         });
 
@@ -144,7 +144,7 @@ const CreateLabel = () => {
     setLoading(true);
     setShow(true)
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/label-history-single/${user.id}`, {
+      const response = await fetch(user?.dealerId ? `${process.env.REACT_APP_API_URL}/api/auth/dealer/${user?.dealerId}/sub-users/${user?.id}/label-history-single` : `${process.env.REACT_APP_API_URL}/api/auth/label-history-single/${user.id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
@@ -346,7 +346,7 @@ const CreateLabel = () => {
 
           // Generate label
           const response = await fetch(
-            `${process.env.REACT_APP_API_URL}/api/auth/generate-label/${loginUser.id}`,
+            loginUser?.dealerId ? `${process.env.REACT_APP_API_URL}/api/auth/dealer/${loginUser?.dealerId}/sub-users/${loginUser?.id}/generate-label` : `${process.env.REACT_APP_API_URL}/api/auth/generate-label/${loginUser.id}`,
             {
               method: "PUT",
               headers: {

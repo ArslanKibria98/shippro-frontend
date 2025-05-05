@@ -21,6 +21,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import BalanceHistory from "./pages/BalanceHistory";
 import BalancePage from "./pages/BalancePage";
 import LabelsHistoryForAdmin from "./components/LabelsHistoryForAdmin";
+import DealerDashboard from "./pages/DealerDashboard";
+import BalanceHistoryDealer from "./pages/BalanceHistoryDealer";
+import LabelsHistoryForHeader from "../src/components/LabelHistoryForDealer"
+import BalancePageDealer from "./pages/BalancePageDealer";
 // Private Route Component for Protected Pages
 const PrivateRoute = ({ element }) => {
     const { user, loading } = useContext(AuthContext);
@@ -31,37 +35,43 @@ const PrivateRoute = ({ element }) => {
 
 function App() {
     return (
-        <AuthProvider>
-            <AdminauthProvider> {/* ✅ Admin authentication context */}
-                <Toaster position="top-center" reverseOrder={false} />
-                <Router>
-                    <Routes>
-                        {/* Public Routes (Without Layout) */}
-                        <Route path="/" element={<Home />} />
-                        <Route path="/signup" element={<Signup />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/admin/login" element={<Adminlogin />} />
-                        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                        <Route path="/admin/balancePage" element={<BalancePage />} />
-                        <Route path="/admin/labelsHistory/:id" element={<LabelsHistoryForAdmin />} />
-                        <Route path="/admin/:id/history" element={<BalanceHistory />} />
-                        {/* Routes Wrapped with Layout */}
-                        <Route
-                            element={<Layout />}
-                        >
-                            <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/create-label" element={<CreateLabel />} />
-                            <Route path="/create/bulk" element={<BulkUpload />} />
+        // <AuthProvider>
+        //     <AdminauthProvider>
+        //         <Toaster position="top-center" reverseOrder={false} />
+        //         <Router>
+        //             <Routes>
+        //                 {/* Public Routes (Without Layout) */}
+        //                 <Route path="/" element={<Home />} />
+        //                 <Route path="/signup" element={<Signup />} />
+        //                 <Route path="/login" element={<Login />} />
+        //                 <Route path="/admin/login" element={<Adminlogin />} />
+        //                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        //                 <Route path="/admin/balancePage" element={<BalancePage />} />
+        //                 <Route path="/admin/labelsHistory/:id" element={<LabelsHistoryForAdmin />} />
+        //                 <Route path="/admin/:id/history" element={<BalanceHistory />} />
+        //                 {/* Routes Wrapped with Layout */}
+        //                 <Route
+        //                     element={<Layout />}
+        //                 >
+        //                     <Route path="/dashboard" element={<Dashboard />} />
+        //                     <Route path="/create-label" element={<CreateLabel />} />
+        //                     <Route path="/create/bulk" element={<BulkUpload />} />
+        //                     <Route path="/dealer/labelsHistory/:id/:dealerId" element={<LabelsHistoryForHeader />} />
+        //                     <Route path="/dealer/:id/:dealerId" element={<BalanceHistoryDealer />} />
+        //                     <Route path="/dealer/balancePage" element={<BalancePageDealer />} />
+        //                     <Route path="/download-history" element={<DisplayHistory />} />
+        //                     <Route path="/dealer-users" element={<DealerDashboard />} />
+        //                     <Route path="/sender" element={<SenderForm />} />
+        //                     <Route path="/test" element={<HaversineTest />} />
+        //                 </Route>
+        //             </Routes>
+        //         </Router>
 
-                            <Route path="/download-history" element={<DisplayHistory />} />
-                            <Route path="/sender" element={<SenderForm />} />
-                            <Route path="/test" element={<HaversineTest />} />
-                        </Route>
-                    </Routes>
-                </Router>
-
-            </AdminauthProvider> {/* ✅ Admin authentication context */}
-        </AuthProvider>
+        //     </AdminauthProvider> {/* ✅ Admin authentication context */}
+        // </AuthProvider>
+        <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+            Website under maintenance
+        </div>
     );
 }
 
